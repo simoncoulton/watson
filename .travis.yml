@@ -1,9 +1,7 @@
 language: python
 python:
     - 3.2
-install: 
-    - pip install coverage
-script: nosetests --config=nose.cfg
+script: nosetests
 branches:
     only:
         - develop
