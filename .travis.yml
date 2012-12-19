@@ -5,4 +5,4 @@ script:
     - nosetests
 branches:
     only:
-        - develop
+        - master
