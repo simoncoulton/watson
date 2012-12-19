@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import types
 from importlib import import_module
 
 
