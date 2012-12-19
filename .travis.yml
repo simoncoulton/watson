@@ -1,7 +1,8 @@
 language: python
 python:
     - 3.2
-script: nosetests -cover-package=watson
+script:
+    - PYTHONPATH=.:$PYTHONPATH nosetests
 branches:
     only:
         - develop
