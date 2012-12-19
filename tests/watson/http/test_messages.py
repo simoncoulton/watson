@@ -83,6 +83,8 @@ class TestRequest(object):
 
     def test_create_mutable(self):
         environ = sample_environ()
+        environ['REQUEST_METHOD'] = 'POST'
+        environ['wsgi.input'] = BufferedReader(BytesIO(b'HTTP_REQUEST_METHOD=PUT'))
         request = create_request_from_environ(environ)
         new_request = copy(request)
         assert isinstance(request.post, ImmutableMultiDict)
