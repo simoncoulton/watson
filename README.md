@@ -2,7 +2,7 @@
 
 > It's elementary my dear Watson
 
-https://api.travis-ci.org/simoncoulton/watson.png?branch=master
+![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=master "Build Status")
 
 Watson is an easy to use framework designed to get out of your way and let you code your application rather than wrangle with the framework.
 
