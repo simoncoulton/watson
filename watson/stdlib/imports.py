@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import types
 from importlib import import_module
 
 
@@ -31,6 +32,15 @@ def get_qualified_name(obj):
         request = Request()
         name = get_qualified_name(request) # watson.http.messages.Request
     """
+
+    name = None
     if hasattr(obj, '__module__'):
-        return '{0}.{1}'.format(obj.__module__, obj.__qualname__)
-    return obj.__class__.__name__
+        if hasattr(obj, '__qualname__'):
+            name = '{0}.{1}'.format(obj.__module__, obj.__qualname__)
+        elif hasattr(obj, '__name__'):
+            name = '{0}.{1}'.format(obj.__module__, obj.__name__)
+        else:
+            name = '{0}.{1}'.format(obj.__module__, obj.__class__.__name__)
+    else:
+        name = obj.__class__.__name__
+    return name
