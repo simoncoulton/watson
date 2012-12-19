@@ -3,6 +3,3 @@ python:
     - 3.2
 script:
     - nosetests
-branches:
-    only:
-        - master
