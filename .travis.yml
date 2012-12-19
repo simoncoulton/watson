@@ -2,7 +2,10 @@ language: python
 python:
     - 3.2
 script:
-    - PYTHONPATH=.:$PYTHONPATH nosetests
+    - export PYTHONPATH=.:$PYTHONPATH
+    - echo $PYTHONPATH
+    - python -c "import sys; print(sys.path)"
+    - nosetests
 branches:
     only:
         - develop
