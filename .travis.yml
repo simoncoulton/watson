@@ -1,6 +1,11 @@
-language:  python
+language: python
 python:
-	- 3.2
-	- 3.3
-install: "pip install -r requirements.txt --use-mirrors"
+    - 3.2
+    - 3.3
+install: 
+    - pip install -r requirements.txt --use-mirrors
+    - sudo aptitude -y install python3.3
 script: fab test
+branches:
+    only:
+        - develop

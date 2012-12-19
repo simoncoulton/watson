@@ -19,5 +19,3 @@ Currently Watson has been tested on the following Python versions:
 * 3.3
 
 
-
-
