@@ -13,9 +13,12 @@ DEFAULTS = {
     'params': {},
     'definitions': {},
     'events': {
-        PRE_EVENT: [],
+        PRE_EVENT: [
+            'watson.di.processors.ConstructorInjectionProcessor',
+        ],
         POST_EVENT: [
-            'watson.di.processors.InjectProcessor',
+            'watson.di.processors.SetterInjectionProcessor',
+            'watson.di.processors.PropertyInjectionProcessor',
             'watson.di.processors.ContainerAwareProcessor'
         ]
     }
@@ -73,13 +76,11 @@ class IocContainer(EventDispatcherAware):
             'dependency': name
         }
         pre_process_event = Event(name=PRE_EVENT, target=definition, params=params)
-        self.dispatcher.trigger(pre_process_event)
-        item = definition['item']
-        dependency = item if isinstance(item, FunctionType) else load_definition_from_string(item)
-        result = dependency(self) if isinstance(dependency, FunctionType) else dependency()
+        result = self.dispatcher.trigger(pre_process_event)
+        dependency = result.last()
         post_process_event = Event(name=POST_EVENT, target=dependency, params=params)
         self.dispatcher.trigger(post_process_event)
-        return result
+        return dependency
 
     def attach_processor(self, event, processor):
         if not isinstance(processor, BaseProcessor):
