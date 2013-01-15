@@ -31,8 +31,20 @@ class TestIoc(object):
 
     def test_add_item(self):
         container = IocContainer()
-        container.add('def', lambda container: 'something')
-        assert container.get('def') == 'something'
+        container.add('dep', lambda container: 'something')
+        assert container.get('dep') == 'something'
+
+    def test_add_instantiated(self):
+        container = IocContainer()
+        dep = SampleDependency()
+        container.add('dep', dep)
+        assert container.get('dep') == dep
+
+    def test_add_dict(self):
+        container = IocContainer()
+        dep = {'something': 'test'}
+        container.add('dep', dep)
+        assert container.get('dep') == dep
 
     @raises(KeyError)
     def test_definition_doesnt_exist(self):
