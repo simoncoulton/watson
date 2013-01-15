@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from copy import copy
 from io import BytesIO, BufferedReader
-from nose.tools import raises
 from wsgiref import util
+from nose.tools import raises
 from watson.http.messages import Response, Request, create_request_from_environ
 from watson.http.cookies import CookieDict
 from watson.http.sessions import MemoryStorage

@@ -8,6 +8,7 @@ from watson.stdlib.datastructures import dict_deep_update
 
 ROUTE_MATCH_EVENT = 'event.application.route.match'
 DISPATCH_EXECUTE_EVENT = 'event.application.dispatch.execute'
+DISPATCH_COMPLETE_EVENT = 'event.application.dispatch.complete'
 DEFAULTS = {
     'dependencies': {
         'definitions': {
@@ -18,7 +19,8 @@ DEFAULTS = {
     },
     'events': {
         ROUTE_MATCH_EVENT: [],
-        DISPATCH_EXECUTE_EVENT: []
+        DISPATCH_EXECUTE_EVENT: [],
+        DISPATCH_COMPLETE_EVENT: [],
     }
 }
 
