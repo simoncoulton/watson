@@ -24,7 +24,11 @@ class ListenerCollection(list):
             TypeError if non-callable is added.
         """
         if not hasattr(callback, '__call__'):
-            raise TypeError('Callback must be callable.')
+            try:
+                name = get_qualified_name(callback)
+            except:
+                name = callback
+            raise TypeError('Callback {0} must be callable.'.format(name))
         self.append((callback, int(priority), bool(only_once)))
         self.require_sort = True
         return self

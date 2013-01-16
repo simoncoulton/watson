@@ -79,6 +79,8 @@ class Url(object):
                 url['netloc'] = netloc
                 del url['hostname']
                 del url['port']
+            if 'username' in url:
+                url['netloc'] = '{0}:{1}@{2}'.format(url['username'], url.get('password', ''), url['netloc'])
             if 'params' not in url:
                 url['params'] = None
             if 'fragment' not in url:
@@ -87,6 +89,8 @@ class Url(object):
                 url['path'] = None
             if 'query' not in url:
                 url['query'] = None
+            del url['username']
+            del url['password']
             self._parts = ParseResult(**url)
         elif isinstance(url, str):
             self._parts = urlparse(url)
