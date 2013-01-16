@@ -3,7 +3,6 @@ import re
 from watson.di import ContainerAware
 from watson.http.messages import Response, Request
 from watson.stdlib.imports import get_qualified_name
-# add controller to container (string), then retrieve
 
 
 class BaseController(ContainerAware):
@@ -12,6 +11,9 @@ class BaseController(ContainerAware):
 
     def get_execute_method_path(self, **kwargs):
         raise NotImplementedError('You must implement get_execute_method_path')
+
+    def __repr__(self):
+        return '<{0}>'.format(get_qualified_name(self))
 
 
 class BaseHttpController(BaseController):
@@ -40,10 +42,12 @@ class BaseHttpController(BaseController):
             raise TypeError('Invalid response type, expected watson.http.messages.Response')
         self._response = response
 
+    # todo redirect
+
 
 class ActionController(BaseHttpController):
     def execute(self, **kwargs):
-        method = getattr(self, kwargs.get('action') + '_action')
+        method = getattr(self, kwargs.get('action', 'index') + '_action')
         try:
             result = method(**kwargs)
         except TypeError:
@@ -52,8 +56,7 @@ class ActionController(BaseHttpController):
 
     def get_execute_method_path(self, **kwargs):
         path = get_qualified_name(self).lower().split('.')
-        action = kwargs.get('action', 'index').lower()
-        action = re.sub('.-', '_', action)
+        action = re.sub('.-', '_', kwargs.get('action', 'index').lower())
         path.append(action)
         return path
 

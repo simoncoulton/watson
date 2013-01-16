@@ -130,4 +130,6 @@ def get_param_from_container(param, container):
         param = container.params[param]
     elif param in container.definitions:
         param = container.get(param)
+    if isinstance(param, FunctionType):
+        param = param(container)
     return param

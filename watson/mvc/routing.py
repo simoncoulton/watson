@@ -31,6 +31,8 @@ class Router(object):
                 matches.append(RouteMatch(route, params))
         return matches
 
+    # todo assemble
+
     def __repr__(self):
         return '<{0} routes:{1}>'.format(get_qualified_name(self), len(self.routes))
 
@@ -68,14 +70,18 @@ class BaseRoute(dict):
             matched = False
         if 'subdomain' in self and request.url.subdomain != self.get('subdomain'):
             matched = False
-        if 'format' in self:
+        accept_format = request.headers.get('Accept')
+        formats = None
+        if accept_format:
             formats = [format for format in MIME_TYPES if
-                        request.headers.get('Accept') in MIME_TYPES[format]]
+                        accept_format in MIME_TYPES[format]]
             if formats:
-                if self['format'].match(formats[0]):
-                    params['format'] = formats[0]
-                else:
-                    matched = False
+                params['format'] = formats[0]
+        if 'format' in self and formats:
+            if self['format'].match(formats[0]):
+                params['format'] = formats[0]
+            else:
+                matched = False
         return matched, params
 
 
@@ -96,6 +102,8 @@ class SegmentRoute(BaseRoute):
             else:
                 params.update((k, v) for k, v in matches.groupdict().items() if v is not None)
         return matched, params
+
+    # todo assemble
 
     def __create_regex_from_segment_path(self, path, requires=None):
         """
@@ -167,6 +175,8 @@ class StaticRoute(BaseRoute):
         if matched:
             matched = request.url.path == self['path']
         return matched, params
+
+    # todo assemble
 
     def __repr__(self):
         return '<{0} path:{1}>'.format(get_qualified_name(self), self['path'])
