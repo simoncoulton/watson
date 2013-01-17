@@ -45,83 +45,83 @@ class Jinja2Renderer(BaseRenderer):
                         </body>
                     </html>
                 ''',
+                'exception_styling': '''
+                <style>
+                    body {
+                        margin: 0; padding: 0;
+                        font-size: 12px;
+                    }
+                    h1, h2 {
+                        background: #ebebeb;
+                        margin: 0;
+                        padding: 10px;
+                        text-shadow: 1px 1px rgba(255, 255, 255, 0.4)
+                    }
+                    h2 {
+                        color: #666;
+                        padding-top: 0;
+                        font-size: 1.2em;
+                        border-bottom: 1px solid #ccc;
+                    }
+                    h3 {
+                        color: #333;
+                        margin-left: 10px;
+                    }
+                    p {
+                        margin: 0;
+                        padding: 10px;
+                    }
+                    table {
+                        margin: 10px;
+                        width: 98%;
+                        border-collapse: collapse;
+                    }
+                    table th {
+                        text-align: left;
+                        font-size: 1.1em;
+                        padding: 0 6px 6px;
+                    }
+                    table td {
+                        padding: 6px;
+                        vertical-align: top;
+                        color: #333;
+                    }
+                    .watson-stack-frames > tbody > tr:nth-child(3n+1) {
+                        background-color: #fff;
+                    }
+                    .watson-stack-frames > tbody > tr {
+                        background-color: #f5f5f5;
+                    }
+                    .hide {
+                        display: none;
+                    }
+                    table td {
+                        font-family: "Lucida Console", Monaco, monospace;
+                    }
+                    dl {
+                        margin: 0;
+                        border-bottom: 1px solid #9cb3be;
+                        border-top: 1px solid #fff;
+                        background: #d9f2fe;
+                        padding: 10px;
+                        color: #1c4d72;
+                    }
+                    dt {
+                        font-weight: bold;
+                        font-size: 1.1em;
+                        float: left;
+                        width: 120px;
+                        clear: both;
+                    }
+                    dd {
+                        color: #6087af;
+                        margin-bottom: 4px;
+                        margin-left: 120px;
+                    }
+                </style>
+                ''',
                 'exception_details': '''
                 {% if debug %}
-                {% block head %}
-                    <style>
-                        body {
-                            margin: 0; padding: 0;
-                            font-size: 12px;
-                        }
-                        h1, h2 {
-                            background: #ebebeb;
-                            margin: 0;
-                            padding: 10px;
-                            text-shadow: 1px 1px rgba(255, 255, 255, 0.4)
-                        }
-                        h2 {
-                            color: #666;
-                            padding-top: 0;
-                            font-size: 1.2em;
-                            border-bottom: 1px solid #ccc;
-                        }
-                        h3 {
-                            color: #333;
-                            margin-left: 10px;
-                        }
-                        p {
-                            margin: 0;
-                            padding: 10px;
-                        }
-                        table {
-                            margin: 10px;
-                            width: 98%;
-                            border-collapse: collapse;
-                        }
-                        table th {
-                            text-align: left;
-                            font-size: 1.1em;
-                            padding: 0 6px 6px;
-                        }
-                        table td {
-                            padding: 6px;
-                            vertical-align: top;
-                            color: #333;
-                        }
-                        .watson-stack-frames > tbody > tr:nth-child(3n+1) {
-                            background-color: #fff;
-                        }
-                        .watson-stack-frames > tbody > tr {
-                            background-color: #f5f5f5;
-                        }
-                        .hide {
-                            display: none;
-                        }
-                        table td {
-                            font-family: "Lucida Console", Monaco, monospace;
-                        }
-                        dl {
-                            margin: 0;
-                            border-bottom: 1px solid #9cb3be;
-                            border-top: 1px solid #fff;
-                            background: #d9f2fe;
-                            padding: 10px;
-                            color: #1c4d72;
-                        }
-                        dt {
-                            font-weight: bold;
-                            font-size: 1.1em;
-                            float: left;
-                            width: 120px;
-                            clear: both;
-                        }
-                        dd {
-                            color: #6087af;
-                            margin-bottom: 4px;
-                            margin-left: 120px;
-                        }
-                    </style>
-                {% endblock %}
                 <h2>{{ message|escape }}</h2>
                 <dl>
                     <dt>Watson Version:<dt>
@@ -187,6 +187,10 @@ class Jinja2Renderer(BaseRenderer):
                     {% endblock %}
                 ''',
                 'errors/404.html': '''{% extends "base" %}
+                    {% block head %}
+                        {{ super() }}
+                        {% include "exception_styling" %}
+                    {% endblock %}
                     {% block body %}
                         <h1>Not Found</h1>
                         {% include "exception_details" %}
@@ -196,6 +200,10 @@ class Jinja2Renderer(BaseRenderer):
                     {% endblock %}
                 ''',
                 'errors/500.html': '''{% extends "base" %}
+                    {% block head %}
+                        {{ super() }}
+                        {% include "exception_styling" %}
+                    {% endblock %}
                     {% block body %}
                         <h1>Internal Server Error</h1>
                         {% include "exception_details" %}
@@ -214,7 +222,7 @@ class Jinja2Renderer(BaseRenderer):
 
 class XmlRenderer(BaseRenderer):
     def __call__(self, view_model):
-        return '<xml><![CDATA[@todo dict > xml]]></xml>'
+        return '<?xml version="1.0"?><xml>To be implemented</xml>'
 
 
 class JsonRenderer(BaseRenderer):

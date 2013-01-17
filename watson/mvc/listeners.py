@@ -6,6 +6,7 @@ from watson.http import MIME_TYPES
 from watson.mvc.exceptions import NotFoundError, InternalServerError
 from watson.mvc.views import Model
 from watson.mvc.exceptions import ExceptionHandler
+from watson.stdlib.imports import get_qualified_name
 
 
 class BaseListener(ContainerAware):
@@ -44,15 +45,14 @@ class DispatchListener(BaseListener):
                          template=templates.get(controller_template, controller_template),
                          data=model_data)
         except Exception as exc:
-            raise InternalServerError('An error occurred executing controller {0}'.format(controller.__repr__())) from exc
+            raise InternalServerError('An error occurred executing controller: {0}'.format(get_qualified_name(controller))) from exc
 
 
 class ExceptionListener(BaseListener):
     def __call__(self, event):
         exception = event.params['exception']
-        # todo retrieve exception config from container
         status_code = exception.status_code
-        handler = ExceptionHandler()
+        handler = self.container.get('exception_handler')
         templates = self.container.get('application.config')['views']['templates']
         return Model(format='html',  # should this take the format from the request?
                      template=templates.get(str(status_code), templates['500']),

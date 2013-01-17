@@ -83,7 +83,7 @@ class TestRouter(object):
 class TestStaticRoute(object):
     def test_create_static_route(self):
         route = StaticRoute({'path': '/'})
-        assert route.__repr__() == '<watson.mvc.routing.StaticRoute path:/>'
+        assert repr(route) == '<watson.mvc.routing.StaticRoute path:/>'
 
     def test_static_match(self):
         route = StaticRoute({'path': '/dump'})
@@ -97,7 +97,7 @@ class TestSegmentRoute(object):
         route = SegmentRoute({'name': 'home', 'path': '/:test'})
         assert route.regex.pattern == '\/(?P<test>[^/]+)'
         assert route.name == 'home'
-        assert route.__repr__() == '<watson.mvc.routing.SegmentRoute path:\/(?P<test>[^/]+)>'
+        assert repr(route) == '<watson.mvc.routing.SegmentRoute path:\/(?P<test>[^/]+)>'
 
     def test_convert_segment_to_regex_optional(self):
         route = SegmentRoute({'path': '/[:test]'})

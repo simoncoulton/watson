@@ -23,6 +23,7 @@ class InternalServerError(ApplicationError):
 
 class ExceptionHandler(object):
     def __init__(self, config=None):
+        self.config = config or {}
         # todo implement config for emailing to admin etc
         pass
 
@@ -35,7 +36,7 @@ class ExceptionHandler(object):
             'version': __version__,
             'frames': frames,
             'type': type,
-            'debug': params.get('debug', True)
+            'debug': self.config.get('enabled', True)
         }
         model.update(params)
         return model

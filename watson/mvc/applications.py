@@ -15,6 +15,15 @@ RENDER_EVENT = 'event.application.render'
 EXCEPTION_EVENT = 'event.application.exception'
 DEFAULTS = {
     'routes': {},
+    'debug': {
+        'enabled': True,
+        'toolbar': {
+            'enabled': True
+        },
+        'profiling': {
+            'enabled': True
+        }
+    },
     'dependencies': {
         'definitions': {
             'shared_event_dispatcher': {
@@ -23,6 +32,10 @@ DEFAULTS = {
             'router': {
                 'item': 'watson.mvc.routing.Router',
                 'init': [lambda container: container.get('application.config').get('routes', {})]
+            },
+            'exception_handler': {
+                'item': 'watson.mvc.exceptions.ExceptionHandler',
+                'init': [lambda container: container.get('application.config').get('debug', {})]
             },
             'route_listener': {'item': 'watson.mvc.listeners.RouteListener'},
             'controller_dispatch_listener': {'item': 'watson.mvc.listeners.DispatchListener'},
