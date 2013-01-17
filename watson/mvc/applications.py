@@ -123,28 +123,41 @@ class WsgiApplication(BaseApplication):
         try:
             route_event.params['router'] = self.container.get('router')
             route_result = self.dispatcher.trigger(route_event)
-            dispatch_event = Event(DISPATCH_EXECUTE_EVENT, target=self, params={
-                'route_match': route_result.first(),
-                'request': request
-            })
-            dispatch_result = self.dispatcher.trigger(dispatch_event)
-            response = dispatch_event.params['controller_class'].response
-            view_model = dispatch_result.first()
-        except ApplicationError as e:
-            exception_event = Event(EXCEPTION_EVENT, target=self, params={
-                'exception': e,
-                'request': request
-            })
-            exception_result = self.dispatcher.trigger(exception_event)
-            response = Response(e.status_code)
-            view_model = exception_result.first()
-        render_event = Event(RENDER_EVENT, target=self, params={
-            'response': response,
-            'view_model': view_model
-        })
-        self.dispatcher.trigger(render_event)
+            route_match = route_result.first()
+        except ApplicationError as exc:
+            route_match = None
+            response, view_model = self.__raise_exception_event(exception=exc, request=request)
+        if route_match:
+            try:
+                dispatch_event = Event(DISPATCH_EXECUTE_EVENT, target=self, params={
+                    'route_match': route_match,
+                    'request': request
+                })
+                dispatch_result = self.dispatcher.trigger(dispatch_event)
+                response = dispatch_event.params['controller_class'].response
+                view_model = dispatch_result.first()
+            except ApplicationError as exc:
+                response, view_model = self.__raise_exception_event(exception=exc, request=request, route_match=route_match)
+        try:
+            self.__render(request=request, response=response, view_model=view_model)
+        except ApplicationError as exc:
+            response, view_model = self.__raise_exception_event(exception=exc, request=request, route_match=route_match)
+            self.__render(request=request, response=response, view_model=view_model)
         start_response(*response.start())
         return [response()]
+
+    def __raise_exception_event(self, **kwargs):
+        params = {}
+        params.update(**kwargs)
+        exception_event = Event(EXCEPTION_EVENT, target=self, params=params)
+        exception_result = self.dispatcher.trigger(exception_event)
+        return Response(params['exception'].status_code), exception_result.first()
+
+    def __render(self, **kwargs):
+        params = {}
+        params.update(**kwargs)
+        render_event = Event(RENDER_EVENT, target=self, params=params)
+        self.dispatcher.trigger(render_event)
 
 
 class ConsoleApplication(BaseApplication):

@@ -69,7 +69,7 @@ class TestRouting(object):
 class TestRouter(object):
     def test_create_router(self):
         router = Router(sample_routes)
-        assert router.__repr__() == '<watson.mvc.routing.Router routes:{0}>'.format(len(sample_routes))
+        assert repr(router) == '<watson.mvc.routing.Router routes:{0}>'.format(len(sample_routes))
 
     def test_matches(self):
         router = Router(sample_routes)
@@ -77,7 +77,7 @@ class TestRouter(object):
         matches = router.matches(request)
         assert len(matches) == 1
         assert matches[0].name == 'home'
-        assert matches[0].__repr__() == '<watson.mvc.routing.RouteMatch name:home>'
+        assert repr(matches[0]) == '<watson.mvc.routing.RouteMatch name:home>'
 
 
 class TestStaticRoute(object):

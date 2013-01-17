@@ -6,7 +6,7 @@ from watson.di.container import IocContainer
 class TestIoc(object):
     def test_create_container(self):
         container = IocContainer()
-        assert container.__repr__() == '<watson.di.container.IocContainer: 0 param(s), 0 definition(s)>'
+        assert repr(container) == '<watson.di.container.IocContainer: 0 param(s), 0 definition(s)>'
         assert container.params == {}
         assert container.definitions == {}
 

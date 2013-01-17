@@ -48,7 +48,7 @@ application = WsgiApplication({
                 'controller': 'simple_hello_world_wsgi_app.MyActionController',
                 'action': 'json_world',
             },
-            'requires': {'format': 'json'}
+            'requires': {'format': 'json$'}
         },
         'invalid_request': {
             'path': '/invalid',
