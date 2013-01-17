@@ -54,8 +54,8 @@ class ExceptionHandler(object):
             cause_message = str(exc)
             type = get_qualified_name(exc)
         except:
-            type = get_qualified_name(exc_info[0])
             tb = exc_info[2]
+            type = get_qualified_name(exc_info[0])
         frames = []
         while tb is not None:
             frame = tb.tb_frame
@@ -73,4 +73,5 @@ class ExceptionHandler(object):
                 'vars': frame.f_locals.items()
             })
             tb = tb.tb_next
+        frames.reverse()
         return code, message, cause_message, frames, type

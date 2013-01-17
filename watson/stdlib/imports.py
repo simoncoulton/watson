@@ -38,5 +38,8 @@ def get_qualified_name(obj):
             name = obj.__name__
         else:
             name = obj.__class__.__name__
-    module = obj.__module__
-    return '{0}.{1}'.format(module, name)
+    try:
+        module = obj.__module__
+        return '{0}.{1}'.format(module, name)
+    except:
+        return name

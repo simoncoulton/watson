@@ -75,6 +75,7 @@ class Jinja2Renderer(BaseRenderer):
                         }
                         table {
                             margin: 10px;
+                            width: 98%;
                             border-collapse: collapse;
                         }
                         table th {
@@ -112,6 +113,7 @@ class Jinja2Renderer(BaseRenderer):
                             font-size: 1.1em;
                             float: left;
                             width: 120px;
+                            clear: both;
                         }
                         dd {
                             color: #6087af;
@@ -136,6 +138,12 @@ class Jinja2Renderer(BaseRenderer):
                     <dd>{{ request.method }}</dd>
                     <dt>Headers:</dt>
                     <dd>{{ request.headers }}</dd>
+                    <dt>Get Vars:</dt>
+                    <dd>{{ request.get }}</dd>
+                    <dt>Post Vars:</dt>
+                    <dd>{{ request.post }}</dd>
+                    <dt>Server:</dt>
+                    <dd>{{ request.server }}</dd>
                     <dt>Session Id:</dt>
                     <dd>{{ request.session.id }}</dd>
                 </dl>
