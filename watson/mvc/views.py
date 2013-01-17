@@ -110,13 +110,13 @@ class Jinja2Renderer(BaseRenderer):
                         font-weight: bold;
                         font-size: 1.1em;
                         float: left;
-                        width: 120px;
+                        width: 160px;
                         clear: both;
                     }
                     dd {
                         color: #6087af;
                         margin-bottom: 4px;
-                        margin-left: 120px;
+                        margin-left: 160px;
                     }
                 </style>
                 ''',
@@ -124,11 +124,15 @@ class Jinja2Renderer(BaseRenderer):
                 {% if debug %}
                 <h2>{{ message|escape }}</h2>
                 <dl>
-                    <dt>Watson Version:<dt>
-                    <dd>{{ version }}</dd>
                     <dt>Exception Type:</dt>
                     <dd>{{ type }}</dd>
+                    <dt>Exception Message:</dt>
+                    {% if cause_message %}
+                    <dd>{{ cause_message|escape }}</dd>
+                    {% endif %}
                     {% if route_match %}
+                    <dt>Watson Version:<dt>
+                    <dd>{{ version }}</dd>
                     <dt>Route:</dt>
                     <dd>{{ route_match.name|e }}</dd>
                     {% endif %}
@@ -136,6 +140,8 @@ class Jinja2Renderer(BaseRenderer):
                     <dd>{{ request.url }}</dd>
                     <dt>Method:</dt>
                     <dd>{{ request.method }}</dd>
+                    <dt>Session Id:</dt>
+                    <dd>{{ request.session.id }}</dd>
                     <dt>Headers:</dt>
                     <dd>{{ request.headers }}</dd>
                     <dt>Get Vars:</dt>
@@ -144,13 +150,8 @@ class Jinja2Renderer(BaseRenderer):
                     <dd>{{ request.post }}</dd>
                     <dt>Server:</dt>
                     <dd>{{ request.server }}</dd>
-                    <dt>Session Id:</dt>
-                    <dd>{{ request.session.id }}</dd>
                 </dl>
                 <h1>Stack Trace</h1>
-                {% if cause_message %}
-                <h3>{{ cause_message|escape }}</h3>
-                {% endif %}
                 <table class="watson-stack-frames">
                 <tr>
                     <th>Line</th><th>File</th><th>Function</th><th>Code</th>
