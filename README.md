@@ -11,6 +11,14 @@ Branch | Status
 Master | ![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=master "Build Status")
 Develop | ![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=develop)
 
+### Requirements
+
+Watson currently requires the following modules:
+
+* Jinja2
+
+These can be installed simply by running `pip install -r requirements.txt`
+
 ### Running the tests
 
 1. Setup a virtualenv for Python 3.3

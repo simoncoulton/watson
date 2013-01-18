@@ -24,7 +24,7 @@ class RouteListener(BaseListener):
         return matches[0]
 
 
-class DispatchListener(BaseListener):
+class DispatchExecuteListener(BaseListener):
     def __call__(self, event):
         route_match = event.params['route_match']
         try:

@@ -34,9 +34,7 @@ class Jinja2Renderer(BaseRenderer):
                         <head>
                             {% block head %}
                             <style>
-                                html, body {
-                                    font-family: Helvetica, Arial, sans-serif
-                                }
+                                html, body { font-family: Helvetica, Arial, sans-serif }
                             </style>
                             {% endblock %}
                         </head>
@@ -100,11 +98,18 @@ class Jinja2Renderer(BaseRenderer):
                     }
                     dl {
                         margin: 0;
-                        border-bottom: 1px solid #9cb3be;
-                        border-top: 1px solid #fff;
-                        background: #d9f2fe;
                         padding: 10px;
+                    }
+                    dl.watson-info {
+                        background: #d9f2fe;
                         color: #1c4d72;
+                        border-bottom: 1px solid #9cb3be;
+                    }
+                    dl.watson-error {
+                        background: #fbeb7c;
+                        border-top: 1px solid #fff;
+                        border-bottom: 1px solid #ccbd4f;
+                        color: #726824;
                     }
                     dt {
                         font-weight: bold;
@@ -118,18 +123,23 @@ class Jinja2Renderer(BaseRenderer):
                         margin-bottom: 4px;
                         margin-left: 160px;
                     }
+                    dl.watson-error dd {
+                        color: #a48d00;
+                    }
                 </style>
                 ''',
                 'exception_details': '''
                 {% if debug %}
                 <h2>{{ message|escape }}</h2>
-                <dl>
+                <dl class="watson-error">
                     <dt>Exception Type:</dt>
                     <dd>{{ type }}</dd>
-                    <dt>Exception Message:</dt>
                     {% if cause_message %}
+                    <dt>Exception Message:</dt>
                     <dd>{{ cause_message|escape }}</dd>
                     {% endif %}
+                </dl>
+                <dl class="watson-info">
                     {% if route_match %}
                     <dt>Watson Version:<dt>
                     <dd>{{ version }}</dd>

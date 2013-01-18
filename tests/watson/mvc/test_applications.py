@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from wsgiref import util
 from watson.di.container import IocContainer
-from watson.mvc.applications import WsgiApplication, DEFAULTS
+from watson.mvc.applications import HttpApplication, DEFAULTS
 from watson.mvc.controllers import RestController
 
 
@@ -16,14 +16,14 @@ def sample_environ(**kwargs):
     return environ
 
 
-class TestWsgiApplication(object):
+class TestHttpApplication(object):
     def test_create(self):
-        application = WsgiApplication()
+        application = HttpApplication()
         assert isinstance(application.container, IocContainer)
         assert application.config == DEFAULTS
 
     def test_call(self):
-        application = WsgiApplication({
+        application = HttpApplication({
             'routes': {
                 'home': {
                     'path': '/',

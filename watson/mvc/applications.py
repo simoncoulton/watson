@@ -9,44 +9,40 @@ from watson.mvc.exceptions import ApplicationError
 from watson.stdlib.datastructures import dict_deep_update
 
 
-ROUTE_MATCH_EVENT = 'event.application.route.match'
-DISPATCH_EXECUTE_EVENT = 'event.application.dispatch.execute'
-RENDER_EVENT = 'event.application.render'
-EXCEPTION_EVENT = 'event.application.exception'
+INIT_EVENT = 'event.mvc.init'
+ROUTE_MATCH_EVENT = 'event.mvc.route.match'
+DISPATCH_EXECUTE_EVENT = 'event.mvc.dispatch.execute'
+RENDER_VIEW_EVENT = 'event.mvc.render.view'
+EXCEPTION_EVENT = 'event.mvc.exception'
 DEFAULTS = {
-    'routes': {},
     'debug': {
-        'enabled': True,
-        'toolbar': {
-            'enabled': True
-        },
         'profiling': {
-            'enabled': True
+            'enabled': False,
+            'max_results': 20,
+            'sort': 'cumulative',
         }
     },
     'dependencies': {
         'definitions': {
-            'shared_event_dispatcher': {
-                'item': 'watson.events.dispatcher.EventDispatcher'
-            },
+            'shared_event_dispatcher': {'item': 'watson.events.dispatcher.EventDispatcher'},
             'router': {
                 'item': 'watson.mvc.routing.Router',
                 'init': [lambda container: container.get('application.config').get('routes', {})]
+            },
+            'profiler': {
+                'item': 'watson.debug.profilers.Profiler',
+                'init': [lambda container: container.get('application.config')['debug']['profiling']]
             },
             'exception_handler': {
                 'item': 'watson.mvc.exceptions.ExceptionHandler',
                 'init': [lambda container: container.get('application.config').get('debug', {})]
             },
-            'route_listener': {'item': 'watson.mvc.listeners.RouteListener'},
-            'controller_dispatch_listener': {'item': 'watson.mvc.listeners.DispatchListener'},
-            'exception_listener': {'item': 'watson.mvc.listeners.ExceptionListener'},
-            'render_listener': {'item': 'watson.mvc.listeners.RenderListener'},
             'jinja2_renderer': {
                 'item': 'watson.mvc.views.Jinja2Renderer',
                 'init': [lambda container: container.get('application.config')['views']['renderers']['default'].get('config', {})]
             },
             'json_renderer': {'item': 'watson.mvc.views.JsonRenderer'},
-            'xml_renderer': {'item': 'watson.mvc.views.XmlRenderer'}
+            'xml_renderer': {'item': 'watson.mvc.views.XmlRenderer'},
         }
     },
     'views': {
@@ -68,10 +64,13 @@ DEFAULTS = {
         }
     },
     'events': {
-        ROUTE_MATCH_EVENT: [('route_listener',)],
-        DISPATCH_EXECUTE_EVENT: [('controller_dispatch_listener',)],
-        RENDER_EVENT: [('render_listener',)],
-        EXCEPTION_EVENT: [('exception_listener',)],
+        EXCEPTION_EVENT: [('watson.mvc.listeners.ExceptionListener',)],
+        INIT_EVENT: [
+            ('watson.debug.profilers.ApplicationInitListener', 1, True)
+        ],
+        ROUTE_MATCH_EVENT: [('watson.mvc.listeners.RouteListener',)],
+        DISPATCH_EXECUTE_EVENT: [('watson.mvc.listeners.DispatchExecuteListener',)],
+        RENDER_VIEW_EVENT: [('watson.mvc.listeners.RenderListener',)],
     }
 }
 
@@ -110,25 +109,30 @@ class BaseApplication(ContainerAware, EventDispatcherAware):
         self.dispatcher = self.container.get('shared_event_dispatcher')
         for event, listeners in self.config['events'].items():
             for callback_priority_pair in listeners:
-                priority = callback_priority_pair[1] if len(callback_priority_pair) > 1 else 1
-                self.dispatcher.add(event, self.container.get(callback_priority_pair[0]), priority)
+                try:
+                    priority = callback_priority_pair[1]
+                except:
+                    priority = 1
+                try:
+                    once_only = callback_priority_pair[2]
+                except:
+                    once_only = False
+                self.dispatcher.add(event, self.container.get(callback_priority_pair[0]), priority, once_only)
+        self.dispatcher.trigger(Event(INIT_EVENT, target=self))
 
     def __call__(self):
         raise NotImplementedError('You must implement __call__')
 
 
-class WsgiApplication(BaseApplication):
+class HttpApplication(BaseApplication):
     """
     An application structure suitable for use with the WSGI protocol.
 
     Usage:
-        application = WsgiApplication({..})
+        application = HttpApplication({..})
         application(environ, start_response)
     """
-    def __init__(self, config=None):
-        super(WsgiApplication, self).__init__(config)
-
-    def __call__(self, environ, start_response):
+    def run(self, environ, start_response):
         request = create_request_from_environ(environ)
         route_event = Event(ROUTE_MATCH_EVENT, target=self, params={
             'request': request
@@ -159,17 +163,17 @@ class WsgiApplication(BaseApplication):
         start_response(*response.start())
         return [response()]
 
+    def __call__(self, *args, **kwargs):
+        return self.run(*args, **kwargs)
+
     def __raise_exception_event(self, **kwargs):
-        params = {}
-        params.update(**kwargs)
-        exception_event = Event(EXCEPTION_EVENT, target=self, params=params)
+        exception_event = Event(EXCEPTION_EVENT, target=self, params=kwargs)
         exception_result = self.dispatcher.trigger(exception_event)
-        return Response(params['exception'].status_code), exception_result.first()
+        return Response(kwargs['exception'].status_code), exception_result.first()
 
     def __render(self, **kwargs):
-        params = {}
-        params.update(**kwargs)
-        render_event = Event(RENDER_EVENT, target=self, params=params)
+        render_event = Event(RENDER_VIEW_EVENT, target=self, params=kwargs)
+        self.container.add('render_event_params', kwargs)
         self.dispatcher.trigger(render_event)
 
 
