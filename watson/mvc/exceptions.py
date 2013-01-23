@@ -25,7 +25,6 @@ class ExceptionHandler(object):
     def __init__(self, config=None):
         self.config = config or {}
         # todo implement config for emailing to admin etc
-        pass
 
     def __call__(self, exc_info, params):
         code, message, cause_message, frames, type = self.__process_exception(exc_info)
@@ -65,14 +64,15 @@ class ExceptionHandler(object):
             file = co.co_filename
             function = co.co_name
             linecache.checkcache(file)
-            code = linecache.getline(file, line, frame.f_globals)
+            sourcecode = linecache.getline(file, line, frame.f_globals)
             frames.append({
                 'line': line,
                 'file': file,
                 'function': function,
-                'code': code.strip(),
+                'code': sourcecode.strip(),
                 'vars': frame.f_locals.items()
             })
             tb = tb.tb_next
         frames.reverse()
+        del tb
         return code, message, cause_message, frames, type

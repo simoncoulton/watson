@@ -134,12 +134,11 @@ class HttpApplication(BaseApplication):
     """
     def run(self, environ, start_response):
         request = create_request_from_environ(environ)
-        route_event = Event(ROUTE_MATCH_EVENT, target=self, params={
-            'request': request
-        })
         try:
-            route_event.params['router'] = self.container.get('router')
-            route_result = self.dispatcher.trigger(route_event)
+            route_result = self.dispatcher.trigger(Event(ROUTE_MATCH_EVENT, target=self, params={
+                'request': request,
+                'router': self.container.get('router')
+            }))
             route_match = route_result.first()
         except ApplicationError as exc:
             route_match = None

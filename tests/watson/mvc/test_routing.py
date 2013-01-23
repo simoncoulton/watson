@@ -79,6 +79,10 @@ class TestRouter(object):
         assert matches[0].name == 'home'
         assert repr(matches[0]) == '<watson.mvc.routing.RouteMatch name:home>'
 
+    def test_assemble(self):
+        router = Router(sample_routes)
+        assert router.assemble('dump') == '/dump'
+
 
 class TestStaticRoute(object):
     def test_create_static_route(self):
@@ -90,6 +94,10 @@ class TestStaticRoute(object):
         request = create_request_from_environ(sample_environ(PATH_INFO='/dump'))
         matched, params = route.match(request)
         assert matched == True
+
+    def test_assemble(self):
+        route = StaticRoute({'path': '/dump'})
+        assert route.assemble() == '/dump'
 
 
 class TestSegmentRoute(object):
@@ -146,6 +154,12 @@ class TestSegmentRoute(object):
         matched, params = route.match(request)
         assert matched == True
         assert params['format'] == 'xml'
+
+    def test_assemble(self):
+        route = SegmentRoute(sample_routes['search'])
+        assert route.assemble() == '/search/blah'
+        route = SegmentRoute(sample_routes['dump_format_segment_requires'])
+        assert route.assemble(format='json') == '/dump.json'
 
     @raises(ValueError)
     def test_bracket_mismatch(self):

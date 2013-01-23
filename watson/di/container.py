@@ -149,6 +149,7 @@ class IocContainer(EventDispatcherAware):
             try:
                 load_definition_from_string(name)
                 self.add(name, name)
+                definitions = self.definitions
             except:
                 raise KeyError('Dependency {} does not exist'.format(name))
         if 'item' not in definitions[name]:

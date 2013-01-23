@@ -22,6 +22,7 @@ class TestBaseHttpController(object):
         base.request = Request('GET')
         assert isinstance(base.request, Request)
         assert isinstance(base.response, Response)
+        assert repr(base) == '<watson.mvc.controllers.BaseHttpController>'
 
     @raises(TypeError)
     def test_invalid_request(self):

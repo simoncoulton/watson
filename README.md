@@ -11,13 +11,20 @@ Branch | Status
 Master | ![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=master "Build Status")
 Develop | ![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=develop)
 
-### Requirements
+### Dependencies
 
-Watson currently requires the following modules:
+Watson currently requires the following modules to work out of box:
 
 * Jinja2
 
-These can be installed simply by running `pip install -r requirements.txt`
+These can be installed by running `pip install -r requirements.txt`
+
+#### Optional Dependencies
+
+##### Memcached
+
+Add python3-memcached to your applications `requirements.txt` file or `pip install python3-memcached`
+This is currently maintained at: [http://pypi.python.org/pypi/python3-memcached/](http://pypi.python.org/pypi/python3-memcached/)
 
 ### Running the tests
 
