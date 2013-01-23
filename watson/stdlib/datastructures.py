@@ -19,6 +19,26 @@ def dict_deep_update(d1, d2):
     return result
 
 
+def module_to_dict(module, ignore_starts_with=''):
+    """
+    Load the contents of a module into a dict.
+
+    Usage:
+        # my_module.py contents:
+        # variable = 'value'
+        import my_module
+        a_dict = module_to_dict(my_module)
+        a_dict['variable']
+
+    Args:
+        string ignore_starts_with: Ignore all module keys that begin with this value.
+
+    Return:
+        dict
+    """
+    return {k: getattr(module, k) for k in dir(module) if not k.startswith('__')}
+
+
 class MultiDict(OrderedDict):
     """
     Dictionary type that will create a list of values if more than one item is

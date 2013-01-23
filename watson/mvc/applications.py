@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 import os
+from types import ModuleType
 from watson.di import ContainerAware
 from watson.di.container import IocContainer
 from watson.events.dispatcher import EventDispatcherAware
 from watson.events.types import Event
 from watson.http.messages import create_request_from_environ, Response
 from watson.mvc.exceptions import ApplicationError
-from watson.stdlib.datastructures import dict_deep_update
+from watson.stdlib.datastructures import dict_deep_update, module_to_dict
 
 
 INIT_EVENT = 'event.mvc.init'
@@ -90,7 +91,11 @@ class BaseApplication(ContainerAware, EventDispatcherAware):
 
     @config.setter
     def config(self, config):
-        self._config = dict_deep_update(DEFAULTS, config or {})
+        if isinstance(config, ModuleType):
+            conf = module_to_dict(config, '__')
+        else:
+            conf = config or {}
+        self._config = dict_deep_update(DEFAULTS, conf)
         self.container.add('application.config', self.config)
 
     @property
