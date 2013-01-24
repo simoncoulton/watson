@@ -139,9 +139,19 @@ class IocContainer(EventDispatcherAware):
         self.definitions[name] = definition
 
     def __find(self, name):
+        """
+        Attempts to retrieve a definition from the container configuration. If
+        no definition is found, it will attempt to add the requested dependency
+        to the container.
+        """
         definitions = self.definitions
         if name not in definitions:
-            raise KeyError('Dependency {} does not exist'.format(name))
+            try:
+                load_definition_from_string(name)
+                self.add(name, name)
+                definitions = self.definitions
+            except:
+                raise KeyError('Dependency {} does not exist'.format(name))
         if 'item' not in definitions[name]:
             raise KeyError('item not specified in dependency definition')
         definition = definitions[name]

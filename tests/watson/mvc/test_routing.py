@@ -69,7 +69,7 @@ class TestRouting(object):
 class TestRouter(object):
     def test_create_router(self):
         router = Router(sample_routes)
-        assert router.__repr__() == '<watson.mvc.routing.Router routes:{0}>'.format(len(sample_routes))
+        assert repr(router) == '<watson.mvc.routing.Router routes:{0}>'.format(len(sample_routes))
 
     def test_matches(self):
         router = Router(sample_routes)
@@ -77,13 +77,17 @@ class TestRouter(object):
         matches = router.matches(request)
         assert len(matches) == 1
         assert matches[0].name == 'home'
-        assert matches[0].__repr__() == '<watson.mvc.routing.RouteMatch name:home>'
+        assert repr(matches[0]) == '<watson.mvc.routing.RouteMatch name:home>'
+
+    def test_assemble(self):
+        router = Router(sample_routes)
+        assert router.assemble('dump') == '/dump'
 
 
 class TestStaticRoute(object):
     def test_create_static_route(self):
         route = StaticRoute({'path': '/'})
-        assert route.__repr__() == '<watson.mvc.routing.StaticRoute path:/>'
+        assert repr(route) == '<watson.mvc.routing.StaticRoute path:/>'
 
     def test_static_match(self):
         route = StaticRoute({'path': '/dump'})
@@ -91,13 +95,17 @@ class TestStaticRoute(object):
         matched, params = route.match(request)
         assert matched == True
 
+    def test_assemble(self):
+        route = StaticRoute({'path': '/dump'})
+        assert route.assemble() == '/dump'
+
 
 class TestSegmentRoute(object):
     def test_covert_segment_to_regex(self):
         route = SegmentRoute({'name': 'home', 'path': '/:test'})
         assert route.regex.pattern == '\/(?P<test>[^/]+)'
         assert route.name == 'home'
-        assert route.__repr__() == '<watson.mvc.routing.SegmentRoute path:\/(?P<test>[^/]+)>'
+        assert repr(route) == '<watson.mvc.routing.SegmentRoute path:\/(?P<test>[^/]+)>'
 
     def test_convert_segment_to_regex_optional(self):
         route = SegmentRoute({'path': '/[:test]'})
@@ -146,6 +154,12 @@ class TestSegmentRoute(object):
         matched, params = route.match(request)
         assert matched == True
         assert params['format'] == 'xml'
+
+    def test_assemble(self):
+        route = SegmentRoute(sample_routes['search'])
+        assert route.assemble() == '/search/blah'
+        route = SegmentRoute(sample_routes['dump_format_segment_requires'])
+        assert route.assemble(format='json') == '/dump.json'
 
     @raises(ValueError)
     def test_bracket_mismatch(self):

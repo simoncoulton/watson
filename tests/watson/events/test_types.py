@@ -5,7 +5,7 @@ from watson.events.types import Event
 
 class TestEvent(object):
     def test_create_event(self):
-        assert Event(name='SampleEvent').__repr__() == '<watson.events.types.Event name:SampleEvent>'
+        assert repr(Event(name='SampleEvent')) == '<watson.events.types.Event name:SampleEvent>'
 
     def test_event_target(self):
         event = Event('SamplEvent', target=self)

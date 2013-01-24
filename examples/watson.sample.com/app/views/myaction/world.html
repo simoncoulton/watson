@@ -1,0 +1,55 @@
+{% extends "layouts/content.html" %}
+{% block body %}
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="/">Watson</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="/hello-world.json">Json</a></li>
+              <li><a href="/hello">Vassal</a></li>
+              <li><a href="/world" class="active">Nginx Config</a></li>
+              <li><a href="/invalid">500</a></li>
+              <li><a href="/404">404</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <h1>Nginx Configuration</h1>
+      <p>This is a sample nginx virtualhost file.</p>
+      <pre>
+server {
+	listen 80;
+	server_name watson.sample.com.local;
+	root /var/www/watson.sample.com/src/public;
+
+	location /css {
+		access_log off;
+	}
+
+	location /js {
+		access_log off;
+	}
+
+	location /images {
+		access_log off;
+	}
+
+	location / {
+		include uwsgi_params;
+		uwsgi_pass unix:/tmp/watson.sample.com.local.sock;
+	}
+}
+      </pre>
+
+    </div>
+{% endblock %}

@@ -96,13 +96,12 @@ class EventDispatcher(object):
         if event.name in self.events:
             collection = self.events[event.name]
             collection.sort_priority()
-            for (callback, priority, only_once) in collection:
+            for (callback, priority, only_once) in collection[:]:
                 results.append(callback(event))
                 if only_once:
                     collection.remove(callback)
                 if event.stopped:
                     break
-
         return results
 
     def __repr__(self):

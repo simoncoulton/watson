@@ -12,7 +12,7 @@ class SampleDispatcherAware(EventDispatcherAware):
 class TestEventDispatcher(object):
     def test_create_dispatcher(self):
         dispatcher = EventDispatcher()
-        assert dispatcher.__repr__() == '<watson.events.dispatcher.EventDispatcher events:0>'
+        assert repr(dispatcher) == '<watson.events.dispatcher.EventDispatcher events:0>'
 
     def test_add_listener(self):
         dispatcher = EventDispatcher()

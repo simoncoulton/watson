@@ -31,7 +31,11 @@ class Router(object):
                 matches.append(RouteMatch(route, params))
         return matches
 
-    # todo assemble
+    def assemble(self, route_name, **kwargs):
+        if route_name in self.routes:
+            return self.routes[route_name].assemble(**kwargs)
+        else:
+            raise Exception('No route named {0} can be found.'.format(route_name))
 
     def __repr__(self):
         return '<{0} routes:{1}>'.format(get_qualified_name(self), len(self.routes))
@@ -87,11 +91,12 @@ class BaseRoute(dict):
 
 class SegmentRoute(BaseRoute):
     regex = None
+    segments = None
 
     def __init__(self, *args, **kwargs):
         super(SegmentRoute, self).__init__(*args, **kwargs)
         if not self.regex:
-            self.regex = self.__create_regex_from_segment_path(self['path'], self.get('requires', {}))
+            self.regex, self.segments = self.__create_regex_from_segment_path(self['path'], self.get('requires', {}))
 
     def match(self, request):
         matched, params = super(SegmentRoute, self).match(request)
@@ -103,7 +108,27 @@ class SegmentRoute(BaseRoute):
                 params.update((k, v) for k, v in matches.groupdict().items() if v is not None)
         return matched, params
 
-    # todo assemble
+    def assemble(self, **kwargs):
+        params = kwargs or {}
+        params.update(self.get('defaults', {}))
+        return ''.join(self.__build_path(self.segments, params))
+
+    def __build_path(self, segments, params):
+        path = []
+        for segment in segments:
+            if isinstance(segment[1], list):
+                path.append(self.__build_path(segment[1], params))
+            else:
+                value = segment[1]
+                if segment[0] == 'param':
+                    value = params.get(value)
+                    if value:
+                        path.append(value)
+                    else:
+                        raise KeyError('Missing {0} in params.'.format(segment[1]))
+                else:
+                    path.append(segment[1])
+        return ''.join(path)
 
     def __create_regex_from_segment_path(self, path, requires=None):
         """
@@ -119,16 +144,16 @@ class SegmentRoute(BaseRoute):
         """
         start, path_length, depth, segments = 0, len(path), 0, []
         depth_segments = [segments]
-        pattern = re.compile('(?P<literal>[^:\[\]]*)(?P<token>[:\[\]]|$)')
+        pattern = re.compile('(?P<static>[^:\[\]]*)(?P<token>[:\[\]]|$)')
         token_pattern = re.compile('(?P<name>[^:/\[\]]+)')
         while start < path_length:
             matches = pattern.search(path, start)
             offset = '{0}{1}'.format(matches.groups()[0], matches.groups()[1])
             start += len(offset)
             token = matches.group('token')
-            literal_part = matches.group('literal')
-            if literal_part:
-                depth_segments[depth].append(('literal', literal_part))
+            static_part = matches.group('static')
+            if static_part:
+                depth_segments[depth].append(('static', static_part))
             if token == ':':
                 token_matches = token_pattern.search(path, start)
                 param = token_matches.groupdict()['name']
@@ -150,12 +175,12 @@ class SegmentRoute(BaseRoute):
             else:
                 break
         del depth_segments
-        return re.compile(self.__convert_hierarchy_to_regex(segments, requires))
+        return re.compile(self.__convert_hierarchy_to_regex(segments, requires)), segments
 
     def __convert_hierarchy_to_regex(self, hierarchy, requires):
         _regex = []
         for _type, value in hierarchy:
-            if _type == 'literal':
+            if _type == 'static':
                 _regex.append(re.escape(value))
             elif _type == 'optional':
                 _regex.append(
@@ -176,7 +201,8 @@ class StaticRoute(BaseRoute):
             matched = request.url.path == self['path']
         return matched, params
 
-    # todo assemble
+    def assemble(self, **kwargs):
+        return self['path']
 
     def __repr__(self):
         return '<{0} path:{1}>'.format(get_qualified_name(self), self['path'])

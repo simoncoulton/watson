@@ -8,8 +8,24 @@ Watson is an easy to use framework designed to get out of your way and let you c
 
 Branch | Status
 ------------ | -------------
-Master | ![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=master "Build Status")
+Master | ![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=master)
 Develop | ![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=develop)
+
+
+### Dependencies
+
+Watson currently requires the following modules to work out of box:
+
+* Jinja2
+
+These can be installed by running `pip install -r requirements.txt`
+
+#### Optional Dependencies
+
+##### Memcached
+
+Add python3-memcached to your applications `requirements.txt` file or `pip install python3-memcached`
+This is currently maintained [here][1].
 
 ### Running the tests
 
@@ -26,4 +42,5 @@ Currently Watson has been tested on the following Python versions:
 * 3.2
 * 3.3
 
+[1]: http://pypi.python.org/pypi/python3-memcached/
 

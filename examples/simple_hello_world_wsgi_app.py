@@ -7,7 +7,7 @@ import os
 import sys
 
 sys.path.append(os.path.abspath('..'))
-from watson.mvc.applications import WsgiApplication
+from watson.mvc.applications import HttpApplication
 from watson.mvc.controllers import RestController, ActionController
 from watson.util.server import make_dev_server
 
@@ -27,7 +27,7 @@ class MyActionController(ActionController):
     def json_world_action(self):
         return {'hello': 'world'}
 
-application = WsgiApplication({
+application = HttpApplication({
     'routes': {
         'home': {
             'path': '/',
@@ -48,7 +48,7 @@ application = WsgiApplication({
                 'controller': 'simple_hello_world_wsgi_app.MyActionController',
                 'action': 'json_world',
             },
-            'requires': {'format': 'json'}
+            'requires': {'format': 'json$'}
         },
         'invalid_request': {
             'path': '/invalid',
