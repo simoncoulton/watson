@@ -1,0 +1,49 @@
+{% extends "layouts/base.html" %}
+{% block body %}
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="/">Watson</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="/hello-world.json">Json</a></li>
+              <li><a href="/hello">Vassal</a></li>
+              <li><a href="/world">Nginx Config</a></li>
+              <li><a href="/invalid">500</a></li>
+              <li><a href="/404">404</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="hero-unit">
+        {{ content }}
+        <p>Watson is an easy to use framework designed to get out of your way and let you code your application rather than wrangle with the framework.</p>
+        <p>This sample application shows how to utilize both the ActionController and RestController.</p>
+        <p><a class="btn btn-primary btn-large" href="http://simoncoulton.github.com/watson/">Learn more &raquo;</a></p>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <h2>Easy to use</h2>
+          <p>Watson provides a simple development server that allows you to serve
+          	static files, or see the linked pages for examples of how to get it up and running on Nginx and uWSGI</p>
+          <p><a class="btn" href="https://github.com/simoncoulton/watson/tree/master/examples">See examples &raquo;</a></p>
+        </div>
+        <div class="span4">
+          <h2>Well Tested</h2>
+          <p>Tests are run on push to GitHub (for both develop and master branches), with high code coverage</p>
+          <p><a class="btn" href="https://travis-ci.org/simoncoulton/watson">View  &raquo;</a></p>
+       </div>
+        <div class="span4">
+          <h2>Built for Python 3</h2>
+          <p>Lets move forward</p>
+        </div>
+      </div>
+    </div>
+{% endblock %}

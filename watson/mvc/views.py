@@ -33,8 +33,9 @@ class Jinja2Renderer(BaseRenderer):
                     <html>
                         <head>
                             {% block head %}
-                            <style>
+                            <style type="text/css">
                                 html, body { font-family: Helvetica, Arial, sans-serif }
+                                {% block styles %}{% endblock %}
                             </style>
                             {% endblock %}
                         </head>
@@ -44,7 +45,6 @@ class Jinja2Renderer(BaseRenderer):
                     </html>
                 ''',
                 'exception_styling': '''
-                <style>
                     body {
                         margin: 0; padding: 0;
                         font-size: 12px;
@@ -126,7 +126,6 @@ class Jinja2Renderer(BaseRenderer):
                     dl.watson-error dd {
                         color: #a48d00;
                     }
-                </style>
                 ''',
                 'exception_details': '''
                 {% if debug %}
@@ -198,7 +197,7 @@ class Jinja2Renderer(BaseRenderer):
                     {% endblock %}
                 ''',
                 'errors/404.html': '''{% extends "base" %}
-                    {% block head %}
+                    {% block styles %}
                         {{ super() }}
                         {% include "exception_styling" %}
                     {% endblock %}
@@ -211,7 +210,7 @@ class Jinja2Renderer(BaseRenderer):
                     {% endblock %}
                 ''',
                 'errors/500.html': '''{% extends "base" %}
-                    {% block head %}
+                    {% block styles %}
                         {{ super() }}
                         {% include "exception_styling" %}
                     {% endblock %}
