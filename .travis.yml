@@ -2,6 +2,6 @@ language: python
 python:
     - 3.2
 install:
-	- pip install python3-memcached
+    - pip install python3-memcached
 script:
     - nosetests
