@@ -43,7 +43,7 @@ class TestActionController(object):
 
     def test_method_template(self):
         controller = SampleActionController()
-        assert controller.get_execute_method_path(action='something') == ['tests', 'watson', 'mvc', 'test_controllers', 'sampleactioncontroller', 'something']
+        assert controller.get_execute_method_path(action='something') == ['sampleactioncontroller', 'something']
 
 
 class TestRestController(object):
@@ -56,7 +56,7 @@ class TestRestController(object):
     def test_method_template(self):
         controller = SampleRestController()
         controller.request = Request('GET')
-        assert controller.get_execute_method_path() == ['tests', 'watson', 'mvc', 'test_controllers', 'samplerestcontroller', 'get']
+        assert controller.get_execute_method_path() == ['samplerestcontroller', 'get']
 
 
 class SampleActionController(ActionController):

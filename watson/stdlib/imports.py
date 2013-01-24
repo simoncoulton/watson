@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from importlib import import_module
+import pkgutil
+import sys
 
 
 def load_definition_from_string(qualified_module):

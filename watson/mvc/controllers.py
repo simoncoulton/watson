@@ -55,10 +55,8 @@ class ActionController(BaseHttpController):
         return result
 
     def get_execute_method_path(self, **kwargs):
-        path = get_qualified_name(self).lower().split('.')
-        action = re.sub('.-', '_', kwargs.get('action', 'index').lower())
-        path.append(action)
-        return path
+        return [self.__class__.__name__.lower(),
+                re.sub('.-', '_', kwargs.get('action', 'index').lower())]
 
 
 class RestController(BaseHttpController):
@@ -71,6 +69,4 @@ class RestController(BaseHttpController):
         return result
 
     def get_execute_method_path(self, **kwargs):
-        path = get_qualified_name(self).lower().split('.')
-        path.append(self.request.method.lower())
-        return path
+        return [self.__class__.__name__.lower(), self.request.method.lower()]

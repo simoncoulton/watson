@@ -40,7 +40,8 @@ class DispatchExecuteListener(BaseListener):
             if isinstance(model_data, str):
                 model_data = {'content': model_data}
             templates = self.container.get('application.config')['views']['templates']
-            controller_template = os.path.join(*controller.get_execute_method_path(**route_match.params)[1:])
+            controller_path = controller.get_execute_method_path(**route_match.params)
+            controller_template = os.path.join(*controller_path)
             return Model(format=route_match.params.get('format', 'html'),
                          template=templates.get(controller_template, controller_template),
                          data=model_data)
