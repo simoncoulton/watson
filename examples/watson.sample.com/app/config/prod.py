@@ -29,6 +29,7 @@ routes = {
     }
 }
 debug = {
+    'enabled': False,
     'profiling': {
         'enabled': False
     }
