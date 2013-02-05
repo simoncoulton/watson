@@ -31,6 +31,6 @@ class SampleClass(object):
     def run(self):
         return 'test'
 
-    @cache()
+    @cache
     def tada(self):
         return 'test'

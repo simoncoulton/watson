@@ -3,9 +3,8 @@ from functools import wraps
 from watson.stdlib.imports import get_qualified_name
 
 
-def cache(timeout=0, key=None):
+def cache(func=None, timeout=0, key=None):
     def decorator(func):
-        @wraps(func)
         def wrapper(self, *args, **kwargs):
             cache_config = self.container.get('application.config')['cache']
             cache_instance = self.container.get(cache_config['type'])
@@ -14,4 +13,7 @@ def cache(timeout=0, key=None):
                 cache_instance.set(key_name, func(self, *args, **kwargs), timeout)
             return cache_instance[key_name]
         return wrapper
-    return decorator
+    if func:
+        return decorator(func)
+    else:
+        return decorator
