@@ -39,7 +39,6 @@ Results from the tests can be found in `docs/tests/`
 ### Supported Versions
 Currently Watson has been tested on the following Python versions:
 
-* 3.2
 * 3.3
 
 [1]: http://pypi.python.org/pypi/python3-memcached/
