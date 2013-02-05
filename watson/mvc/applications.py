@@ -30,7 +30,6 @@ class BaseApplication(ContainerAware, EventDispatcherAware):
             conf = module_to_dict(config, '__')
         else:
             conf = config or {}
-        print(module_to_dict(DefaultConfig, '__'))
         self._config = dict_deep_update(module_to_dict(DefaultConfig, '__'), conf)
         self.container.add('application.config', self.config)
 
