@@ -9,11 +9,10 @@ def get_form_vars(environ):
     Process all get and post vars from a <form> and return MultiDict of
     each.
     """
-    keep_blank_values = True
     if environ['REQUEST_METHOD'] == 'PUT' and not environ.get('CONTENT_TYPE'):
         environ['CONTENT_TYPE'] = 'application/x-www-form-urlencoded'
     field_storage = FieldStorage(fp=environ['wsgi.input'], environ=environ,
-                                 keep_blank_values=keep_blank_values)
+                                 keep_blank_values=True)
     get = MultiDict()
     for name, value in parse_qsl(environ.get('QUERY_STRING')):
         get[name] = value
