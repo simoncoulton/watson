@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from wsgiref import util
 from watson.di.container import IocContainer
-from watson.mvc.applications import HttpApplication, DEFAULTS
+from watson.mvc.applications import HttpApplication
+from watson.mvc import config
 from watson.mvc.controllers import RestController
+from watson.stdlib.datastructures import module_to_dict
 
 
 def start_response(status_line, headers):
@@ -20,7 +22,7 @@ class TestHttpApplication(object):
     def test_create(self):
         application = HttpApplication()
         assert isinstance(application.container, IocContainer)
-        assert application.config == DEFAULTS
+        assert application.config == module_to_dict(config, '__')
 
     def test_call(self):
         application = HttpApplication({
