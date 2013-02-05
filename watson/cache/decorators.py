@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from functools import wraps
 from watson.stdlib.imports import get_qualified_name
 
 
