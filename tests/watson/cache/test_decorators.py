@@ -14,7 +14,6 @@ class TestCacheDecorator(object):
     def test_get_no_key(self):
         c = SampleClass()
         memcached_instance = c.container.get('watson.cache.storage.Memory')
-        c.blah()
         assert not memcached_instance['tests.watson.cache.test_decorators.SampleClass.tada']
         assert c.tada() == 'test'
         assert memcached_instance['tests.watson.cache.test_decorators.SampleClass.tada'] == 'test'
@@ -34,8 +33,4 @@ class SampleClass(object):
 
     @cache
     def tada(self):
-        return 'test'
-
-    @cache(timeout=60)
-    def blah(self):
         return 'test'

@@ -55,11 +55,93 @@ class TestStorageMixin(object):
 
 
 class TestFileStorage(object):
-    pass
+    def test_create(self):
+        session = FileStorage(id=123, timeout=30, autosave=False)
+        session['test'] = 'blah'
+        assert session.timeout == 30
+        assert session.autosave == False
+        assert session.id == 123
+        assert repr(session) == '<watson.http.sessions.FileStorage id:123>'
+        assert session['test'] == 'blah'
+        assert session.get('test') == 'blah'
+
+    def test_custom_storage_path(self):
+        session = FileStorage(storage='/tmp')
+        assert session.storage == '/tmp'
+
+    def test_cookie_params(self):
+        session = FileStorage()
+        params = {
+            'expires': 0,
+            'path': '/',
+            'domain': None,
+            'secure': False,
+            'httponly': True,
+            'comment': 'Watson session id'
+        }
+        session.cookie_params = params
+        assert session.cookie_params == params
+
+    def test_data(self):
+        session = FileStorage()
+        assert session.data == None
+
+    def test_load(self):
+        session = FileStorage()
+        session.load()
+
+    def test_load_existing_data(self):
+        session = FileStorage(timeout=-1)
+        session['blah'] = 'test'
+        session.load()
+        assert session['blah'] == None
+
+    def test_exists(self):
+        session = FileStorage()
+        assert not session.exists()
 
 
 class TestMemoryStorage(object):
-    pass
+    def test_create(self):
+        session = MemoryStorage(id=123, timeout=30, autosave=False)
+        session['test'] = 'blah'
+        assert session.timeout == 30
+        assert session.autosave == False
+        assert session.id == 123
+        assert repr(session) == '<watson.http.sessions.MemoryStorage id:123>'
+        assert session['test'] == 'blah'
+        assert session.get('test') == 'blah'
+
+    def test_cookie_params(self):
+        session = MemoryStorage()
+        params = {
+            'expires': 0,
+            'path': '/',
+            'domain': None,
+            'secure': False,
+            'httponly': True,
+            'comment': 'Watson session id'
+        }
+        session.cookie_params = params
+        assert session.cookie_params == params
+
+    def test_data(self):
+        session = MemoryStorage()
+        assert session.data == None
+
+    def test_load(self):
+        session = MemoryStorage()
+        session.load()
+
+    def test_load_existing_data(self):
+        session = MemoryStorage(timeout=-1)
+        session['blah'] = 'test'
+        session.load()
+        assert session['blah'] == None
+
+    def test_exists(self):
+        session = MemoryStorage()
+        assert not session.exists()
 
 
 class TestFunctions(object):
