@@ -166,6 +166,15 @@ class TestSegmentRoute(object):
         route = SegmentRoute(sample_routes['dump_format_segment_requires'])
         assert route.assemble(format='json') == '/dump.json'
 
+    @raises(KeyError)
+    def test_assemble_missing_param(self):
+        route = SegmentRoute(sample_routes['edit_user'])
+        route.assemble()
+
+    def test_assemble_param(self):
+        route = SegmentRoute(sample_routes['edit_user'])
+        assert route.assemble(id=1) == '/edit/1'
+
     @raises(ValueError)
     def test_bracket_mismatch(self):
         SegmentRoute({'path': '/[test]]'})

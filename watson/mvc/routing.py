@@ -123,7 +123,7 @@ class SegmentRoute(BaseRoute):
                 if segment[0] == 'param':
                     value = params.get(value)
                     if value:
-                        path.append(value)
+                        path.append(str(value))
                     else:
                         raise KeyError('Missing {0} in params.'.format(segment[1]))
                 else:
