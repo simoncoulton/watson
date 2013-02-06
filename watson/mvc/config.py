@@ -30,9 +30,20 @@ dependencies = {
         },
         'json_renderer': {'item': 'watson.mvc.views.JsonRenderer'},
         'xml_renderer': {'item': 'watson.mvc.views.XmlRenderer'},
-        'dispatch_execute_listener': {
+        'app_dispatch_execute_listener': {
             'item': 'watson.mvc.listeners.DispatchExecuteListener',
             'init': [lambda container: container.get('application.config')['views']['templates']]
+        },
+        'app_exception_listener': {
+            'item': 'watson.mvc.listeners.ExceptionListener',
+            'init': [
+                lambda container: container.get('exception_handler'),
+                lambda container: container.get('application.config')['views']['templates']
+            ]
+        },
+        'app_render_listener': {
+            'item': 'watson.mvc.listeners.RenderListener',
+            'init': [lambda container: container.get('application.config')['views']]
         }
     }
 }
@@ -55,11 +66,11 @@ views = {
     }
 }
 events = {
-    events.EXCEPTION_EVENT: [('watson.mvc.listeners.ExceptionListener',)],
+    events.EXCEPTION_EVENT: [('app_exception_listener',)],
     events.INIT_EVENT: [
         ('watson.debug.profilers.ApplicationInitListener', 1, True)
     ],
     events.ROUTE_MATCH_EVENT: [('watson.mvc.listeners.RouteListener',)],
-    events.DISPATCH_EXECUTE_EVENT: [('dispatch_execute_listener',)],
-    events.RENDER_VIEW_EVENT: [('watson.mvc.listeners.RenderListener',)],
+    events.DISPATCH_EXECUTE_EVENT: [('app_dispatch_execute_listener',)],
+    events.RENDER_VIEW_EVENT: [('app_render_listener',)],
 }

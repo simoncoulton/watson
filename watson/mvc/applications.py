@@ -87,7 +87,8 @@ class HttpApplication(BaseApplication):
             try:
                 dispatch_event = Event(events.DISPATCH_EXECUTE_EVENT, target=self, params={
                     'route_match': route_match,
-                    'request': request
+                    'request': request,
+                    'container': self.container
                 })
                 dispatch_result = self.dispatcher.trigger(dispatch_event)
                 response = dispatch_event.params['controller_class'].response
@@ -111,6 +112,7 @@ class HttpApplication(BaseApplication):
         return Response(kwargs['exception'].status_code), exception_result.first()
 
     def __render(self, **kwargs):
+        kwargs['container'] = self.container
         render_event = Event(events.RENDER_VIEW_EVENT, target=self, params=kwargs)
         self.container.add('render_event_params', kwargs)
         self.dispatcher.trigger(render_event)

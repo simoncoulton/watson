@@ -9,7 +9,7 @@ from watson.mvc.exceptions import ExceptionHandler
 from watson.stdlib.imports import get_qualified_name
 
 
-class BaseListener(ContainerAware):
+class BaseListener(object):
     def __call__(self, event):
         raise NotImplementedError('You must implement __call__')
 
@@ -25,8 +25,6 @@ class RouteListener(BaseListener):
 
 
 class DispatchExecuteListener(BaseListener):
-    templates = None
-
     def __init__(self, templates):
         self.templates = templates
 
@@ -34,8 +32,8 @@ class DispatchExecuteListener(BaseListener):
         route_match = event.params['route_match']
         try:
             controller_class = route_match.params['controller']
-            self.container.add(controller_class, controller_class, 'prototype')
-            controller = self.container.get(controller_class)
+            event.params['container'].add(controller_class, controller_class, 'prototype')
+            controller = event.params['container'].get(controller_class)
         except Exception as exc:
             raise InternalServerError('Controller not found for route: {0}'.format(route_match.name)) from exc
         event.params['controller_class'] = controller
@@ -54,24 +52,28 @@ class DispatchExecuteListener(BaseListener):
 
 
 class ExceptionListener(BaseListener):
+    def __init__(self, handler, templates):
+        self.handler = handler
+        self.templates = templates
+
     def __call__(self, event):
         exception = event.params['exception']
         status_code = exception.status_code
-        handler = self.container.get('exception_handler')
-        templates = self.container.get('application.config')['views']['templates']
         return Model(format='html',  # should this take the format from the request?
-                     template=templates.get(str(status_code), templates['500']),
-                     data=handler(sys.exc_info(), event.params))
+                     template=self.templates.get(str(status_code), templates['500']),
+                     data=self.handler(sys.exc_info(), event.params))
 
 
 class RenderListener(BaseListener):
+    def __init__(self, view_config):
+        self.view_config = view_config
+
     def __call__(self, event):
         response, view_model = event.params['response'], event.params['view_model']
-        view_config = self.container.get('application.config')['views']
-        renderers = view_config['renderers']
+        renderers = self.view_config['renderers']
         renderer = renderers.get(view_model.format, renderers['default'])
         mime_type = MIME_TYPES[view_model.format][0]
-        renderer_instance = self.container.get(renderer['name'])
+        renderer_instance = event.params['container'].get(renderer['name'])
         try:
             response.body = renderer_instance(view_model)
             response.headers.add('Content-Type', mime_type)
