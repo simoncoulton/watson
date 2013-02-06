@@ -83,6 +83,11 @@ class TestRouter(object):
         router = Router(sample_routes)
         assert router.assemble('dump') == '/dump'
 
+    @raises(Exception)
+    def test_assemble_invalid(self):
+        router = Router(sample_routes)
+        router.assemble('test')
+
 
 class TestStaticRoute(object):
     def test_create_static_route(self):
