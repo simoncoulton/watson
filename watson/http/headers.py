@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from watson.stdlib.datastructures import MultiDict
-from .cookies import CookieDict
+from watson.http.cookies import CookieDict
 
 
 class HeaderDict(MultiDict):

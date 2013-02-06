@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from urllib.parse import urlparse, ParseResult
+from urllib.parse import urlparse
 from watson.http.uri import Url
 
 
@@ -53,3 +53,16 @@ class TestUrl(object):
         assert url.path_index(0) == 'path'
         assert url.query == 'q=test'
         assert url.netloc == 'simon:test@www.google.com:80'
+        assert not url.path_index(4)
+
+    def test_create_from_dict_empty(self):
+        url = Url({
+            'hostname': 'www.google.com'
+        })
+        assert not url.fragment
+        assert url.path == '/'
+        assert not url.query
+
+    def test_params(self):
+        url = Url('http://www.google.com/search;test=blah')
+        assert url.params == 'test=blah'

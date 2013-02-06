@@ -83,6 +83,11 @@ class TestRouter(object):
         router = Router(sample_routes)
         assert router.assemble('dump') == '/dump'
 
+    @raises(Exception)
+    def test_assemble_invalid(self):
+        router = Router(sample_routes)
+        router.assemble('test')
+
 
 class TestStaticRoute(object):
     def test_create_static_route(self):
@@ -160,6 +165,15 @@ class TestSegmentRoute(object):
         assert route.assemble() == '/search/blah'
         route = SegmentRoute(sample_routes['dump_format_segment_requires'])
         assert route.assemble(format='json') == '/dump.json'
+
+    @raises(KeyError)
+    def test_assemble_missing_param(self):
+        route = SegmentRoute(sample_routes['edit_user'])
+        route.assemble()
+
+    def test_assemble_param(self):
+        route = SegmentRoute(sample_routes['edit_user'])
+        assert route.assemble(id=1) == '/edit/1'
 
     @raises(ValueError)
     def test_bracket_mismatch(self):

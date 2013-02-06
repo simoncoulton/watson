@@ -126,7 +126,7 @@ class StorageMixin(dict):
             expires = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
             self._save(expires)
         except Exception:
-            pass
+            raise Exception('Unable to save the contents of the session')
 
     def destroy(self):
         """

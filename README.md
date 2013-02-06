@@ -31,15 +31,14 @@ This is currently maintained [here][1].
 
 1. Setup a virtualenv for Python 3.3
 2. Install Fabric `pip install fabric` 
-3. Install Nose `pip install nose`
-3. Run `fab test clean`
+3. Install Nose `pip install nose` or Py.test `pip install pytest`
+4. Run `fab test clean`
 
 Results from the tests can be found in `docs/tests/`
 
 ### Supported Versions
 Currently Watson has been tested on the following Python versions:
 
-* 3.2
 * 3.3
 
 [1]: http://pypi.python.org/pypi/python3-memcached/

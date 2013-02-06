@@ -179,6 +179,11 @@ class TestFile(object):
         del cache['test']
         assert not cache['test']
 
+    def test_delete_invalid(self):
+        cache = File()
+        cache.flush()
+        del cache['test']
+
     def test_get(self):
         cache = File()
         cache.flush()
@@ -186,6 +191,10 @@ class TestFile(object):
         assert cache['test'] == 'test'
         assert cache.get('test') == 'test'
         assert cache.get('invalid', 'blah') == 'blah'
+
+    def test_get_invalid(self):
+        cache = File()
+        cache.flush()
 
     def test_expired(self):
         cache = File()

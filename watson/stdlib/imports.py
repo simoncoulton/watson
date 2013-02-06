@@ -36,10 +36,10 @@ def get_qualified_name(obj):
     try:
         name = obj.__qualname__
     except AttributeError:
-        if hasattr(obj, '__name__'):
-            name = obj.__name__
-        else:
+        try:
             name = obj.__class__.__name__
+        except:
+            name = obj.__name__
     try:
         module = obj.__module__
         return '{0}.{1}'.format(module, name)

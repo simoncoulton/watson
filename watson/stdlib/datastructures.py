@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from copy import deepcopy
 from collections import OrderedDict
+from types import ModuleType
 
 
 def dict_deep_update(d1, d2):
@@ -36,7 +37,12 @@ def module_to_dict(module, ignore_starts_with=''):
     Return:
         dict
     """
-    return {k: getattr(module, k) for k in dir(module) if not k.startswith('__')}
+    new_dict = {}
+    for k in dir(module):
+        item = getattr(module, k)
+        if not isinstance(item, ModuleType) and not k.startswith(ignore_starts_with):
+            new_dict[k] = item
+    return new_dict
 
 
 class MultiDict(OrderedDict):
