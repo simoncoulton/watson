@@ -30,6 +30,10 @@ dependencies = {
         },
         'json_renderer': {'item': 'watson.mvc.views.JsonRenderer'},
         'xml_renderer': {'item': 'watson.mvc.views.XmlRenderer'},
+        'dispatch_execute_listener': {
+            'item': 'watson.mvc.listeners.DispatchExecuteListener',
+            'init': [lambda container: container.get('application.config')['views']['templates']]
+        }
     }
 }
 views = {
@@ -56,6 +60,6 @@ events = {
         ('watson.debug.profilers.ApplicationInitListener', 1, True)
     ],
     events.ROUTE_MATCH_EVENT: [('watson.mvc.listeners.RouteListener',)],
-    events.DISPATCH_EXECUTE_EVENT: [('watson.mvc.listeners.DispatchExecuteListener',)],
+    events.DISPATCH_EXECUTE_EVENT: [('dispatch_execute_listener',)],
     events.RENDER_VIEW_EVENT: [('watson.mvc.listeners.RenderListener',)],
 }

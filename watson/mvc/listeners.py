@@ -25,6 +25,11 @@ class RouteListener(BaseListener):
 
 
 class DispatchExecuteListener(BaseListener):
+    templates = None
+
+    def __init__(self, templates):
+        self.templates = templates
+
     def __call__(self, event):
         route_match = event.params['route_match']
         try:
@@ -39,11 +44,10 @@ class DispatchExecuteListener(BaseListener):
             model_data = controller.execute(**route_match.params)
             if isinstance(model_data, str):
                 model_data = {'content': model_data}
-            templates = self.container.get('application.config')['views']['templates']
             controller_path = controller.get_execute_method_path(**route_match.params)
             controller_template = os.path.join(*controller_path)
             return Model(format=route_match.params.get('format', 'html'),
-                         template=templates.get(controller_template, controller_template),
+                         template=self.templates.get(controller_template, controller_template),
                          data=model_data)
         except Exception as exc:
             raise InternalServerError('An error occurred executing controller: {0}'.format(get_qualified_name(controller))) from exc
