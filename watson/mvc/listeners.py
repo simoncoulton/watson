@@ -60,7 +60,7 @@ class ExceptionListener(BaseListener):
         exception = event.params['exception']
         status_code = exception.status_code
         return Model(format='html',  # should this take the format from the request?
-                     template=self.templates.get(str(status_code), templates['500']),
+                     template=self.templates.get(str(status_code), self.templates['500']),
                      data=self.handler(sys.exc_info(), event.params))
 
 
