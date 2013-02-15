@@ -4,6 +4,8 @@
 
 Watson is an easy to use framework designed to get out of your way and let you code your application rather than wrangle with the framework.
 
+You can find a sample hello world application in the `/examples` directory.
+
 #### Build Status
 
 Branch | Status
