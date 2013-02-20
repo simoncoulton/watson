@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+from collections import namedtuple
 from watson.stdlib.imports import get_qualified_name
+
+Listener = namedtuple('Listener', 'callback priority only_once')
 
 
 class ListenerCollection(list):
@@ -26,7 +29,7 @@ class ListenerCollection(list):
         if not hasattr(callback, '__call__'):
             name = get_qualified_name(callback)
             raise TypeError('Callback {0} must be callable.'.format(name))
-        self.append((callback, int(priority), bool(only_once)))
+        self.append(Listener(callback, int(priority), bool(only_once)))
         self.require_sort = True
         return self
 
@@ -39,7 +42,7 @@ class ListenerCollection(list):
         """
         i = len(self) - 1
         while i >= 0:
-            if self[i][0] == callback:
+            if self[i].callback == callback:
                 listener = self[i]
                 super(ListenerCollection, self).remove(listener)
             i -= 1
@@ -49,11 +52,11 @@ class ListenerCollection(list):
         Sort the collection based on the priority of the callbacks.
         """
         if self.require_sort:
-            self.sort(key=lambda listener: listener[1], reverse=True)
+            self.sort(key=lambda listener: listener.priority, reverse=True)
             self.require_sort = False
 
     def __contains__(self, callback):
-        return [listener for listener in self if listener[0] == callback]
+        return [listener for listener in self if listener.callback == callback]
 
     def __repr__(self):
         return '<{0} callbacks:{1}>'.format(get_qualified_name(self), len(self))
