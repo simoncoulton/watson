@@ -43,6 +43,8 @@ class ConstructorInjectionProcessor(BaseProcessor):
         else:
             raw = load_definition_from_string(item)
         if not instantiated:
+            if not raw:
+                raise NameError('Cannot initialize dependency {0}, the module may not exist.'.format(item))
             args, kwargs = [], {}
             if isinstance(raw, FunctionType):
                 kwargs['container'] = self.container

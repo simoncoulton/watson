@@ -58,4 +58,5 @@ class Profiler(ContainerAware):
                     'file': func[0]
                 })
         self.stats = stats
+        print(stats)
         return response
