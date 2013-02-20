@@ -5,12 +5,24 @@ from watson.di import ContainerAware
 
 
 class ApplicationInitListener(ContainerAware):
+    """
+    A listener that will be triggered on watson.mvc.events.INIT_EVENT.
+    Retrieves an instance of the Profiler from the container and overrides
+    the 'run' method.
+    """
     def __call__(self, event):
         profiler = self.container.get('profiler')
         profiler.register_class(event.target, 'run')
 
 
-class Profiler(ContainerAware):
+class Profiler(object):
+    """
+    Allows a piece of code to be profiled and processes the result of the
+    profiling.
+
+    Attributes:
+        stats: The returned dict for a profiled piece of code
+    """
     config = None
     stats = None
 
@@ -18,6 +30,9 @@ class Profiler(ContainerAware):
         self.config = config or {}
 
     def register_class(self, _class, func):
+        """
+        Replaces a method on _class with it's own __execute method.
+        """
         self.original_func = getattr(_class, func)
         setattr(_class, func, self.__execute)
 
@@ -29,6 +44,17 @@ class Profiler(ContainerAware):
             return self.original_func(*args, **kwargs)
 
     def profile(self, func, *args, **kwargs):
+        """
+        Executes a func and profiles it. Sorts the stats cumulatively by default
+        unless it is modified in the configuration.
+
+        Usage:
+            def my_func():
+                do_something()
+
+            profiler = Profiler()
+            profiler.profile(my_func)
+        """
         profiler = cProfile.Profile()
         response = profiler.runcall(func, *args, **kwargs)
         p = pstats.Stats(profiler)
