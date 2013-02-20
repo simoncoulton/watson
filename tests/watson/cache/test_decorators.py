@@ -18,6 +18,16 @@ class TestCacheDecorator(object):
         assert c.tada() == 'test'
         assert memcached_instance['tests.watson.cache.test_decorators.SampleClass.tada'] == 'test'
 
+    def test_get_no_container(self):
+        a = AClass()
+        assert a.run() == 'test'
+
+
+class AClass(object):
+    @cache
+    def run(self):
+        return 'test'
+
 
 class SampleClass(object):
     def __init__(self):
