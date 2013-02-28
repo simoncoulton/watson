@@ -3,10 +3,7 @@ from nose.tools import raises
 from watson.events.dispatcher import EventDispatcher, EventDispatcherAware
 from watson.events.collections import ListenerCollection
 from watson.events.types import Event
-
-
-class SampleDispatcherAware(EventDispatcherAware):
-    pass
+from tests.watson.events.support import SampleDispatcherAware
 
 
 class TestEventDispatcher(object):

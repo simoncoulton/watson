@@ -1,21 +1,10 @@
 # -*- coding: utf-8 -*-
-from wsgiref import util
 from watson.di.container import IocContainer
 from watson.mvc.applications import HttpApplication
 from watson.mvc import config
 from watson.mvc.controllers import RestController
 from watson.stdlib.datastructures import module_to_dict
-
-
-def start_response(status_line, headers):
-    pass
-
-
-def sample_environ(**kwargs):
-    environ = {}
-    util.setup_testing_defaults(environ)
-    environ.update(kwargs)
-    return environ
+from tests.watson.mvc.support import sample_environ, start_response
 
 
 class TestHttpApplication(object):

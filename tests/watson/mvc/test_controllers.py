@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from nose.tools import raises
 from watson.http.messages import Request, Response
-from watson.mvc.controllers import BaseController, HttpControllerMixin, ActionController, RestController
+from watson.mvc.controllers import BaseController, HttpControllerMixin
+from tests.watson.mvc.support import SampleActionController, SampleRestController
 
 
 class TestNotImplementedController(object):
@@ -57,16 +58,3 @@ class TestRestController(object):
         controller = SampleRestController()
         controller.request = Request('GET')
         assert controller.get_execute_method_path() == ['samplerestcontroller', 'get']
-
-
-class SampleActionController(ActionController):
-    def something_action(self, **kwargs):
-        return 'something_action'
-
-    def blah_action(self):
-        return 'blah_action'
-
-
-class SampleRestController(RestController):
-    def GET(self):
-        return 'GET'
