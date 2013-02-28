@@ -5,6 +5,12 @@ from watson.stdlib.imports import get_qualified_name
 
 class Form(FieldMixin):
     attributes = None
+    validated = False
+    valid = False
+    _data = None
+    _validated_data = None
+    _bound_object = None
+    _bound_object_mapping = None
 
     @property
     def method(self):
@@ -20,7 +26,9 @@ class Form(FieldMixin):
 
     @property
     def elements(self):
-        return [element for element in dir(self) if not element.startswith('__') and isinstance(element, FieldMixin)]
+        return [getattr(self, element) for element in dir(self) if not element.startswith('__') \
+                                                 and not element == 'elements' \
+                                                 and isinstance(getattr(self, element), FieldMixin)]
 
     def __init__(self, name, method='post', action=None, **kwargs):
         self.attributes = {}
@@ -34,7 +42,29 @@ class Form(FieldMixin):
 
     @property
     def errors(self):
-        pass  # todo, call validate first
+        self.is_valid()
+
+    @property
+    def data(self):
+        return self._validated_data if self.validated and self.valid else self._data
+
+    @data.setter
+    def data(self, data):
+        self.invalidate()
+        self._data = data
+
+    def bind(self, obj, mapping=None):
+        self.invalidate()
+        self._bound_object = obj
+        self._bound_object_mapping = mapping
+
+    def invalidate(self):
+        self.validated = False
+
+    def is_valid(self):
+        if not self.validated:
+            self._validate()
+        return self.valid
 
     def begin(self):
         return '<form {0}>'.format(flatten_attributes(self.attributes))
@@ -42,15 +72,33 @@ class Form(FieldMixin):
     def end(self):
         return '</form>'
 
+    def _validate(self):
+        self.valid = False
+
+    def _hydrate_data_to_object(self, obj=None, data=None, mapping=None):
+        if not obj:
+            raise AttributeError('No object has been bound to form "{0}"'.format(self.name))
+        obj_mapping = mapping if mapping else []
+        for name, value in data.items():
+            if name in obj_mapping:
+                last_field = obj_mapping[name][-1]
+                current_obj = obj
+                for field_name in obj_mapping[name][0:-1]:
+                    current_obj = getattr(current_obj, field_name)
+                setattr(current_obj, last_field, value)
+            elif hasattr(obj, name):
+                setattr(obj, name, value)
+
     def __len__(self):
         return len(self.elements)
 
     def __repr__(self):
-        return '<{0} name:{1} method:{2} action:{3}>'.format(
+        return '<{0} name:{1} method:{2} action:{3} fields:{4}>'.format(
                     get_qualified_name(self),
                     self.name,
                     self.method,
-                    self.action)
+                    self.action,
+                    len(self))
 
 
 class MultipartForm(Form):

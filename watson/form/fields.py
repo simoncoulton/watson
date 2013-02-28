@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from watson.stdlib.imports import get_qualified_name
 
 class TagMixin(object):
     attributes = None
@@ -29,6 +29,8 @@ class Label(TagMixin):
 class FieldMixin(TagMixin):
     label = None
     html = '{0}'
+    validators = None
+    filters = None
     _value = None
 
     def __init__(self, name, value=None, label=None, **kwargs):
@@ -54,6 +56,9 @@ class FieldMixin(TagMixin):
 
     def __str__(self):
         return self.render()
+
+    def __repr__(self):
+        return '<{0} name:{1}>'.format(get_qualified_name(self), self.name)
 
 
 class Input(FieldMixin):

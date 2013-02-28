@@ -3,17 +3,13 @@ import collections
 from watson.form import fields
 
 
-class TestFieldMixin(object):
-    def test_create_field_mixin(self):
-        pass
-
-
 class TestInputField(object):
     def test_create(self):
         field = fields.Input(name='test', type='blah')
         assert field.value == None
         assert field.name == 'test'
         assert str(field) == '<input name="test" type="blah" />'
+        assert repr(field) == '<watson.form.fields.Input name:test>'
 
 
 class TestTextInputField(object):
@@ -31,6 +27,10 @@ class TestTextInputField(object):
     def test_render_with_label(self):
         field = fields.Text(name='test')
         assert field.render_with_label() == '<label for="test">test</label><input id="test" name="test" type="text" />'
+
+    def test_unspecified_attribute(self):
+        field = fields.Text(name='test', placeholder='Enter some data here')
+        assert str(field) == '<input name="test" placeholder="Enter some data here" type="text" />'
 
     # todo filter/validate
 
