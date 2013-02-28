@@ -8,6 +8,9 @@ class TagMixin(object):
         self.attributes = {}
         self.attributes.update(kwargs)
 
+    def render(self):
+        raise NotImplementedError('The render method has not been implemented')
+
 
 class Label(TagMixin):
     html = '<label for="{0}">{1}</label>'
@@ -17,7 +20,10 @@ class Label(TagMixin):
         self.text = text
 
     def render(self, field):
-        return self.html.format(field.name, self.text)
+        if not 'id' in field.attributes:
+            # inject id based on field name
+            field.attributes['id'] = field.name
+        return self.html.format(field.attributes['id'], self.text)
 
 
 class FieldMixin(TagMixin):
@@ -25,10 +31,8 @@ class FieldMixin(TagMixin):
     html = '{0}'
     _value = None
 
-    def __init__(self, name, value=None, **kwargs):
-        self.label = Label(kwargs.get('label', name))
-        if 'label' in kwargs:
-            del kwargs['label']
+    def __init__(self, name, value=None, label=None, **kwargs):
+        self.label = Label(label or name)
         kwargs['name'] = name
         self.value = value
         super(FieldMixin, self).__init__(**kwargs)
@@ -44,9 +48,6 @@ class FieldMixin(TagMixin):
     @property
     def name(self):
         return self.attributes['name']
-
-    def render(self):
-        raise NotImplementedError('The render method has not been implemented')
 
     def render_with_label(self):
         raise NotImplementedError('The render method has not been implemented')
@@ -69,14 +70,77 @@ class Input(FieldMixin):
         return ''.join((self.label.render(self), self.render()))
 
 
-class Radio(Input):
-    def __init__(self, name, value=None, **kwargs):
-        super(Radio, self).__init__(name, value, type='radio', **kwargs)
+class GroupInputMixin(Input):
+    label_position = 'left'
+    wrapped = True
+    values = None
+    fieldset_html = '<fieldset><legend>{0}</legend>{1}</fieldset>'
+
+    def __init__(self, name, values=None, value=None, **kwargs):
+        super(GroupInputMixin, self).__init__(name, value, **kwargs)
+        try:
+            iter(values)
+            self.values = values
+        except:
+            self.values = [(self.label.text, values)]
+
+    def has_multiple_elements(self):
+        return isinstance(self.values, (tuple, list)) and len(self.values) > 1
+
+    def render(self):
+        multiple_elements = self.has_multiple_elements()
+        name = '{0}[]'.format(self.name) if multiple_elements else self.name
+        elements = []
+        for index, label_value_pair in enumerate(self.values):
+            attributes = self.attributes.copy()
+            label_text, value = label_value_pair
+            if multiple_elements:
+                element_id = '{0}_{1}'.format(self.name, index)
+            else:
+                element_id = self.name
+            attributes.update({
+                'name': name,
+                'id': element_id
+            })
+            if value:
+                attributes['value'] = value
+            if self.value and value == self.value:
+                attributes['checked'] = 'checked'
+            flat_attributes = flatten_attributes(attributes)
+            element = self.__render_input(element_id, flat_attributes, label_text)
+            elements.append(element)
+        return ''.join(elements)
+
+    def render_with_label(self):
+        multiple_elements = self.has_multiple_elements()
+        if multiple_elements:
+            wrap_html = self.fieldset_html
+        else:
+            wrap_html = '{1}'
+        return wrap_html.format(self.label.text, self.render())
+
+    def __render_input(self, id, attributes, label_text):
+        element = self.html.format(attributes)
+        output = '{0}{1}'
+        if self.wrapped:
+            if self.label_position == 'left':
+                return self.label.html.format(id, output.format(label_text, element))
+            return self.label.html.format(id, output.format(element, label_text))
+        else:
+            label = self.label.html.format(id, label_text)
+            if self.label_position == 'left':
+                return output.format(label, element)
+            return output.format(element, label)
 
 
-class Checkbox(Input):
-    def __init__(self, name, value=None, **kwargs):
-        super(Checkbox, self).__init__(name, value, type='checkbox', **kwargs)
+class Radio(GroupInputMixin):
+    def __init__(self, name, values=None, value=None, **kwargs):
+        super(Radio, self).__init__(name, values, value, type='radio', **kwargs)
+
+
+class Checkbox(GroupInputMixin):
+    def __init__(self, name, values=None, value=None, **kwargs):
+        super(Checkbox, self).__init__(name, values, value, type='checkbox', **kwargs)
 
 
 class Button(Input):
@@ -87,6 +151,26 @@ class Button(Input):
         if self.value:
             attributes['value'] = str(self.value)
         return self.html.format(flatten_attributes(attributes), self.label.text)
+
+    def render_with_label(self):
+        return self.render()
+
+
+class Submit(Input):
+    button_mode = False
+
+    def __init__(self, name, value=None, button_mode=False, **kwargs):
+        real_value = value or kwargs.get('label', name)
+        if button_mode:
+            self.html = '<button {0}>{1}</button>'
+            self.button_mode = True
+        super(Submit, self).__init__(name, real_value, type='submit', **kwargs)
+
+    def render(self):
+        if self.button_mode:
+            attributes = self.attributes.copy()
+            return self.html.format(flatten_attributes(attributes), self.label.text)
+        return super(Submit, self).render()
 
     def render_with_label(self):
         return self.render()
@@ -168,11 +252,6 @@ class Hidden(Input):
 class Password(Input):
     def __init__(self, name, value=None, **kwargs):
         super(Password, self).__init__(name, value, type='password', **kwargs)
-
-
-class Submit(Input):
-    def __init__(self, name, value=None, **kwargs):
-        super(Submit, self).__init__(name, value, type='submit', **kwargs)
 
 
 class File(Input):
