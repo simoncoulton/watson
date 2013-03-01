@@ -39,6 +39,7 @@ class Form(FieldMixin):
             'action': kwargs.get('action', '/'),
             'enctype': kwargs.get('enctype', 'application/x-www-form-urlencoded')
         })
+        self.data = {}
 
     @property
     def errors(self):
@@ -53,10 +54,12 @@ class Form(FieldMixin):
         self.invalidate()
         self._data = data
 
-    def bind(self, obj, mapping=None):
+    def bind(self, obj, mapping=None, hydrate_form=True):
         self.invalidate()
         self._bound_object = obj
         self._bound_object_mapping = mapping
+        if hydrate_form:
+            self.data = self._hydrate_object_to_form_data(self._bound_object, self.data, self._bound_object_mapping)
 
     def invalidate(self):
         self.validated = False
@@ -74,6 +77,31 @@ class Form(FieldMixin):
 
     def _validate(self):
         self.valid = False
+
+    def _hydrate_object_to_form_data(self, obj=None, data=None, mapping=None):
+        if not obj:
+            raise AttributeError('Object cannot be bound to form "{0}"'.format(self.name))
+        obj_mapping = mapping if mapping else []
+        for field in self.elements:
+            try:
+                field_value = getattr(obj, field.name)
+                if field_value:
+                    data[field.name] = field_value
+                    field.value = field_value
+            except:
+                pass
+            if field.name in obj_mapping:
+                last_field = obj_mapping[field.name][-1]
+                current_obj = obj
+                for field_name in obj_mapping[field.name][0:-1]:
+                    current_obj = getattr(current_obj, field_name)
+                try:
+                    field_value = getattr(current_obj, last_field)
+                    if field_value:
+                        data[last_field] = field_value
+                        field.value = field_value
+                except:
+                    pass
 
     def _hydrate_data_to_object(self, obj=None, data=None, mapping=None):
         if not obj:

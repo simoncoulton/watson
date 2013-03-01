@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from watson.stdlib.imports import get_qualified_name
+# todo: csrf field
+
 
 class TagMixin(object):
     attributes = None

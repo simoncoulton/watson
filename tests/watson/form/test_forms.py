@@ -30,10 +30,22 @@ class TestForm(object):
     def test_bind_object_and_mapping(self):
         form = LoginForm('test')
         user = User()
-        mapping = {'first_name': 'personal.first_name', 'last_name': 'personal.last_name'}
+        mapping = {'first_name': ('personal', 'first_name'), 'last_name': ('personal', 'last_name')}
         form.bind(user, mapping)
         assert form._bound_object == user
         assert form._bound_object_mapping == mapping
+
+    def test_hydrate_object_to_form_data(self):
+        form = LoginForm('test')
+        user = User()
+        user.username = 'simon'
+        user.password = 'test'
+        user.personal.first_name = 'Simon'
+        user.personal.last_name = 'Coulton'
+        mapping = {'first_name': ('personal', 'first_name'), 'last_name': ('personal', 'last_name')}
+        form.bind(user, mapping)
+        assert form.username.value == 'simon'
+        assert form.first_name.value == 'Simon'
 
     def test_hydrate_form_data_to_object(self):
         form = LoginForm('test')
