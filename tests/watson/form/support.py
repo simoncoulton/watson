@@ -16,6 +16,7 @@ class Personal:
 
 
 class User:
+    id = None
     username = None
     password = None
     personal = Personal()

@@ -26,9 +26,9 @@ class Form(FieldMixin):
 
     @property
     def elements(self):
-        return [getattr(self, element) for element in dir(self) if not element.startswith('__') \
-                                                 and not element == 'elements' \
-                                                 and isinstance(getattr(self, element), FieldMixin)]
+        return [getattr(self, element) for element in dir(self) if not element.startswith('__')
+                and not element == 'elements'
+                and isinstance(getattr(self, element), FieldMixin)]
 
     def __init__(self, name, method='post', action=None, **kwargs):
         self.attributes = {}
@@ -76,7 +76,11 @@ class Form(FieldMixin):
         return '</form>'
 
     def _validate(self):
-        self.valid = False
+        self.valid = True
+        # loop thru elements and validate each one
+        # if fail validation self.valid = False
+        if self.valid and self._bound_object:
+            self._hydrate_data_to_object(self._bound_object, self.data, self._bound_object_mapping)
 
     def _hydrate_object_to_form_data(self, obj=None, data=None, mapping=None):
         if not obj:
@@ -122,11 +126,11 @@ class Form(FieldMixin):
 
     def __repr__(self):
         return '<{0} name:{1} method:{2} action:{3} fields:{4}>'.format(
-                    get_qualified_name(self),
-                    self.name,
-                    self.method,
-                    self.action,
-                    len(self))
+            get_qualified_name(self),
+            self.name,
+            self.method,
+            self.action,
+            len(self))
 
 
 class MultipartForm(Form):

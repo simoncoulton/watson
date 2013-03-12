@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from unittest.mock import patch
 from tempfile import gettempdir
 from nose.tools import raises
 from watson.cache.storage import BaseStorage, Memory, File, Memcached
@@ -105,33 +106,54 @@ class TestMemcache(object):
         })
         assert repr(cache) == '<watson.cache.storage.Memcached servers:2>'
 
-    def test_set(self):
+    @patch('memcache.Client')
+    def test_set(self, client):
+        client.get.return_value = 'test'
         cache = Memcached()
+        cache.client = client
         cache.flush()
         cache['test'] = 'test'
-        cache.set('expired', 'value', -1)
         assert cache['test'] == 'test'
+
+    @patch('memcache.Client')
+    def test_set_expired(self, client):
+        client.get.return_value = None
+        cache = Memcached()
+        cache.client = client
+        cache.flush()
+        cache.set('expired', 'value', -1)
         assert not cache['expired']
 
-    def test_get(self):
+    @patch('memcache.Client')
+    def test_get(self, client):
         cache = Memcached()
+        cache.client = client
         cache.flush()
         cache['test'] = 'test'
+        client.get.return_value = 'test'
         assert cache['test'] == 'test'
         assert cache.get('test') == 'test'
+        client.get.return_value = 'blah'
         assert cache.get('invalid', 'blah') == 'blah'
 
-    def test_delete(self):
+    @patch('memcache.Client')
+    def test_delete(self, client):
         cache = Memcached()
+        cache.client = client
         cache.flush()
+        client.get.return_value = 'test'
         cache['test'] = 'test'
         assert cache['test'] == 'test'
         del cache['test']
+        client.get.return_value = None
         assert not cache['test']
 
-    def test_flush(self):
+    @patch('memcache.Client')
+    def test_flush(self, client):
         cache = Memcached()
+        cache.client = client
         cache.flush()
+        client.get.return_value = None
         cache['test'] = 'test'
         assert cache.flush()
         assert not cache['test']
@@ -142,11 +164,15 @@ class TestMemcache(object):
         cache.set('test', 'value', -1)
         assert cache.expired('test')
 
-    def test_contains(self):
+    @patch('memcache.Client')
+    def test_contains(self, client):
         cache = Memcached()
+        cache.client = client
+        client.get.return_value = False
         cache.flush()
         assert not 'test' in cache
         cache['test'] = 'test'
+        client.get.return_value = True
         assert 'test' in cache
 
     def test_close(self):
