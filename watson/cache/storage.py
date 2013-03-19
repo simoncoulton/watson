@@ -8,10 +8,11 @@ from watson.stdlib.imports import get_qualified_name
 
 
 class BaseStorage(object):
-    """
-    Interface for all cache storage classes. It is designed to act similar to
-    a dict, however get and set methods can be used when a timeout is required
-    on a set, or when a default value is to be specified on a get.
+    """Base class for all cache storage classes.
+
+    Cache storage classes are designed to act similar to a dict, however get and
+    set methods can be used when a timeout is required on a set, or when a default
+    value is to be specified on a get.
     """
     config = None
 
@@ -19,20 +20,17 @@ class BaseStorage(object):
         self.config = config or {}
 
     def __setitem__(self, key, value, timeout=0):
-        """
-        See set()
+        """See set()
         """
         raise NotImplementedError('__setitem__ must be implemented')
 
     def __getitem__(self, key, default=None):
-        """
-        See get()
+        """See get()
         """
         raise NotImplementedError('__getitem__ must be implemented')
 
     def __delitem__(self, key):
-        """
-        Delete a key from the cache.
+        """Delete a key from the cache.
 
         Args:
             string key: The key to delete
@@ -43,9 +41,13 @@ class BaseStorage(object):
         raise NotImplementedError('__delitem__ must be implemented')
 
     def __contains__(self, key):
-        """
-        Returns True/False depending on whether or not a key exists in the
-        cache.
+        """Determine whether or not a key exists in the cache.
+
+        Args:
+            string key: The key to find
+
+        Returns:
+            True/False depending on if the key exists.
 
         Usage:
             if 'key' in cache:
@@ -54,17 +56,18 @@ class BaseStorage(object):
         raise NotImplementedError('__contains__ must be implemented')
 
     def flush(self):
-        """
-        Clears all items from the cache.
+        """Clears all items from the cache.
         """
         raise NotImplementedError('flush must be implemented')
 
     def expired(self, key):
-        """
-        Returns True/False depending on whether or not a key has expired.
+        """Determine if a key has expired or not.
 
         Args:
             string key: The key to find
+
+        Returns:
+            True/False depending on expiration
         """
         raise NotImplementedError('expired must be implemented')
 
@@ -74,8 +77,7 @@ class BaseStorage(object):
     # Convenience methods
 
     def set(self, key, value, timeout=0):
-        """
-        Sets a key in the cache.
+        """Sets a key in the cache.
 
         Args:
             string key: The key to be used as a reference
@@ -88,8 +90,7 @@ class BaseStorage(object):
         self.__setitem__(key, value, timeout)
 
     def get(self, key, default=None):
-        """
-        Gets a key from the cache, returns the default if not set.
+        """Gets a key from the cache, returns the default if not set.
 
         Args:
             string key: The key to be retrieved
@@ -104,7 +105,8 @@ class BaseStorage(object):
 
 
 class Memory(BaseStorage):
-    """
+    """A cache storage mechanism for storing items in memory.
+
     Memory cache storage will maintain the cache while the application is being
     run. This is usually best used in instances when you don't want to keep
     the cached items after the application has finished running.
@@ -145,7 +147,8 @@ class Memory(BaseStorage):
 
 
 class File(BaseStorage):
-    """
+    """A cache storage mechanism for storing items on the local filesystem.
+
     File cache storage will persist the data to the filesystem in whichever
     directory has been specified in the configuration options. If no
     directory is specified then the system temporary folder will be used.
@@ -236,7 +239,8 @@ class File(BaseStorage):
 
 
 class Memcached(BaseStorage):
-    """
+    """A cache storage mechanism for storing items in memcached.
+
     Memcached cache storage will utilize python3-memcached to maintain the cache
     across multiple servers.
     Python3-memcached documentation can be found at http://pypi.python.org/pypi/python3-memcached/

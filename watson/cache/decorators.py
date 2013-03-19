@@ -6,16 +6,20 @@ DEFAULT_CACHE_TYPE = Memory
 
 
 def cache(func=None, timeout=0, key=None):
-    """
+    """Retrieve a value from the cache
+
     Attempts to retrieve a value from the cache. If the wrapped function
-    does not have an attribute of container (see watson.di.container), then
-    it will default to cache.storage.Memory.
+    does not have an attribute of container (see watson.di.container), from
+    which to retrieve the cache type then it will default to cache.storage.Memory.
 
     Args:
         callable func: the function that is being wrapped
         int timeout: the number of seconds the item should exist in the cache
         string key: the key to store the data against in the cache, defaults
             to the qualified name of the decorated function.
+
+    Returns:
+        The contents of the cache key.
 
     Usage:
         class MyClass(ContainerAware):
