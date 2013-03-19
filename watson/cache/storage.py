@@ -13,6 +13,9 @@ class BaseStorage(object):
     Cache storage classes are designed to act similar to a dict, however get and
     set methods can be used when a timeout is required on a set, or when a default
     value is to be specified on a get.
+
+    Attributes:
+        dict config: The relevant configuration settings for the storage.
     """
     config = None
 

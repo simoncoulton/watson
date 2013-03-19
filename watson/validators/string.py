@@ -8,8 +8,6 @@ class Length(BaseValidator):
         self.message = message
         if max > -1 and min > max:
             raise ValueError('Min cannot be greater than max')
-        if min > -1 and max > -1 and max < min:
-            raise ValueError('Max cannot be greater than min')
         self.min = int(min)
         self.max = int(max)
 

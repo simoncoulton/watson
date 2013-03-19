@@ -5,6 +5,10 @@ from watson.validators.string import Length, Required, RegEx
 
 class TestLength(object):
     @raises(ValueError)
+    def test_invalid_min_greater_than_max(self):
+        Length(min=10, max=9)
+
+    @raises(ValueError)
     def test_doesnt_meet_min_requirement(self):
         validator = Length(min=10)
         validator('Test')

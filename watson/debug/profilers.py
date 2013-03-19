@@ -2,6 +2,7 @@
 import cProfile
 import pstats
 from watson.di import ContainerAware
+# TODO(simon.coulton@gmail.com) All of this is yet to be implemented
 
 
 class ApplicationInitListener(ContainerAware):
