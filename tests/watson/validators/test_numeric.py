@@ -13,6 +13,7 @@ class TestRange(object):
         validator = Range(1, 10)
         validator(5)
         validator(5.4)
+        validator('6')
 
     @raises(ValueError)
     def test_no_min_or_max(self):
