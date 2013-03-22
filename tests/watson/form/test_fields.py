@@ -144,7 +144,7 @@ class TestRadioInputField(object):
         assert str(field) == '<label for="test">test<input id="test" name="test" type="radio" /></label>'
         assert str(field_with_value_label) == '<label for="test">My Radio<input id="test" name="test" type="radio" value="1" /></label>'
         assert str(field_with_value) == '<label for="test">Test<input id="test" name="test" type="radio" value="1" /></label>'
-        assert str(field_with_multiple_values) == '<label for="test_0">Test<input id="test_0" name="test[]" type="radio" value="1" /></label><label for="test_1">Testing<input id="test_1" name="test[]" type="radio" value="2" /></label>'
+        assert str(field_with_multiple_values) == '<label for="test_0">Test<input id="test_0" name="test" type="radio" value="1" /></label><label for="test_1">Testing<input id="test_1" name="test" type="radio" value="2" /></label>'
 
     def test_render_label_wrapped_right(self):
         field = fields.Radio(name='test')
@@ -158,26 +158,26 @@ class TestRadioInputField(object):
         assert str(field) == '<label for="test"><input id="test" name="test" type="radio" />test</label>'
         assert str(field_with_value_label) == '<label for="test"><input id="test" name="test" type="radio" value="1" />My Radio</label>'
         assert str(field_with_value) == '<label for="test"><input id="test" name="test" type="radio" value="1" />Test</label>'
-        assert str(field_with_multiple_values) == '<label for="test_0"><input id="test_0" name="test[]" type="radio" value="1" />Test</label><label for="test_1"><input id="test_1" name="test[]" type="radio" value="2" />Testing</label>'
+        assert str(field_with_multiple_values) == '<label for="test_0"><input id="test_0" name="test" type="radio" value="1" />Test</label><label for="test_1"><input id="test_1" name="test" type="radio" value="2" />Testing</label>'
 
     def test_render_with_wrapped_fieldset(self):
         field = fields.Radio(name='test', label='My Radio Group', values=(('Test', 1), ('Testing', 2)))
         single_field_value = fields.Radio(name='test', label='My Radio', values=1)
-        assert field.render_with_label() == '<fieldset><legend>My Radio Group</legend><label for="test_0">Test<input id="test_0" name="test[]" type="radio" value="1" /></label><label for="test_1">Testing<input id="test_1" name="test[]" type="radio" value="2" /></label></fieldset>'
+        assert field.render_with_label() == '<fieldset><legend>My Radio Group</legend><label for="test_0">Test<input id="test_0" name="test" type="radio" value="1" /></label><label for="test_1">Testing<input id="test_1" name="test" type="radio" value="2" /></label></fieldset>'
         assert single_field_value.render_with_label() == '<label for="test">My Radio<input id="test" name="test" type="radio" value="1" /></label>'
 
     def test_render_label_without_wrapped(self):
         field = fields.Radio(name='test', label='My Radio Group', values=(('Test', 1), ('Testing', 2)))
         field.wrapped = False
-        assert str(field) == '<label for="test_0">Test</label><input id="test_0" name="test[]" type="radio" value="1" /><label for="test_1">Testing</label><input id="test_1" name="test[]" type="radio" value="2" />'
+        assert str(field) == '<label for="test_0">Test</label><input id="test_0" name="test" type="radio" value="1" /><label for="test_1">Testing</label><input id="test_1" name="test" type="radio" value="2" />'
         field_right = fields.Radio(name='test', label='My Radio Group', values=(('Test', 1), ('Testing', 2)))
         field_right.wrapped = False
         field_right.label_position = 'right'
-        assert str(field_right) == '<input id="test_0" name="test[]" type="radio" value="1" /><label for="test_0">Test</label><input id="test_1" name="test[]" type="radio" value="2" /><label for="test_1">Testing</label>'
+        assert str(field_right) == '<input id="test_0" name="test" type="radio" value="1" /><label for="test_0">Test</label><input id="test_1" name="test" type="radio" value="2" /><label for="test_1">Testing</label>'
 
     def test_checked_value(self):
         field = fields.Radio(name='test', label='My Radio Group', values=(('Test', 1), ('Testing', 2)), value=2)
-        assert str(field) == '<label for="test_0">Test<input id="test_0" name="test[]" type="radio" value="1" /></label><label for="test_1">Testing<input checked="checked" id="test_1" name="test[]" type="radio" value="2" /></label>'
+        assert str(field) == '<label for="test_0">Test<input id="test_0" name="test" type="radio" value="1" /></label><label for="test_1">Testing<input checked="checked" id="test_1" name="test" type="radio" value="2" /></label>'
 
     # todo filter/validate
 
@@ -192,7 +192,7 @@ class TestCheckboxInputField(object):
         field = fields.Checkbox(name='test', label='My Checkbox Group', values=(('Test', 1), ('Testing', 2)))
         single_field_value = fields.Checkbox(name='test', label='My Checkbox', values=1)
         checked_field = fields.Checkbox(name='test', label='My Checkbox', values=1, value=1)
-        assert str(field) == '<label for="test_0">Test<input id="test_0" name="test[]" type="checkbox" value="1" /></label><label for="test_1">Testing<input id="test_1" name="test[]" type="checkbox" value="2" /></label>'
+        assert str(field) == '<label for="test_0">Test<input id="test_0" name="test" type="checkbox" value="1" /></label><label for="test_1">Testing<input id="test_1" name="test" type="checkbox" value="2" /></label>'
         assert str(single_field_value) == '<label for="test">My Checkbox<input id="test" name="test" type="checkbox" value="1" /></label>'
         assert str(checked_field) == '<label for="test">My Checkbox<input checked="checked" id="test" name="test" type="checkbox" value="1" /></label>'
 
@@ -263,6 +263,8 @@ class TestSelectField(object):
         assert str(field) == '<select name="test"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>'
         field_with_value = fields.Select(name='test', options=[1, 2, 3], value=2)
         assert str(field_with_value) == '<select name="test"><option value="1">1</option><option value="2" selected="selected">2</option><option value="3">3</option></select>'
+        field_with_key_value = fields.Select(name='test', options=[(1, 'Test'), (2, 'Testing')])
+        assert str(field_with_key_value) == '<select name="test"><option value="1">Test</option><option value="2">Testing</option></select>'
 
     def test_render_options_dict(self):
         field = fields.Select(name='test', options={'Test': 'Value'})
@@ -279,3 +281,5 @@ class TestSelectField(object):
     def test_optgroup(self):
         field = fields.Select(name='test', options=collections.OrderedDict([('Group One', [1, 2]), ('Group Two', [3, 4])]))
         assert str(field) == '<select name="test"><optgroup label="Group One"><option value="1">1</option><option value="2">2</option></optgroup><optgroup label="Group Two"><option value="3">3</option><option value="4">4</option></optgroup></select>'
+        field_with_key_value = fields.Select(name='test', options=collections.OrderedDict([('Group One', [(1, 'Test'), (2, 'Testing')]), ('Group Two', [3, 4])]))
+        assert str(field_with_key_value) == '<select name="test"><optgroup label="Group One"><option value="1">Test</option><option value="2">Testing</option></optgroup><optgroup label="Group Two"><option value="3">3</option><option value="4">4</option></optgroup></select>'
