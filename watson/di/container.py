@@ -18,7 +18,7 @@ DEFAULTS = {
         ],
         POST_EVENT: [
             'watson.di.processors.SetterInjectionProcessor',
-            'watson.di.processors.PropertyInjectionProcessor',
+            'watson.di.processors.AttributeInjectionProcessor',
             'watson.di.processors.ContainerAwareProcessor'
         ]
     }

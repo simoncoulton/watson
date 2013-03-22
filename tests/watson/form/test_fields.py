@@ -32,8 +32,6 @@ class TestTextInputField(object):
         field = fields.Text(name='test', placeholder='Enter some data here')
         assert str(field) == '<input name="test" placeholder="Enter some data here" type="text" />'
 
-    # todo filter/validate
-
 
 class TestPasswordInputField(object):
     def test_create(self):
@@ -50,8 +48,6 @@ class TestPasswordInputField(object):
     def test_render_with_label(self):
         field = fields.Password(name='test')
         assert field.render_with_label() == '<label for="test">test</label><input id="test" name="test" type="password" />'
-
-    # todo filter/validate
 
 
 class TestDateInputField(object):
@@ -70,8 +66,6 @@ class TestDateInputField(object):
         field = fields.Date(name='test')
         assert field.render_with_label() == '<label for="test">test</label><input id="test" name="test" type="date" />'
 
-    # todo filter/validate
-
 
 class TestEmailInputField(object):
     def test_create(self):
@@ -89,8 +83,6 @@ class TestEmailInputField(object):
         field = fields.Email(name='test')
         assert field.render_with_label() == '<label for="test">test</label><input id="test" name="test" type="email" />'
 
-    # todo filter/validate
-
 
 class TestFileInputField(object):
     def test_create(self):
@@ -107,8 +99,6 @@ class TestFileInputField(object):
     def test_render_with_label(self):
         field = fields.File(name='test')
         assert field.render_with_label() == '<label for="test">test</label><input id="test" name="test" type="file" />'
-
-    # todo filter/validate
 
 
 class TestSubmitInputField(object):
@@ -138,8 +128,6 @@ class TestSubmitInputField(object):
     def test_render_with_label_button_mode(self):
         field = fields.Submit(name='test', button_mode=True)
         assert field.render_with_label() == '<button name="test" type="submit">test</button>'
-
-    # todo filter/validate
 
 
 class TestRadioInputField(object):
@@ -225,8 +213,6 @@ class TestHiddenInputField(object):
         field = fields.Hidden(name='test')
         assert field.render_with_label() == '<label for="test">test</label><input id="test" name="test" type="hidden" />'
 
-    # todo filter/validate
-
 
 class TestTextareaField(object):
     def test_create(self):
@@ -244,8 +230,6 @@ class TestTextareaField(object):
         field = fields.Textarea(name='test', label='My Test')
         assert field.render_with_label() == '<label for="test">My Test</label><textarea id="test" name="test"></textarea>'
 
-    # todo filter/validate
-
 
 class TestButtonField(object):
     def test_create(self):
@@ -262,8 +246,6 @@ class TestButtonField(object):
     def test_render_with_label(self):
         field = fields.Button(name='test', label='My Test')
         assert field.render_with_label() == '<button name="test">My Test</button>'
-
-    # todo filter/validate
 
 
 class TestSelectField(object):
@@ -297,6 +279,3 @@ class TestSelectField(object):
     def test_optgroup(self):
         field = fields.Select(name='test', options=collections.OrderedDict([('Group One', [1, 2]), ('Group Two', [3, 4])]))
         assert str(field) == '<select name="test"><optgroup label="Group One"><option value="1">1</option><option value="2">2</option></optgroup><optgroup label="Group Two"><option value="3">3</option><option value="4">4</option></optgroup></select>'
-
-
-    # todo filter/validate

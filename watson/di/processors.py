@@ -5,8 +5,7 @@ from watson.stdlib.imports import get_qualified_name, load_definition_from_strin
 
 
 class BaseProcessor(ContainerAware):
-    """
-    The base processor that all other processors should extend.
+    """The base processor that all other processors should extend.
 
     When a processor is called from the container the following parameters are
     sent through with the event:
@@ -22,7 +21,8 @@ class BaseProcessor(ContainerAware):
 
 
 class ConstructorInjectionProcessor(BaseProcessor):
-    """
+    """Responsible for initializing the dependency.
+
     Responsible for initializing the dependency and injecting any required
     values into the constructor.
 
@@ -60,8 +60,7 @@ class ConstructorInjectionProcessor(BaseProcessor):
 
 
 class SetterInjectionProcessor(BaseProcessor):
-    """
-    Responsible for injecting required values into setter methods.
+    """Responsible for injecting required values into setter methods.
 
     Args:
         watson.events.types.Event event: The event dispatched from the container.
@@ -85,9 +84,8 @@ class SetterInjectionProcessor(BaseProcessor):
         return item
 
 
-class PropertyInjectionProcessor(BaseProcessor):
-    """
-    Responsibile for injecting required values into properties.
+class AttributeInjectionProcessor(BaseProcessor):
+    """Responsibile for injecting required values into attributes.
 
     Args:
         watson.events.types.Event event: The event dispatched from the container.
@@ -103,8 +101,10 @@ class PropertyInjectionProcessor(BaseProcessor):
 
 
 class ContainerAwareProcessor(BaseProcessor):
-    """
-    Responsible for injecting the container in any class that extends watson.di.ContainerAware
+    """Injects the container into a dependency.
+
+    Responsible for injecting the container in any class that extends
+    watson.di.ContainerAware. The container is then accessible via object.container
 
     Args:
         watson.events.types.Event event: The event dispatched from the container.
@@ -120,7 +120,8 @@ class ContainerAwareProcessor(BaseProcessor):
 
 
 def get_param_from_container(param, container):
-    """
+    """Internal function used by the container.
+
     Retrieve a parameter from the container, and determine whether or not that
     parameter is an existing dependency.
 
