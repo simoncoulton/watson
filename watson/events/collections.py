@@ -6,7 +6,8 @@ Listener = namedtuple('Listener', 'callback priority only_once')
 
 
 class ListenerCollection(list):
-    """
+    """A list of listeners to be used in an EventDispatcher.
+
     A Listener Collection is a list of callbacks that are to be triggered
     by an event dispatcher. Each item in the list contains the callback, a
     priority, and whether or not the callback should only be triggered once.
@@ -15,8 +16,7 @@ class ListenerCollection(list):
     require_sort = False
 
     def add(self, callback, priority=1, only_once=False):
-        """
-        Adds a new callback to the collection.
+        """Adds a new callback to the collection.
 
         Args:
             callable callback: the function to be triggered
@@ -34,8 +34,7 @@ class ListenerCollection(list):
         return self
 
     def remove(self, callback):
-        """
-        Removes all callbacks matching `callback` from the collection.
+        """Removes all callbacks matching `callback` from the collection.
 
         Args:
             callable callback: the callback to be removed.
@@ -48,8 +47,7 @@ class ListenerCollection(list):
             i -= 1
 
     def sort_priority(self):
-        """
-        Sort the collection based on the priority of the callbacks.
+        """Sort the collection based on the priority of the callbacks.
         """
         if self.require_sort:
             self.sort(key=lambda listener: listener.priority, reverse=True)
@@ -63,21 +61,21 @@ class ListenerCollection(list):
 
 
 class ResultCollection(list):
-    """
+    """A list of responses from a EventDispatcher.trigger call.
+
     A result collection contains all the resulting output from an event that has
     been triggered from an event dispatcher. It provides some convenience methods
     to deal with the results.
     """
 
     def first(self, default=None):
-        """
-        Return the first result from the list.
+        """Return the first result from the list.
 
         Args:
-            mixed default: the value to return if the index doesn't exist
+            mixed default: The value to return if the index doesn't exist
 
         Returns:
-            mixed
+            mixed: The first result
         """
         try:
             return self[0]
@@ -85,14 +83,13 @@ class ResultCollection(list):
             return default
 
     def last(self, default=None):
-        """
-        Return the last result from the list.
+        """Return the last result from the list.
 
         Args:
-            mixed default: the value to return if the index doesn't exist
+            mixed default: The value to return if the index doesn't exist
 
         Returns:
-            mixed
+            mixed: The first result
         """
         try:
             return self[-1]
