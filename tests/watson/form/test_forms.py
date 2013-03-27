@@ -15,11 +15,11 @@ class TestForm(object):
 
     def test_form_start_tag(self):
         form = Form('test')
-        assert form.begin() == '<form action="/" enctype="application/x-www-form-urlencoded" method="post" name="test">'
+        assert form.open() == '<form action="/" enctype="application/x-www-form-urlencoded" method="post" name="test">'
 
     def test_form_end_tag(self):
         form = Form('test')
-        assert form.end() == '</form>'
+        assert form.close() == '</form>'
 
     def test_set_data_on_form(self):
         form = LoginForm('test')
@@ -113,4 +113,4 @@ class TestMultiPartForm(object):
 
     def test_form_start_tag(self):
         form = MultipartForm('test')
-        assert form.begin() == '<form action="/" enctype="multipart/form-data" method="post" name="test">'
+        assert form.open() == '<form action="/" enctype="multipart/form-data" method="post" name="test">'

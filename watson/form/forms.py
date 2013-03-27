@@ -8,12 +8,32 @@ from watson.stdlib.imports import get_qualified_name
 
 
 class Form(TagMixin):
-    """
+    """<form> management.
 
+    The implementation of the form gives the ability to define the fields
+    within the form in a declarative manor.
+
+    Usage:
+        from watson.form import fields
+        class MyForm(Form):
+            text = fields.Text(name='text', label='My TextField')
+
+        form = MyForm('my_form')
+        form.text.value = 'Something'
+
+        # in view
+        {% form.open() %}   # <form name="my_form">
+        {% form.text %}     # <input name="text" type="text" value="Something" />
+        {% form.text.render_with_label() %} # <label for="text">My TextField</label><input id="text" name="text" type="text" value="Something" />
+        {% form.close() %}  # </form>
+
+
+    Attributes:
+        dict attributes: A list of all attributes on the <form>.
     """
     attributes = None
-    validated = False
-    valid = False
+    _valid = False
+    _validated = False
     _ignored_attributes = ('fields', '_fields', 'data', 'raw_data', 'errors')
     _bound_object = None
     _bound_object_mapping = None
@@ -30,12 +50,16 @@ class Form(TagMixin):
             'enctype': kwargs.get('enctype', 'application/x-www-form-urlencoded')
         })
         for field_name, field in self.fields.items():
-            # create a copy of the field so that we're not referencing
-            # the class attr of the same name.
             if detect_multipart and isinstance(field, File):
                 self.attributes['enctype'] = 'multipart/form-data'
+            # create a copy of the field so that we're not referencing
+            # the class attr of the same name.
             setattr(self, field_name, deepcopy(field))
         del self._fields
+
+    @property
+    def validated(self):
+        return self._validated
 
     @cached_property
     def fields(self):
@@ -151,7 +175,7 @@ class Form(TagMixin):
                 delattr(self, attr)
             except AttributeError:
                 pass
-        self.validated = self.valid = False
+        self._validated = self._valid = False
 
     def is_valid(self):
         """Determine whether or not the form and relating values are valid.
@@ -164,26 +188,26 @@ class Form(TagMixin):
         Returns:
             boolean value depending on the validity of the form.
         """
-        if not self.validated:
-            self.valid = True
+        if not self._validated:
+            self._valid = True
             for field_name, field in self.fields.items():
                 field.filter()
                 valid = field.validate()
                 if len(valid) > 0:
-                    self.valid = False
-            self.validated = True
-        if self.valid and self._bound_object:
+                    self._valid = False
+            self._validated = True
+        if self._valid and self._bound_object:
             self.__hydrate_form_to_obj()
-        return self.valid
+        return self._valid
 
     # rendering methods
 
-    def begin(self):
+    def open(self):
         """Render the start tag of the form.
         """
         return '<form {0}>'.format(flatten_attributes(self.attributes))
 
-    def end(self):
+    def close(self):
         """Render the end tag of the form.
         """
         return '</form>'
