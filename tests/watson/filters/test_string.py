@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from watson.filters.string import Trim, RegEx, Numbers, Upper, Lower, StripTags
+from watson.filters.string import Trim, RegEx, Numbers, Upper, Lower, StripTags, HtmlEntities
 
 
 class TestTrim(object):
@@ -34,6 +34,12 @@ class TestNumbers(object):
 
 
 class TestStripTags(object):
-    def test_remove_tags(self):
+    def test_strip_tags(self):
         filter = StripTags()
         assert filter('test<div>blah</div>') == 'testblah'
+
+
+class TestHtmlEntities(object):
+    def test_encode(self):
+        filter = HtmlEntities()
+        assert filter('<div>test</div>') == '&lt;div&gt;test&lt;/div&gt;'

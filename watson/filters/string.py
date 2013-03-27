@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 from watson.filters.base import BaseFilter
+from watson.html.entities import encode
 
 
 class Trim(BaseFilter):
@@ -90,3 +91,14 @@ class StripTags(RegEx):
     """
     def __init__(self, regex=r'</?\S([^=]*=(\s*"[^"]*"|\s*\'[^\']*\'|\S*)|[^>])*?>', flags=re.IGNORECASE):
         super(StripTags, self).__init__(regex, '', flags)
+
+
+class HtmlEntities(BaseFilter):
+    """Encodes all html entities.
+
+    Usage:
+        filter = HtmlEntities()
+        filter('<div>test</div>')  # &lt;div&gt;test&lt;/div&gt;
+    """
+    def __call__(self, value):
+        return encode(str(value))
