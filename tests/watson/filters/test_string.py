@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from watson.filters.string import Trim, RegEx, Numbers, Upper, Lower
+from watson.filters.string import Trim, RegEx, Numbers, Upper, Lower, StripTags
 
 
 class TestTrim(object):
@@ -31,3 +31,9 @@ class TestNumbers(object):
     def test_remove_numbers(self):
         filter = Numbers()
         assert filter('ab1234') == '1234'
+
+
+class TestStripTags(object):
+    def test_remove_tags(self):
+        filter = StripTags()
+        assert filter('test<div>blah</div>') == 'testblah'

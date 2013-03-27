@@ -12,6 +12,8 @@ class Trim(BaseFilter):
         Returns:
             The original value, but whitespace has been removed.
         """
+        if not value:
+            return value
         return str(value).strip()
 
 
@@ -75,3 +77,16 @@ class Numbers(RegEx):
     """
     def __init__(self, regex='[^0-9]', replacement='', flags=0):
         super(Numbers, self).__init__(regex, replacement, flags)
+
+
+class StripTags(RegEx):
+    """Strips all html tags.
+
+    Thanks to django for the regex used below.
+
+    Usage:
+        filter = StripTags()
+        filter('test<div>blah</div>')  # testblah
+    """
+    def __init__(self, regex=r'</?\S([^=]*=(\s*"[^"]*"|\s*\'[^\']*\'|\S*)|[^>])*?>', flags=re.IGNORECASE):
+        super(StripTags, self).__init__(regex, '', flags)

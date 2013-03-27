@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+import itertools
+from watson.filters.string import Trim
 from watson.stdlib.imports import get_qualified_name
+from watson.validators.string import Required
 # todo: csrf field
 
 
@@ -51,18 +54,28 @@ class FieldMixin(TagMixin):
         list validators: the validators that will be used to validate the value
         list filters: the filters that will be used prior to validation
     """
+    _counter = itertools.count()
     label = None
     html = '{0}'
     validators = None
     filters = None
+    _errors = None
     _value = None
+    _original_value = None
 
     def __init__(self, name, value=None, label=None, **kwargs):
         """Initializes the field with a specific name.
         """
+        self.count = next(FieldMixin._counter)
         self.label = Label(label or name)
         kwargs['name'] = name
         self.value = value
+        self.filters = [Trim()] + kwargs.get('filters', [])
+        self.validators = kwargs.get('validators', [])
+        if 'required' in kwargs:
+            self.validators.append(Required())
+            kwargs['required'] = 'required'
+        self._errors = []
         super(FieldMixin, self).__init__(**kwargs)
 
     @property
@@ -79,6 +92,41 @@ class FieldMixin(TagMixin):
         """Convenience method to set the value on the field.
         """
         self._value = value
+
+    @property
+    def original_value(self):
+        """Return the original value for the field.
+        """
+        return self._original_value if self._original_value else self.value
+
+    def filter(self):
+        """Filter the value on the field based on the associated filters.
+
+        Set the original_value of the field to the first value stored. Note, if
+        this is called a second time, then the original value will be overridden.
+        """
+        for _filter in self.filters:
+            self._original_value = self.value
+            self.value = _filter(self.value)
+
+    def validate(self):
+        """Validate the value of the field against the associated validators.
+
+        Returns:
+            A list of errors that have occurred when the field has been
+            validated.
+        """
+        self._errors = []
+        for validator in self.validators:
+            try:
+                validator(self.value)
+            except ValueError as exc:
+                self._errors.append(str(exc))
+        return self._errors
+
+    @property
+    def errors(self):
+        return self._errors
 
     @property
     def name(self):
