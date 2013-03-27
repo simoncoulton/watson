@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 import collections
 from copy import deepcopy
-from watson.form.fields import FieldMixin, TagMixin, File, flatten_attributes
+from watson.form.fields import FieldMixin, File
+from watson.html.elements import TagMixin, flatten_attributes
 from watson.stdlib.decorators import cached_property
 from watson.stdlib.imports import get_qualified_name
 
 
 class Form(TagMixin):
-    """A basic
+    """
 
     """
     attributes = None
@@ -84,6 +85,21 @@ class Form(TagMixin):
         return {field_name: field.value for
                 field_name, field in self.fields.items()}
 
+    @data.setter
+    def data(self, data):
+        """Sets the data for the form.
+
+        Iterates through all the fields on the form and injects the value.
+
+        Args:
+            dict data: A dict of key/value pairs to populate the form with.
+        """
+        self.invalidate()
+        data = data or {}
+        for key, value in data.items():
+            if key in self.fields:
+                self.fields[key].value = value
+
     @cached_property
     def raw_data(self):
         """Returns a dict containing all the original field values.
@@ -93,59 +109,89 @@ class Form(TagMixin):
         return {field_name: field.original_value for
                 field_name, field in self.fields.items()}
 
-    def bind(self, data, obj=None):
+    def bind(self, obj=None, mapping=None, hydrate=True):
+        """Binds an object to the form.
+
+        Optionally additional mapping can be specified in order to set values on
+        any of the classes that may exist within the object.
+        If this method is called after the data has been set on the form, then
+        the existing data will be overridden with the attributes on the object
+        unless hydrate is set to false.
+
+        Args:
+            class obj: the class to bind to the form.
+            dict mapping: the mapping between the form fields and obj attributes.
+            bool hydrate: whether or not to hydrate the form with the obj attributes.
+
+        Usage:
+            form = ...
+            user = User(username='test')
+            form.bind(user)
+            form.username.value  # 'test'
+        """
+        if obj:
+            self._bound_object = obj
+            if mapping:
+                self._bound_object_mapping = mapping
         self.invalidate()
-        for field, value in data.items():
-            if field in self.fields:
-                self.fields[field].value = value
+        if obj and hydrate:
+            self.__hydrate_obj_to_form()
 
     # validation methods
 
     def invalidate(self):
-        try:
-            del self._data
-        except AttributeError:
-            pass
-        try:
-            del self._raw_data
-        except AttributeError:
-            pass
-        try:
-            del self._errors
-        except AttributeError:
-            pass
+        """Invalidate the data that has been bound on the form.
+
+        This is called automatically when data is bound to the form and
+        sets the forms validity to invalid.
+        """
+        attrs = ('_data', '_raw_data', '_errors')
+        for attr in attrs:
+            try:
+                delattr(self, attr)
+            except AttributeError:
+                pass
         self.validated = self.valid = False
 
     def is_valid(self):
+        """Determine whether or not the form and relating values are valid.
+
+        Filter all the values on the fields associated with the form, and
+        then validate each field. Will only execute the filter/validation
+        steps if the form has not been previously validated, or has
+        been invalidated.
+
+        Returns:
+            boolean value depending on the validity of the form.
+        """
         if not self.validated:
             self.valid = True
             for field_name, field in self.fields.items():
                 field.filter()
                 valid = field.validate()
-                if not valid:
+                if len(valid) > 0:
                     self.valid = False
             self.validated = True
+        if self.valid and self._bound_object:
+            self.__hydrate_form_to_obj()
         return self.valid
-
-        # loop thru fields and validate each one
-        # if fail validation self.valid = False
-        # if self.valid and self._bound_object:
-        #     self._hydrate_data_to_object(self._bound_object, self.data, self._bound_object_mapping)
 
     # rendering methods
 
     def begin(self):
+        """Render the start tag of the form.
+        """
         return '<form {0}>'.format(flatten_attributes(self.attributes))
 
     def end(self):
+        """Render the end tag of the form.
+        """
         return '</form>'
 
     # convenience methods
 
     @property
     def name(self):
-        """Convenience method to retrieve the name of the field.
-        """
         return self.attributes['name']
 
     @property
@@ -160,53 +206,43 @@ class Form(TagMixin):
     def enctype(self):
         return self.attributes['enctype']
 
-    # def bind(self, obj, mapping=None, hydrate_form=True):
-    #     self.invalidate()
-    #     self._bound_object = obj
-    #     self._bound_object_mapping = mapping
-    #     if hydrate_form:
-    #         self.data = self._hydrate_object_to_form_data(self._bound_object, self.data, self._bound_object_mapping)
+    # hydration methods
 
-    # def _hydrate_object_to_form_data(self, obj=None, data=None, mapping=None):
-    #     if not obj:
-    #         raise AttributeError('Object cannot be bound to form "{0}"'.format(self.name))
-    #     obj_mapping = mapping if mapping else []
-    #     for field in self.fields:
-    #         try:
-    #             field_value = getattr(obj, field.name)
-    #             if field_value:
-    #                 data[field.name] = field_value
-    #                 field.value = field_value
-    #         except:
-    #             pass
-    #         if field.name in obj_mapping:
-    #             last_field = obj_mapping[field.name][-1]
-    #             current_obj = obj
-    #             for field_name in obj_mapping[field.name][0:-1]:
-    #                 current_obj = getattr(current_obj, field_name)
-    #             try:
-    #                 field_value = getattr(current_obj, last_field)
-    #                 if field_value:
-    #                     data[last_field] = field_value
-    #                     field.value = field_value
-    #             except:
-    #                 pass
+    def __hydrate_obj_to_form(self):
+        # should never be called externally. Triggered by bind.
+        obj_mapping = self._bound_object_mapping or {}
+        for field_name, field in self.fields.items():
+            attr = field_name
+            current_obj = self._bound_object
+            if field_name in obj_mapping:
+                last_field = obj_mapping[field_name][-1]
+                for name in obj_mapping[field_name][0:-1]:
+                    try:
+                        current_obj = getattr(current_obj, name)
+                    except:
+                        raise AttributeError('Mapping for object does not match object structure.')
+            if hasattr(current_obj, attr):
+                self.fields[field_name].value = getattr(current_obj, attr)
 
-    # def _hydrate_data_to_object(self, obj=None, data=None, mapping=None):
-    #     if not obj:
-    #         raise AttributeError('No object has been bound to form "{0}"'.format(self.name))
-    #     obj_mapping = mapping if mapping else []
-    #     for name, value in data.items():
-    #         if name in obj_mapping:
-    #             last_field = obj_mapping[name][-1]
-    #             current_obj = obj
-    #             for field_name in obj_mapping[name][0:-1]:
-    #                 current_obj = getattr(current_obj, field_name)
-    #             setattr(current_obj, last_field, value)
-    #         elif hasattr(obj, name):
-    #             setattr(obj, name, value)
+    def __hydrate_form_to_obj(self):
+        # should never be called externally. Triggered by is_valid.
+        obj_mapping = self._bound_object_mapping or {}
+        for field_name, value in self.data.items():
+            current_obj = self._bound_object
+            attr = field_name
+            if field_name in obj_mapping:
+                attr = obj_mapping[field_name][-1]
+                for name in obj_mapping[field_name][0:-1]:
+                    try:
+                        current_obj = getattr(current_obj, name)
+                    except:
+                        raise AttributeError('Mapping for object does not match object structure.')
+            if hasattr(current_obj, attr):
+                setattr(current_obj, attr, value)
 
     def __len__(self):
+        """Return the number of fields associated with the form.
+        """
         return len(self.fields)
 
     def __repr__(self):

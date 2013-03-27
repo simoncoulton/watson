@@ -1,28 +1,10 @@
 # -*- coding: utf-8 -*-
 import itertools
 from watson.filters.string import Trim
+from watson.html.elements import TagMixin, flatten_attributes
 from watson.stdlib.imports import get_qualified_name
 from watson.validators.string import Required
 # todo: csrf field
-
-
-class TagMixin(object):
-    """Simple tag mixin used for all html tags.
-
-    All keyword arguments that get passed to __init__ will be converted into
-    attributes for the element.
-
-    Attributes:
-        dict attributes: a dictionary of attributes associated with the tag.
-    """
-    attributes = None
-
-    def __init__(self, **kwargs):
-        self.attributes = {}
-        self.attributes.update(kwargs)
-
-    def render(self):
-        raise NotImplementedError('The render method has not been implemented')
 
 
 class Label(TagMixin):
@@ -484,11 +466,3 @@ class Password(Input):
 class File(Input):
     def __init__(self, name, value=None, **kwargs):
         super(File, self).__init__(name, value, type='file', **kwargs)
-
-
-def flatten_attributes(attrs):
-    """Flattens attributes into a single string of key=value pairs.
-
-    Attributes are sorted alphabetically.
-    """
-    return ' '.join(['{0}="{1}"'.format(name, value) for name, value in sorted(attrs.items())])
