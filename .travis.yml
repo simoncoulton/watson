@@ -4,6 +4,8 @@ python:
 install:
     - pip install -r requirements.txt
     - pip install coveralls
+before_script:
+    - mkdir -p docs/tests/html
 script:
     - nosetests --config=nose.cfg
 after_success:
