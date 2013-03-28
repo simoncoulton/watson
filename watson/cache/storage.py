@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime, timedelta
-import memcache
 import os
 import pickle
 from tempfile import gettempdir
+try:
+    import memcache
+except ImportError:
+    pass
 from watson.stdlib.imports import get_qualified_name
 
 
@@ -263,7 +266,10 @@ class Memcached(BaseStorage):
             config = {}
         settings.update(config)
         self.config = settings
-        self.client = memcache.Client(self.config['servers'])
+        try:
+            self.client = memcache.Client(self.config['servers'])
+        except:
+            raise ImportError('You must have python3-memcached installed.')
 
     def __setitem__(self, key, value, timeout=0):
         self.client.set(key, value, timeout)

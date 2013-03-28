@@ -3,7 +3,6 @@ python:
     - 3.3
 install:
     - pip install -r requirements.txt
-before_script:
     - pip install coveralls
 script:
     - nosetests
