@@ -251,6 +251,8 @@ class Memcached(BaseStorage):
     across multiple servers.
     Python3-memcached documentation can be found at http://pypi.python.org/pypi/python3-memcached/
     """
+    client = None
+
     def __init__(self, config=None):
         """
         Initializes the cache.
@@ -266,28 +268,36 @@ class Memcached(BaseStorage):
             config = {}
         settings.update(config)
         self.config = settings
-        try:
-            self.client = memcache.Client(self.config['servers'])
-        except:
-            raise ImportError('You must have python3-memcached installed.')
 
     def __setitem__(self, key, value, timeout=0):
+        self.open()
         self.client.set(key, value, timeout)
 
     def __getitem__(self, key, default=None):
+        self.open()
         value = self.client.get(key)
         if not value:
             return default
         return value
 
     def __delitem__(self, key):
+        self.open()
         return self.client.delete(key)
 
     def flush(self):
+        self.open()
         self.client.flush_all()
         return True
 
+    def open(self):
+        if not self.client:
+            try:
+                self.client = memcache.Client(self.config['servers'])
+            except:
+                raise ImportError('You must have python3-memcached installed.')
+
     def close(self):
+        self.open()
         self.client.disconnect_all()
         return True
 
