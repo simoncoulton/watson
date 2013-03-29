@@ -54,7 +54,10 @@ class Form(TagMixin):
                 self.attributes['enctype'] = 'multipart/form-data'
             # create a copy of the field so that we're not referencing
             # the class attr of the same name.
-            setattr(self, field_name, deepcopy(field))
+            new_field = deepcopy(field)
+            if not new_field.name:
+                new_field.name = field_name
+            setattr(self, field_name, new_field)
         del self._fields
 
     @property
@@ -239,7 +242,6 @@ class Form(TagMixin):
             attr = field_name
             current_obj = self._bound_object
             if field_name in obj_mapping:
-                last_field = obj_mapping[field_name][-1]
                 for name in obj_mapping[field_name][0:-1]:
                     try:
                         current_obj = getattr(current_obj, name)

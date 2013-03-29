@@ -7,11 +7,11 @@ form_user_mapping = {'first_name': ('personal', 'first_name'), 'email': ('person
 
 
 class LoginForm(Form):
-    username = fields.Text(name='username', required=True)
-    password = fields.Password(name='password', required=True)
-    first_name = fields.Text(name='first_name')
-    last_name = fields.Text(name='last_name')
-    email = fields.Text(name='email')
+    username = fields.Text(required=True)
+    password = fields.Password(required=True)
+    first_name = fields.Text()
+    last_name = fields.Text()
+    email = fields.Text()
 
 
 class UploadForm(Form):

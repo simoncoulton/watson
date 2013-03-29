@@ -45,10 +45,12 @@ class FieldMixin(TagMixin):
     _value = None
     _original_value = None
 
-    def __init__(self, name, value=None, label=None, **kwargs):
+    def __init__(self, name=None, value=None, label=None, **kwargs):
         """Initializes the field with a specific name.
         """
         self.count = next(FieldMixin._counter)
+        if not name:
+            name = ''
         self.label = Label(label or name)
         kwargs['name'] = name
         self.value = value
@@ -116,6 +118,14 @@ class FieldMixin(TagMixin):
         """
         return self.attributes['name']
 
+    @name.setter
+    def name(self, name):
+        """Override the name attribute on the field.
+        """
+        self.attributes['name'] = name
+        if not self.label.text:
+            self.label.text = name
+
     def render_with_label(self):
         """Render the field with the label attached.
         """
@@ -169,7 +179,7 @@ class GroupInputMixin(Input):
     values = None
     fieldset_html = '<fieldset><legend>{0}</legend>{1}</fieldset>'
 
-    def __init__(self, name, values=None, value=None, **kwargs):
+    def __init__(self, name=None, values=None, value=None, **kwargs):
         super(GroupInputMixin, self).__init__(name, value, **kwargs)
         if not values:
             values = value
@@ -246,7 +256,7 @@ class Radio(GroupInputMixin):
         str(field)
         <label for="test"><input type="radio" name="test" values="1" />My Radio</label>
     """
-    def __init__(self, name, values=None, value=None, **kwargs):
+    def __init__(self, name=None, values=None, value=None, **kwargs):
         """Initializes the radio.
 
         If a value is specified, then that value out of the available values will
@@ -275,10 +285,10 @@ class Checkbox(GroupInputMixin):
         </fieldset>
 
         field = Checkbox(name='test', label='My Checkbox', values=1)
-        str(field)
+        str(field)=None
         <label for="test"><input type="checkbox" name="test" value="1" />My Checkbox</label>
     """
-    def __init__(self, name, values=None, value=None, **kwargs):
+    def __init__(self, name=None, values=None, value=None, **kwargs):
         """Initializes the checkbox.
 
         If a value is specified, then that value out of the available values will
@@ -316,7 +326,7 @@ class Submit(Input):
     """
     button_mode = False
 
-    def __init__(self, name, value=None, button_mode=False, **kwargs):
+    def __init__(self, name=None, value=None, button_mode=False, **kwargs):
         real_value = value or kwargs.get('label', name)
         if button_mode:
             self.html = '<button {0}>{1}</button>'
@@ -358,7 +368,7 @@ class Select(FieldMixin):
     optgroup_html = '<optgroup label="{0}">{1}</optgroup>'
     options = None
 
-    def __init__(self, name, options=None, value=None, multiple=False, **kwargs):
+    def __init__(self, name=None, options=None, value=None, multiple=False, **kwargs):
         """Initializes the select field.
 
         If the options passed through are a dict, and the value of each key is
@@ -431,38 +441,38 @@ class Select(FieldMixin):
 class Text(Input):
     """Creates an <input type="text" /> element.
     """
-    def __init__(self, name, value=None, **kwargs):
+    def __init__(self, name=None, value=None, **kwargs):
         super(Text, self).__init__(name, value, type='text', **kwargs)
 
 
 class Date(Input):
     """Creates an <input type="date" /> element.
     """
-    def __init__(self, name, value=None, **kwargs):
+    def __init__(self, name=None, value=None, **kwargs):
         super(Date, self).__init__(name, value, type='date', **kwargs)
 
 
 class Email(Input):
     """Creates an <input type="email" /> element.
     """
-    def __init__(self, name, value=None, **kwargs):
+    def __init__(self, name=None, value=None, **kwargs):
         super(Email, self).__init__(name, value, type='email', **kwargs)
 
 
 class Hidden(Input):
     """Creates an <input type="hidden" /> element.
     """
-    def __init__(self, name, value=None, **kwargs):
+    def __init__(self, name=None, value=None, **kwargs):
         super(Hidden, self).__init__(name, value, type='hidden', **kwargs)
 
 
 class Password(Input):
     """Creates an <input type="password" /> element.
     """
-    def __init__(self, name, value=None, **kwargs):
+    def __init__(self, name=None, value=None, **kwargs):
         super(Password, self).__init__(name, value, type='password', **kwargs)
 
 
 class File(Input):
-    def __init__(self, name, value=None, **kwargs):
+    def __init__(self, name=None, value=None, **kwargs):
         super(File, self).__init__(name, value, type='file', **kwargs)
