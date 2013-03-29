@@ -3,8 +3,8 @@ from types import FunctionType
 from watson.di.processors import BaseProcessor
 from watson.events.dispatcher import EventDispatcherAware
 from watson.events.types import Event
-from watson.stdlib.datastructures import dict_deep_update
-from watson.stdlib.imports import get_qualified_name, load_definition_from_string
+from watson.common.datastructures import dict_deep_update
+from watson.common.imports import get_qualified_name, load_definition_from_string
 
 
 PRE_EVENT = 'event.container.pre'

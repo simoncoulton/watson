@@ -2,7 +2,7 @@
 import itertools
 from watson.filters.string import Trim
 from watson.html.elements import TagMixin, flatten_attributes
-from watson.stdlib.imports import get_qualified_name
+from watson.common.imports import get_qualified_name
 from watson.validators.string import Required
 # todo: csrf field
 

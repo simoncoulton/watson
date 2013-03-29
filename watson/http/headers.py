@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from watson.stdlib.datastructures import MultiDict
+from watson.common.datastructures import MultiDict
 from watson.http.cookies import CookieDict
 
 

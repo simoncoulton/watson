@@ -3,8 +3,8 @@ import collections
 from copy import deepcopy
 from watson.form.fields import FieldMixin, File
 from watson.html.elements import TagMixin, flatten_attributes
-from watson.stdlib.decorators import cached_property
-from watson.stdlib.imports import get_qualified_name
+from watson.common.decorators import cached_property
+from watson.common.imports import get_qualified_name
 
 
 class Form(TagMixin):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from watson.cache.storage import Memory
-from watson.stdlib.imports import get_qualified_name
+from watson.common.imports import get_qualified_name
 
 DEFAULT_CACHE_TYPE = Memory
 

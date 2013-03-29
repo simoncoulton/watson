@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from nose.tools import raises
-from watson.stdlib.datastructures import ImmutableDict, ImmutableMultiDict
-from watson.stdlib.datastructures import MultiDict, dict_deep_update
+from watson.common.datastructures import ImmutableDict, ImmutableMultiDict
+from watson.common.datastructures import MultiDict, dict_deep_update
 from copy import copy, deepcopy
 
 

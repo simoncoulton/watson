@@ -7,7 +7,7 @@ from watson.http.headers import HeaderDict, split_headers_server_vars
 from watson.http.uri import Url
 from watson.http.wsgi import get_form_vars
 from watson.http.sessions import create_session_from_request
-from watson.stdlib.datastructures import ImmutableMultiDict, MultiDict
+from watson.common.datastructures import ImmutableMultiDict, MultiDict
 
 
 class MessageMixin(object):

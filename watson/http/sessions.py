@@ -5,7 +5,7 @@ import os
 import pickle
 from random import random
 from tempfile import gettempdir
-from watson.stdlib.imports import load_definition_from_string
+from watson.common.imports import load_definition_from_string
 
 COOKIE_KEY = 'watson.session'
 

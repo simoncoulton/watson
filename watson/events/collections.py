@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from collections import namedtuple
-from watson.stdlib.imports import get_qualified_name
+from watson.common.imports import get_qualified_name
 
 Listener = namedtuple('Listener', 'callback priority only_once')
 

@@ -3,7 +3,7 @@ from watson.di.container import IocContainer
 from watson.mvc.applications import HttpApplication
 from watson.mvc import config
 from watson.mvc.controllers import RestController
-from watson.stdlib.datastructures import module_to_dict
+from watson.common.datastructures import module_to_dict
 from tests.watson.mvc.support import sample_environ, start_response
 
 

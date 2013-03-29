@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from types import FunctionType
 from watson.di import ContainerAware
-from watson.stdlib.imports import get_qualified_name, load_definition_from_string
+from watson.common.imports import get_qualified_name, load_definition_from_string
 
 
 class BaseProcessor(ContainerAware):

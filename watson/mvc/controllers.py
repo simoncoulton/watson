@@ -2,7 +2,7 @@
 import re
 from watson.di import ContainerAware
 from watson.http.messages import Response, Request
-from watson.stdlib.imports import get_qualified_name
+from watson.common.imports import get_qualified_name
 
 
 class BaseController(ContainerAware):

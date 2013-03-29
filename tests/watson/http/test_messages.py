@@ -5,7 +5,7 @@ from nose.tools import raises
 from watson.http.messages import Response, Request, create_request_from_environ
 from watson.http.cookies import CookieDict
 from watson.http.sessions import MemoryStorage
-from watson.stdlib.datastructures import ImmutableMultiDict, MultiDict
+from watson.common.datastructures import ImmutableMultiDict, MultiDict
 from tests.watson.http.support import sample_environ
 
 

@@ -7,7 +7,7 @@ try:
     import memcache
 except ImportError:
     pass
-from watson.stdlib.imports import get_qualified_name
+from watson.common.imports import get_qualified_name
 
 
 class BaseStorage(object):

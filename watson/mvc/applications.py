@@ -8,7 +8,7 @@ from watson.http.messages import create_request_from_environ, Response
 from watson.mvc.exceptions import ApplicationError
 from watson.mvc import config as DefaultConfig
 from watson.mvc import events
-from watson.stdlib.datastructures import dict_deep_update, module_to_dict
+from watson.common.datastructures import dict_deep_update, module_to_dict
 
 
 class BaseApplication(ContainerAware, EventDispatcherAware):
