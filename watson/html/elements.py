@@ -23,9 +23,11 @@ class TagMixin(object):
         raise NotImplementedError('The render method has not been implemented')
 
 
-def flatten_attributes(attrs):
+def flatten_attributes(attrs, keep_empty=False):
     """Flattens attributes into a single string of key=value pairs.
 
     Attributes are sorted alphabetically.
     """
-    return ' '.join(['{0}="{1}"'.format(name, value) for name, value in sorted(attrs.items())])
+    value_check = lambda val: True if keep_empty else True if val else False
+    return ' '.join(['{0}="{1}"'.format(name, value or '') for name, value
+                    in sorted(attrs.items()) if value_check(value)])

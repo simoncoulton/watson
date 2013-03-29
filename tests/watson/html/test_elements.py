@@ -8,6 +8,14 @@ class TestFlattenAttributes(object):
         attrs = {'class': 'menu', 'id': 'MainMenu'}
         assert flatten_attributes(attrs) == 'class="menu" id="MainMenu"'
 
+    def test_flatten_forget_empty(self):
+        attrs = {'class': 'menu', 'id': None}
+        assert flatten_attributes(attrs) == 'class="menu"'
+
+    def test_flatten_keep_empty(self):
+        attrs = {'class': 'menu', 'id': None}
+        assert flatten_attributes(attrs, True) == 'class="menu" id=""'
+
 
 class TestTagMixin(object):
     def test_initialize(self):
