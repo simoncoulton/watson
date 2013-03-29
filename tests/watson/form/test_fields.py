@@ -11,6 +11,10 @@ class TestInputField(object):
         assert str(field) == '<input name="test" type="blah" />'
         assert repr(field) == '<watson.form.fields.Input name:test>'
 
+    def test_modify_label_attributes(self):
+        field = fields.Input(name='test', type='text', label='Test', _class='text', label_attrs={'class': 'inline'})
+        assert field.render_with_label() == '<label class="inline" for="test">Test</label><input class="text" id="test" name="test" type="text" />'
+
 
 class TestTextInputField(object):
     def test_create(self):

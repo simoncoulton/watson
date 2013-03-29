@@ -14,17 +14,21 @@ class Label(TagMixin):
         string html: the html used to render the label
         string text: the text associated with the label
     """
-    html = '<label for="{0}">{1}</label>'
+    html = '<label {0}>{1}</label>'
     text = None
 
-    def __init__(self, text):
+    def __init__(self, text, **kwargs):
         self.text = text
+        super(Label, self).__init__(**kwargs)
 
     def render(self, field):
-        if not 'id' in field.attributes:
+        attrs = self.attributes.copy()
+        if not 'id' in field.attributes and field.name:
             # inject id based on field name
-            field.attributes['id'] = field.name
-        return self.html.format(field.attributes['id'], self.text)
+            id = field.name
+            field.attributes['id'] = id
+            attrs['for'] = id
+        return self.html.format(flatten_attributes(attrs), self.text)
 
 
 class FieldMixin(TagMixin):
@@ -45,17 +49,22 @@ class FieldMixin(TagMixin):
     _value = None
     _original_value = None
 
-    def __init__(self, name=None, value=None, label=None, **kwargs):
+    def __init__(self, name=None, value=None, label=None, label_attrs=None, **kwargs):
         """Initializes the field with a specific name.
         """
         self.count = next(FieldMixin._counter)
         if not name:
             name = ''
         self.label = Label(label or name)
+        if label_attrs and isinstance(label_attrs, dict):
+            self.label.attributes.update(label_attrs)
         kwargs['name'] = name
         self.value = value
         self.filters = [Trim()] + kwargs.get('filters', [])
         self.validators = kwargs.get('validators', [])
+        if '_class' in kwargs:
+            kwargs['class'] = kwargs.get('_class')
+            del kwargs['_class']
         if 'required' in kwargs:
             self.validators.append(Required())
             kwargs['required'] = 'required'
@@ -228,12 +237,15 @@ class GroupInputMixin(Input):
     def __render_input(self, id, attributes, label_text):
         element = self.html.format(attributes)
         output = '{0}{1}'
+        attrs = self.label.attributes.copy()
+        attrs['for'] = id
+        flat_attrs = flatten_attributes(attrs)
         if self.wrapped:
             if self.label_position == 'left':
-                return self.label.html.format(id, output.format(label_text, element))
-            return self.label.html.format(id, output.format(element, label_text))
+                return self.label.html.format(flat_attrs, output.format(label_text, element))
+            return self.label.html.format(flat_attrs, output.format(element, label_text))
         else:
-            label = self.label.html.format(id, label_text)
+            label = self.label.html.format(flat_attrs, label_text)
             if self.label_position == 'left':
                 return output.format(label, element)
             return output.format(element, label)
