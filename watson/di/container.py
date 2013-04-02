@@ -3,8 +3,8 @@ from types import FunctionType
 from watson.di.processors import BaseProcessor
 from watson.events.dispatcher import EventDispatcherAware
 from watson.events.types import Event
-from watson.stdlib.datastructures import dict_deep_update
-from watson.stdlib.imports import get_qualified_name, load_definition_from_string
+from watson.common.datastructures import dict_deep_update
+from watson.common.imports import get_qualified_name, load_definition_from_string
 
 
 PRE_EVENT = 'event.container.pre'
@@ -18,7 +18,7 @@ DEFAULTS = {
         ],
         POST_EVENT: [
             'watson.di.processors.SetterInjectionProcessor',
-            'watson.di.processors.PropertyInjectionProcessor',
+            'watson.di.processors.AttributeInjectionProcessor',
             'watson.di.processors.ContainerAwareProcessor'
         ]
     }
@@ -26,8 +26,7 @@ DEFAULTS = {
 
 
 class IocContainer(EventDispatcherAware):
-    """
-    A simple dependency injection container that can store and retrieve
+    """A simple dependency injection container that can store and retrieve
     dependencies for an application.
 
     The container is configured via a dict containing the following keys:
@@ -73,8 +72,7 @@ class IocContainer(EventDispatcherAware):
 
     @property
     def params(self):
-        """
-        Convenience method for retrieving the params.
+        """Convenience method for retrieving the params.
 
         Returns:
             dict: A dict of params.
@@ -83,8 +81,7 @@ class IocContainer(EventDispatcherAware):
 
     @property
     def definitions(self):
-        """
-        Convenience method for retrieving the definitions.
+        """Convenience method for retrieving the definitions.
 
         Returns:
             dict: A dict of params.
@@ -92,8 +89,7 @@ class IocContainer(EventDispatcherAware):
         return self.config['definitions']
 
     def __init__(self, config=None):
-        """
-        Initializes the container and set some default configuration options.
+        """Initializes the container and set some default configuration options.
 
         Args:
             dict config: A dict containing the params, definitions and processors.
@@ -105,8 +101,7 @@ class IocContainer(EventDispatcherAware):
                 self.attach_processor(event, load_definition_from_string(processor)())
 
     def get(self, name):
-        """
-        Retrieve a dependency from the container.
+        """Retrieve a dependency from the container.
 
         Args:
             string name: The name of the dependency to retrieve.
@@ -120,16 +115,15 @@ class IocContainer(EventDispatcherAware):
         definition = self.__find(name)
         if name not in self.__instantiated \
             or definition.get('type', 'singleton').lower() == 'prototype' \
-            or isinstance(self.__instantiated.get(name), FunctionType):
-            instantiated = self.__create_instance(name, definition)
-            self.__instantiated[name] = instantiated
+                or isinstance(self.__instantiated.get(name), FunctionType):
+                    instantiated = self.__create_instance(name, definition)
+                    self.__instantiated[name] = instantiated
         else:
             instantiated = self.__instantiated[name]
         return instantiated
 
     def add(self, name, item, type='singleton'):
-        """
-        Add a dependency to the container (either already instatiated or not).
+        """Add a dependency to the container (either already instatiated or not).
 
         Args:
             string name: The name used to reference the dependency
@@ -171,9 +165,10 @@ class IocContainer(EventDispatcherAware):
         return dependency
 
     def attach_processor(self, event, processor):
-        """
-        Attach a processor to the container to be called when a dependency
-        is retrieved.
+        """Attach a processor to the container.
+
+        Attaches a processor to the container that will be triggered on a specific
+        event.
 
         Args:
             string event: The name of the event (watson.di.container.POST_EVENT or PRE_EVENT)
@@ -185,8 +180,7 @@ class IocContainer(EventDispatcherAware):
         self.dispatcher.add(event, processor)
 
     def __repr__(self):
-        return '<{0}: {1} param(s), ' \
-                    '{2} definition(s)>'.format(
-                        get_qualified_name(self),
-                        len(self.config['params']),
-                        len(self.config['definitions']))
+        return ('<{0}: {1} param(s), '
+                '{2} definition(s)>').format(
+                    get_qualified_name(self), len(self.config['params']),
+                    len(self.config['definitions']))

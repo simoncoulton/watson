@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from watson.stdlib.datastructures import MultiDict
+from watson.common.datastructures import MultiDict
 from watson.http.cookies import CookieDict
 
 
 class HeaderDict(MultiDict):
-    """
+    """A dictionary of headers and their values.
+
     Contains a collection of key/value pairs that define a set of headers
     for either a http request or response (e.g. HTTP_ACCEPT)
     """
@@ -29,8 +30,7 @@ class HeaderDict(MultiDict):
         self.set(parse_from_environ_header_field(field), '; '.join(vals), replace)
 
     def get_option(self, field, option, default=None):
-        """
-        Retrieve an individual option from a header.
+        """Retrieve an individual option from a header.
 
         Usage:
             # Content-Type: text/html; charset=utf-8
@@ -66,7 +66,8 @@ class HeaderDict(MultiDict):
             super(HeaderDict, self).__delitem__(field)
 
     def __call__(self):
-        """
+        """Output in a format suitable for a wsgi callable.
+
         Outputs the header collection as a list of tuple pairs for use in a
         wsgi application.
 
@@ -87,36 +88,31 @@ class HeaderDict(MultiDict):
 
 
 def is_header(field):
-    """
-    Determine if a field is an acceptable http header.
+    """Determine if a field is an acceptable http header.
     """
     return field[:5] == 'HTTP_' or field in ('CONTENT_TYPE', 'CONTENT_LENGTH')
 
 
 def http_header(field):
-    """
-    Return the correct header field name.
+    """Return the correct header field name.
     """
     return field if field[:5] != 'HTTP_' else field[5:]
 
 
 def parse_to_environ_header_field(field):
-    """
-    Converts a http header field into an uppercase form.
+    """Converts a http header field into an uppercase form.
     """
     return field.replace('-', '_').upper()
 
 
 def parse_from_environ_header_field(field):
-    """
-    Converts a http header field into a lowercase form.
+    """Converts a http header field into a lowercase form.
     """
     return http_header(field).replace('_', ' ').title().replace(' ', '-')
 
 
 def split_headers_server_vars(environ):
-    """
-    Splits the environ into headers and server pairs.
+    """Splits the environ into headers and server pairs.
     """
     headers = HeaderDict()
     server = MultiDict()

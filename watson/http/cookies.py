@@ -3,14 +3,20 @@ from http.cookies import SimpleCookie, Morsel
 
 
 class CookieDict(SimpleCookie):
-    """
+    """A dictionary containing cookies.
+
     A basic extension of the SimpleCookie class from the standard library, but
     designed to work better with wsgi.
+
+    Usage:
+        cd = CookieDict()
+        cookie = cd.add('my_cookie', 'some value')
+        print(cookie)  # my_cookie=some value
+        print(cd['my_cookie'])  # my_cookie=some value
     """
     def add(self, name, value='', expires=0, path='/', domain=None, secure=False,
             httponly=False, comment=None):
-        """
-        Convenience method to add cookies to the dict.
+        """Convenience method to add cookies to the dict.
 
         Args:
             name: the name of the cookie
@@ -43,8 +49,7 @@ class CookieDict(SimpleCookie):
         return morsel
 
     def delete(self, name):
-        """
-        Expire a cookie the next time it is sent to the browser.
+        """Expire a cookie the next time it is sent to the browser.
 
         Args:
             name: the name of the cookie
@@ -52,8 +57,7 @@ class CookieDict(SimpleCookie):
         self[name].expire()
 
     def expire(self):
-        """
-        Expire all the cookies.
+        """Expire all the cookies in the dictionary.
         """
         for name in self:
             self.delete(name)

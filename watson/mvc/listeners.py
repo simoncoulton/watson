@@ -6,7 +6,7 @@ from watson.http import MIME_TYPES
 from watson.mvc.exceptions import NotFoundError, InternalServerError
 from watson.mvc.views import Model
 from watson.mvc.exceptions import ExceptionHandler
-from watson.stdlib.imports import get_qualified_name
+from watson.common.imports import get_qualified_name
 
 
 class BaseListener(object):

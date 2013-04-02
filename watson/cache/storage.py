@@ -1,34 +1,80 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime, timedelta
-import memcache
 import os
 import pickle
 from tempfile import gettempdir
-from watson.stdlib.imports import get_qualified_name
+try:
+    import memcache
+except ImportError:
+    pass
+from watson.common.imports import get_qualified_name
 
 
 class BaseStorage(object):
+    """Base class for all cache storage classes.
+
+    Cache storage classes are designed to act similar to a dict, however get and
+    set methods can be used when a timeout is required on a set, or when a default
+    value is to be specified on a get.
+
+    Attributes:
+        dict config: The relevant configuration settings for the storage.
+    """
     config = None
 
     def __init__(self, config=None):
         self.config = config or {}
 
     def __setitem__(self, key, value, timeout=0):
+        """See set()
+        """
         raise NotImplementedError('__setitem__ must be implemented')
 
     def __getitem__(self, key, default=None):
+        """See get()
+        """
         raise NotImplementedError('__getitem__ must be implemented')
 
     def __delitem__(self, key):
+        """Delete a key from the cache.
+
+        Args:
+            string key: The key to delete
+
+        Usage:
+            del cache['key'] # deletes 'key' from the cache
+        """
         raise NotImplementedError('__delitem__ must be implemented')
 
     def __contains__(self, key):
+        """Determine whether or not a key exists in the cache.
+
+        Args:
+            string key: The key to find
+
+        Returns:
+            True/False depending on if the key exists.
+
+        Usage:
+            if 'key' in cache:
+                print('exists!')
+        """
         raise NotImplementedError('__contains__ must be implemented')
 
     def flush(self):
+        """Clears all items from the cache.
+        """
         raise NotImplementedError('flush must be implemented')
 
     def expired(self, key):
+        """Determine if a key has expired or not.
+
+        Args:
+            string key: The key to find
+
+        Returns:
+            True/False depending on expiration
+        """
         raise NotImplementedError('expired must be implemented')
 
     def __repr__(self):
@@ -37,13 +83,40 @@ class BaseStorage(object):
     # Convenience methods
 
     def set(self, key, value, timeout=0):
+        """Sets a key in the cache.
+
+        Args:
+            string key: The key to be used as a reference
+            mixed value: The value to store in the key
+            int timeout: The amount of time in seconds a key is valid for.
+
+        Usage:
+            cache['key'] = 'value'
+        """
         self.__setitem__(key, value, timeout)
 
     def get(self, key, default=None):
+        """Gets a key from the cache, returns the default if not set.
+
+        Args:
+            string key: The key to be retrieved
+
+        Returns:
+            The value stored within the cache
+
+        Usage:
+            value = cache['key']
+        """
         return self.__getitem__(key, default)
 
 
 class Memory(BaseStorage):
+    """A cache storage mechanism for storing items in memory.
+
+    Memory cache storage will maintain the cache while the application is being
+    run. This is usually best used in instances when you don't want to keep
+    the cached items after the application has finished running.
+    """
     def __init__(self):
         self._cache = {}
 
@@ -80,7 +153,25 @@ class Memory(BaseStorage):
 
 
 class File(BaseStorage):
+    """A cache storage mechanism for storing items on the local filesystem.
+
+    File cache storage will persist the data to the filesystem in whichever
+    directory has been specified in the configuration options. If no
+    directory is specified then the system temporary folder will be used.
+    """
     def __init__(self, config=None):
+        """
+        Initializes the cache.
+
+        Args:
+            dict config: The config for the cache
+
+        Usage:
+            cache = File({'dir': '/tmp', 'prefix': 'my-cache'})
+            # all cached items will be saved to /tmp
+            # and will be prefixed with my-cache
+            cache['key'] = 'value' # /tmp/my-cache-key contains a serialized 'value'
+        """
         settings = {'dir': gettempdir(), 'prefix': 'cache'}
         if not config:
             config = {}
@@ -154,31 +245,59 @@ class File(BaseStorage):
 
 
 class Memcached(BaseStorage):
+    """A cache storage mechanism for storing items in memcached.
+
+    Memcached cache storage will utilize python3-memcached to maintain the cache
+    across multiple servers.
+    Python3-memcached documentation can be found at http://pypi.python.org/pypi/python3-memcached/
+    """
+    client = None
+
     def __init__(self, config=None):
+        """
+        Initializes the cache.
+
+        Args:
+            dict config: The config for the cache
+
+        Usage:
+            cache = Memcached({'servers': ['127.0.0.1:11211', '192.168.100.1:11211']})
+        """
         settings = {'servers': ['127.0.0.1:11211']}
         if not config:
             config = {}
         settings.update(config)
         self.config = settings
-        self.client = memcache.Client(self.config['servers'])
 
     def __setitem__(self, key, value, timeout=0):
+        self.open()
         self.client.set(key, value, timeout)
 
     def __getitem__(self, key, default=None):
+        self.open()
         value = self.client.get(key)
         if not value:
             return default
         return value
 
     def __delitem__(self, key):
+        self.open()
         return self.client.delete(key)
 
     def flush(self):
+        self.open()
         self.client.flush_all()
         return True
 
+    def open(self):
+        if not self.client:
+            try:
+                self.client = memcache.Client(self.config['servers'])
+            except:
+                raise ImportError('You must have python3-memcached installed.')
+
     def close(self):
+        self.open()
         self.client.disconnect_all()
         return True
 

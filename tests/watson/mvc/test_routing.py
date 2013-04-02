@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from wsgiref import util
 from nose.tools import raises
 from watson.http.messages import create_request_from_environ
 from watson.mvc.routing import create_route_from_definition
 from watson.mvc.routing import StaticRoute, SegmentRoute, Router
+from tests.watson.mvc.support import sample_environ
 
 sample_routes = {
     'home': {
@@ -44,13 +44,6 @@ sample_routes = {
         'subdomain': 'clients'
     }
 }
-
-
-def sample_environ(**kwargs):
-    environ = {}
-    util.setup_testing_defaults(environ)
-    environ.update(kwargs)
-    return environ
 
 
 class TestRouting(object):

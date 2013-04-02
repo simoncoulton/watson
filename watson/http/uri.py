@@ -73,18 +73,14 @@ class Url(object):
             self._parts = url
         elif isinstance(url, dict):
             if 'hostname' in url and 'netloc' not in url:
-                netloc = url['hostname']
+                netloc = url.pop('hostname')
                 if 'port' in url:
-                    netloc += ':' + str(url['port'])
-                    del url['port']
+                    netloc += ':' + str(url.pop('port'))
                 url['netloc'] = netloc
-                del url['hostname']
             if 'scheme' not in url:
                 url['scheme'] = 'http'
             if 'username' in url:
-                url['netloc'] = '{0}:{1}@{2}'.format(url['username'], url.get('password', ''), url['netloc'])
-                del url['username']
-                del url['password']
+                url['netloc'] = '{0}:{1}@{2}'.format(url.pop('username'), url.pop('password', ''), url['netloc'])
             if 'params' not in url:
                 url['params'] = None
             if 'fragment' not in url:

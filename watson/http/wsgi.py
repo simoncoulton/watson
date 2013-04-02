@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from cgi import FieldStorage
 from urllib.parse import parse_qsl
-from watson.stdlib.datastructures import MultiDict
+from watson.common.datastructures import MultiDict
 
 
 def get_form_vars(environ):

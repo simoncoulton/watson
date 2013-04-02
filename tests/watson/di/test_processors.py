@@ -2,7 +2,7 @@
 from nose.tools import raises
 from watson.di import ContainerAware
 from watson.di.processors import ConstructorInjectionProcessor, BaseProcessor
-from watson.di.processors import SetterInjectionProcessor, PropertyInjectionProcessor
+from watson.di.processors import SetterInjectionProcessor, AttributeInjectionProcessor
 from watson.di.processors import ContainerAwareProcessor
 from watson.di.container import IocContainer
 from watson.events.types import Event
@@ -90,9 +90,9 @@ class TestSetterInjection(object):
         assert event.target.value == 'arg'
 
 
-class TestPropertyInjection(object):
+class TestAttributeInjection(object):
     def test_inject_property(self):
-        processor = PropertyInjectionProcessor()
+        processor = AttributeInjectionProcessor()
         processor.container = IocContainer()
         event = sample_event('tests.watson.di.test_processors.SampleDependency')
         event.params['definition']['property'] = {'basic_property': 'test value'}

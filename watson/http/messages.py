@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
 from copy import copy
 from wsgiref.util import request_uri
-from . import STATUS_CODES, REQUEST_METHODS
-from .cookies import CookieDict
-from .headers import HeaderDict, split_headers_server_vars
-from .uri import Url
-from .wsgi import get_form_vars
-from .sessions import create_session_from_request
-from watson.stdlib.datastructures import ImmutableMultiDict, MultiDict
+from watson.http import STATUS_CODES, REQUEST_METHODS
+from watson.http.cookies import CookieDict
+from watson.http.headers import HeaderDict, split_headers_server_vars
+from watson.http.uri import Url
+from watson.http.wsgi import get_form_vars
+from watson.http.sessions import create_session_from_request
+from watson.common.datastructures import ImmutableMultiDict, MultiDict
 
 
 class MessageMixin(object):
-    """
-    Base mixin for all Http Message objects.
+    """Base mixin for all Http Message objects.
     """
     _headers = None
     _version = None
@@ -45,7 +44,8 @@ class MessageMixin(object):
 
 
 def create_request_from_environ(environ):
-    """
+    """Create a new Request object.
+
     Create a new Request object based on a set of environ variables. To create
     a mutable version of the request you should copy() the Request object.
 
@@ -59,14 +59,10 @@ def create_request_from_environ(environ):
         method = post.get('HTTP_REQUEST_METHOD')
     else:
         method = server['REQUEST_METHOD']
-    return Request(method,
-                    ImmutableMultiDict(get),
-                    ImmutableMultiDict(post),
-                    ImmutableMultiDict(files),
-                    ImmutableMultiDict(headers),
-                    ImmutableMultiDict(server),
-                    ImmutableMultiDict(cookies),
-                    ImmutableMultiDict(session))
+    return Request(method, ImmutableMultiDict(get), ImmutableMultiDict(post),
+                   ImmutableMultiDict(files), ImmutableMultiDict(headers),
+                   ImmutableMultiDict(server), ImmutableMultiDict(cookies),
+                   ImmutableMultiDict(session))
 
 
 class Request(MessageMixin):
@@ -104,8 +100,7 @@ class Request(MessageMixin):
 
     @property
     def method(self):
-        """
-        The method associated with the request.
+        """The method associated with the request.
 
         Returns:
             A string representation of the Http Request method
@@ -114,8 +109,7 @@ class Request(MessageMixin):
 
     @property
     def get(self):
-        """
-        A dict of all GET variables associated with the request.
+        """A dict of all GET variables associated with the request.
 
         Returns:
             A dict of GET variables
@@ -124,8 +118,7 @@ class Request(MessageMixin):
 
     @property
     def post(self):
-        """
-        A dict of all POST variables associated with the request.
+        """A dict of all POST variables associated with the request.
 
         Returns:
             A dict of POST variables
@@ -134,8 +127,7 @@ class Request(MessageMixin):
 
     @property
     def files(self):
-        """
-        A dict of all files that have been uploaded as part of a
+        """A dict of all files that have been uploaded as part of a
         enctype="multipart/form-data" request.
 
         Usage:
@@ -149,8 +141,7 @@ class Request(MessageMixin):
 
     @property
     def server(self):
-        """
-        A dict of all environ variables associated with the server where the
+        """A dict of all environ variables associated with the server where the
         request originated.
 
         Returns:
@@ -160,8 +151,7 @@ class Request(MessageMixin):
 
     @property
     def cookies(self):
-        """
-        A dict of all cookies from the request.
+        """A dict of all cookies from the request.
 
         Usage:
             request = ...
@@ -188,8 +178,7 @@ class Request(MessageMixin):
 
     @property
     def url(self):
-        """
-        Generates a watson.http.uri.Url object based on Request.server variables.
+        """Generates a watson.http.uri.Url object based on Request.server variables.
 
         Usage:
             request = ...
@@ -204,8 +193,7 @@ class Request(MessageMixin):
 
     def __init__(self, method, get=None, post=None, files=None, headers=None,
                  server=None, cookies=None, body=''):
-        """
-        Creates a new instance of the Request object.
+        """Creates a new instance of the Request object.
 
         Args:
             method: The Http request method
@@ -230,10 +218,10 @@ class Request(MessageMixin):
 
     def __str__(self):
         return '{0} {1} HTTP/{2}\r\n{3}\r\n\r\n{4}'.format(self.method,
-                                                       self.url,
-                                                       self.version,
-                                                       self.headers,
-                                                       self.body)
+                                                           self.url,
+                                                           self.version,
+                                                           self.headers,
+                                                           self.body)
 
     # TODO: Add copy method to create non-immutable dicts
     def __copy__(self):
@@ -312,8 +300,7 @@ class Response(MessageMixin):
 
     @property
     def status_code(self):
-        """
-        The status code for the Response.
+        """The status code for the Response.
         """
         return self._status_code or 200
 
@@ -327,15 +314,13 @@ class Response(MessageMixin):
 
     @property
     def status_line(self):
-        """
-        The formatted status line including the status code and message.
+        """The formatted status line including the status code and message.
         """
         return '{0} {1}'.format(self.status_code, STATUS_CODES.get(self.status_code))
 
     @property
     def cookies(self):
-        """
-        Returns the cookies associated with the Response.
+        """Returns the cookies associated with the Response.
         """
         if not self._cookies:
             self._cookies = CookieDict()
@@ -343,8 +328,7 @@ class Response(MessageMixin):
 
     @cookies.setter
     def cookies(self, cookies):
-        """
-        Sets the cookies associated with the Response.
+        """Sets the cookies associated with the Response.
         """
         if not isinstance(cookies, CookieDict):
             cookies = CookieDict(cookies)
@@ -364,23 +348,20 @@ class Response(MessageMixin):
         self.version = str(version)
 
     def encoding(self):
-        """
-        Retrieve the encoding for the response from the headers, defaults to
+        """Retrieve the encoding for the response from the headers, defaults to
         UTF-8.
         """
         return self.headers.get_option('Content-Type', 'charset', 'utf-8')
 
     def start(self):
-        """
-        Return the status_line and headers of the response for use in a WSGI
+        """Return the status_line and headers of the response for use in a WSGI
         application.
         """
         self._prepare()
         return self.status_line, self.headers()
 
     def raw(self):
-        """
-        Return the raw encoded output for the response.
+        """Return the raw encoded output for the response.
         """
         return str(self).encode(self.encoding())
 

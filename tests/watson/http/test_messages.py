@@ -1,19 +1,12 @@
 # -*- coding: utf-8 -*-
 from copy import copy
 from io import BytesIO, BufferedReader
-from wsgiref import util
 from nose.tools import raises
 from watson.http.messages import Response, Request, create_request_from_environ
 from watson.http.cookies import CookieDict
 from watson.http.sessions import MemoryStorage
-from watson.stdlib.datastructures import ImmutableMultiDict, MultiDict
-
-
-def sample_environ(**kwargs):
-    environ = {}
-    util.setup_testing_defaults(environ)
-    environ.update(kwargs)
-    return environ
+from watson.common.datastructures import ImmutableMultiDict, MultiDict
+from tests.watson.http.support import sample_environ
 
 
 class TestRequest(object):

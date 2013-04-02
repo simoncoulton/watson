@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 from watson.http import REQUEST_METHODS, MIME_TYPES
-from watson.stdlib.imports import get_qualified_name
+from watson.common.imports import get_qualified_name
 
 
 def create_route_from_definition(name, definition):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import linecache
 from watson import __version__
-from watson.stdlib.imports import get_qualified_name
+from watson.common.imports import get_qualified_name
 
 
 class ApplicationError(Exception):

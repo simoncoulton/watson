@@ -1,30 +1,43 @@
 # -*- coding: utf-8 -*-
-from watson.stdlib.imports import get_qualified_name
+from watson.common.imports import get_qualified_name
 from watson.events.collections import ListenerCollection, ResultCollection
 from watson.events.types import Event
 
 
 class EventDispatcher(object):
+    """Register and trigger events that will be executed by callables.
+
+    The EventDispatcher allows user defined events to be specified. Any
+    listener that is triggered will have the event that was triggered
+    passed to it as the first argument. Attributes can be added to the
+    event params (see watson.events.types.Event) which can then be
+    accessed by the listener.
+
+    Usage:
+        dispatcher = EventDispatcher()
+        dispatcher.add('MyEvent', lambda x: x.name)
+        result = dispatcher.trigger(Event('SampleEvent'))
+        result.first()  # 'SampleEvent'
+    """
 
     _events = None
 
     @property
     def events(self):
-        """
-        Returns the events registered on the event dispatcher.
+        """Returns the events registered on the event dispatcher.
         """
         if not self._events:
             self.clear()
         return self._events
 
     def clear(self):
-        """
-        Clears all registered events from the event dispatcher.
+        """Clears all registered events from the event dispatcher.
         """
         self._events = {}
 
     def add(self, event, callback, priority=1, only_once=False):
-        """
+        """Add an event listener to the dispatcher.
+
         Adds an event listener to the relevant event listener collection. If
         a listener is set to once_only, it will be removed when the event
         is triggered on the EventDispatcher.
@@ -45,7 +58,8 @@ class EventDispatcher(object):
         return self.events[event]
 
     def remove(self, event, callback=None):
-        """
+        """Remove an event listener from the dispatcher.
+
         Removes an event listener from the relevant ListenerCollection.
         If no callback is specified, all event listeners for that event are
         removed.
@@ -65,21 +79,20 @@ class EventDispatcher(object):
         return self.events[event]
 
     def __contains__(self, event):
-        """
-        Return whether or not an event is registered with the event dispatcher.
+        """Return whether or not an event is registered with the event dispatcher.
         """
         return event in self.events
 
     def has(self, event, callback=None):
-        """
-        Return whether or not a callback is found for a particular event.
+        """Return whether or not a callback is found for a particular event.
         """
         return callback in self.events[event] if event in self.events else False
 
     def trigger(self, event):
-        """
+        """Fire an event and return a list of results from all listeners.
+
         Dispatches an event to all associated listeners and returns a
-        tuple of results. If the event is stopped (Event.stopped) then the
+        list of results. If the event is stopped (Event.stopped) then the
         ResultCollection returned will only contain the response from the
         first listener in the stack.
 
@@ -109,8 +122,7 @@ class EventDispatcher(object):
 
 
 class EventDispatcherAware(object):
-    """
-    Provides an interface for event dispatcher's to be injected.
+    """Provides an interface for event dispatchers to be injected.
     """
     _dispatcher = None
 

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from nose.tools import raises
 from watson.di.container import IocContainer
+from tests.watson.di.support import SampleDependency
 
 
 class TestIoc(object):
@@ -14,11 +15,11 @@ class TestIoc(object):
         container = IocContainer({
             'definitions': {
                 'test': {
-                    'item': 'tests.watson.di.test_container.SampleDependency',
+                    'item': 'tests.watson.di.support.SampleDependency',
                     'type': 'singleton',
                 },
                 'test2': {
-                    'item': 'tests.watson.di.test_container.sample_dependency',
+                    'item': 'tests.watson.di.support.sample_dependency',
                     'type': 'singleton',
                 }
             }
@@ -69,7 +70,7 @@ class TestIoc(object):
         container = IocContainer({
             'definitions': {
                 'test': {
-                    'item': 'tests.watson.di.test_container.SampleDependency',
+                    'item': 'tests.watson.di.support.SampleDependency',
                     'type': 'prototype'
                 }
             }
@@ -77,11 +78,3 @@ class TestIoc(object):
         test1 = container.get('test')
         test2 = container.get('test')
         assert test1 != test2
-
-
-def sample_dependency(container):
-    return 'test'
-
-
-class SampleDependency(object):
-    pass

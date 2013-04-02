@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from nose.tools import raises
 from watson.http.messages import Request, Response
-from watson.mvc.controllers import BaseController, BaseHttpController, ActionController, RestController
+from watson.mvc.controllers import BaseController, HttpControllerMixin
+from tests.watson.mvc.support import SampleActionController, SampleRestController
 
 
 class TestNotImplementedController(object):
@@ -18,20 +19,20 @@ class TestNotImplementedController(object):
 
 class TestBaseHttpController(object):
     def test_request_response(self):
-        base = BaseHttpController()
+        base = HttpControllerMixin()
         base.request = Request('GET')
         assert isinstance(base.request, Request)
         assert isinstance(base.response, Response)
-        assert repr(base) == '<watson.mvc.controllers.BaseHttpController>'
+        assert repr(base) == '<watson.mvc.controllers.HttpControllerMixin>'
 
     @raises(TypeError)
     def test_invalid_request(self):
-        base = BaseHttpController()
+        base = HttpControllerMixin()
         base.request = 'test'
 
     @raises(TypeError)
     def test_invalid_response(self):
-        base = BaseHttpController()
+        base = HttpControllerMixin()
         base.response = 'test'
 
 
@@ -57,16 +58,3 @@ class TestRestController(object):
         controller = SampleRestController()
         controller.request = Request('GET')
         assert controller.get_execute_method_path() == ['samplerestcontroller', 'get']
-
-
-class SampleActionController(ActionController):
-    def something_action(self, **kwargs):
-        return 'something_action'
-
-    def blah_action(self):
-        return 'blah_action'
-
-
-class SampleRestController(RestController):
-    def GET(self):
-        return 'GET'
