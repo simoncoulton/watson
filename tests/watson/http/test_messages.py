@@ -83,6 +83,10 @@ class TestRequest(object):
         assert isinstance(request.post, ImmutableMultiDict)
         assert isinstance(new_request.post, MultiDict)
 
+    def test_repr(self):
+        environ = sample_environ()
+        assert repr(create_request_from_environ(environ)) == '<watson.http.messages.Request method:GET url:http://127.0.0.1/>'
+
 
 class TestResponse(object):
     def test_create(self):
