@@ -43,7 +43,7 @@ class MessageMixin(object):
         self.body = body or ''
 
 
-def create_request_from_environ(environ):
+def create_request_from_environ(environ, session_class=None):
     """Create a new Request object.
 
     Create a new Request object based on a set of environ variables. To create
@@ -54,15 +54,15 @@ def create_request_from_environ(environ):
     """
     headers, server, cookies = split_headers_server_vars(environ)
     get, post, files = get_form_vars(environ)
-    session = ImmutableMultiDict()
     if post.get('HTTP_REQUEST_METHOD', '').upper() in REQUEST_METHODS:
         method = post.get('HTTP_REQUEST_METHOD')
     else:
         method = server['REQUEST_METHOD']
-    return Request(method, ImmutableMultiDict(get), ImmutableMultiDict(post),
-                   ImmutableMultiDict(files), ImmutableMultiDict(headers),
-                   ImmutableMultiDict(server), ImmutableMultiDict(cookies),
-                   ImmutableMultiDict(session))
+    request = Request(method, ImmutableMultiDict(get), ImmutableMultiDict(post),
+                      ImmutableMultiDict(files), ImmutableMultiDict(headers),
+                      ImmutableMultiDict(server), ImmutableMultiDict(cookies))
+    request.session_class = session_class if session_class else Request._session_class
+    return request
 
 
 class Request(MessageMixin):
