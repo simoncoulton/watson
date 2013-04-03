@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import itertools
-from watson.filters.string import Trim
-from watson.html.elements import TagMixin, flatten_attributes
 from watson.common.imports import get_qualified_name
-from watson.validators.string import Required
+from watson.filters import Trim
+from watson.html.elements import TagMixin, flatten_attributes
+from watson.validators import Required
 # todo: csrf field
 
 
