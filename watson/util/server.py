@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from wsgiref.simple_server import make_server
-from .middleware import StaticFileMiddleware
-from .reloader import main
+from watson.util.middleware import StaticFileMiddleware
+from watson.util.reloader import main
 
 
 def make_dev_server(app, host='127.0.0.1', port=8000, do_reload=True):
