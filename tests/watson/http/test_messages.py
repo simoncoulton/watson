@@ -65,8 +65,7 @@ class TestRequest(object):
 
     def test_session(self):
         environ = sample_environ(HTTP_COOKIE='watson.session=123456;')
-        request = create_request_from_environ(environ)
-        request.session_class = 'watson.http.sessions.MemoryStorage'
+        request = create_request_from_environ(environ, 'watson.http.sessions.MemoryStorage')
         assert request.session.id == '123456'
         assert isinstance(request.session, MemoryStorage)
 
