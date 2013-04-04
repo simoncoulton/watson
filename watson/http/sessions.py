@@ -161,6 +161,11 @@ class StorageMixin(dict):
             self.load()
         return self.data[key] if key in self.data else default
 
+    def __contains__(self, key):
+        if not self.data:
+            self.load()
+        return key in self.data
+
     def __iter__(self):
         if not self.data:
             self.load()
