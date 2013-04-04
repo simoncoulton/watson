@@ -161,6 +161,12 @@ class StorageMixin(dict):
             self.load()
         return self.data[key] if key in self.data else default
 
+    def __iter__(self):
+        if not self.data:
+            self.load()
+        for key, value in self.data.items():
+            yield (key, value)
+
     def __repr__(self):
         return '<watson.http.sessions.{0} id:{1}>'.format(self.__class__.__name__, self.id)
 
@@ -250,6 +256,7 @@ class MemoryStorage(StorageMixin):
         self.storage.pop(self.id, None)
 
 
+
 # TODO: MemcachedStorage, DbStorageMixin, MySqlStorage, MongoStorage
 
 
@@ -263,5 +270,4 @@ def create_session_from_request(request):
     """
     storage = load_definition_from_string(request.session_class)
     session_cookie = request.cookies[COOKIE_KEY]
-    # TODO: Retrieve this from the DI Container
     return storage(id=session_cookie.value) if session_cookie else storage()
