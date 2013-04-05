@@ -109,6 +109,11 @@ class TestMemcache(object):
         })
         assert repr(cache) == '<watson.cache.storage.Memcached servers:2>'
 
+    @raises(ImportError)
+    def test_open(self):
+        cache = Memcached()
+        cache.open()
+
     def test_set(self):
         cache = Memcached()
         cache.client = self.mock_memcache
