@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 import datetime
 from hashlib import sha1
-import os
-import pickle
 from random import random
-from tempfile import gettempdir
-from watson.common.imports import load_definition_from_string
+
 
 COOKIE_KEY = 'watson.session'
 
@@ -149,6 +146,9 @@ class StorageMixin(dict):
 
     # Internals
 
+    def __bool__(self):
+        return True  # __iter__ breaks this :(
+
     def __setitem__(self, key, value):
         if not self.data:
             self._data = {}
@@ -160,6 +160,25 @@ class StorageMixin(dict):
         if not self.data:
             self.load()
         return self.data[key] if key in self.data else default
+
+    def __contains__(self, key):
+        if not self.data:
+            self.load()
+        return key in self.data
+
+    def __delitem__(self, key):
+        if not self.data:
+            self.load()
+        try:
+            del self.data[key]
+        except KeyError:
+            pass  # fail silently
+
+    def __iter__(self):
+        if not self.data:
+            self.load()
+        for key, value in self.data.items():
+            yield (key, value)
 
     def __repr__(self):
         return '<watson.http.sessions.{0} id:{1}>'.format(self.__class__.__name__, self.id)
@@ -175,93 +194,3 @@ class StorageMixin(dict):
 
     def _exists(self):
         raise Exception('_exists must be implemented')
-
-
-class FileStorage(StorageMixin):
-    """
-    A file based storage adapter for session data. By default it will
-    store data in the systems temp directory, however this can be overriden
-    in the __init__.
-    """
-    storage = None
-    file_prefix = 'session'
-
-    def __init__(self, id=None, timeout=None, autosave=True, storage=None):
-        """
-        Initialize the FileStorage object.
-
-        Args:
-            storage: where the files should be stored
-        """
-        super(FileStorage, self).__init__(id, timeout, autosave)
-        if storage and os.path.exists(storage):
-            self.storage = storage
-        else:
-            self.storage = gettempdir()
-
-    # Internals
-
-    def _exists(self):
-        return os.path.exists(self.__file_path())
-
-    def _save(self, expires):
-        with open(self.__file_path(), 'wb') as file:
-            try:
-                pickle.dump((self.data, expires), file, pickle.HIGHEST_PROTOCOL)
-            except:
-                pass
-
-    def _load(self):
-        try:
-            with open(self.__file_path(), 'rb') as file:
-                try:
-                    return pickle.load(file)
-                except:
-                    pass
-        except:
-            return ()
-
-    def _destroy(self):
-        try:
-            os.unlink(self.__file_path())
-        except OSError:
-            pass
-
-    def __file_path(self):
-        return os.path.join(self.storage, '{0}-{1}'.format(self.file_prefix, self.id))
-
-
-class MemoryStorage(StorageMixin):
-    """
-    A ram based storage adapter for session data.
-    """
-    storage = {}
-
-    def _exists(self):
-        return self.id in self.storage
-
-    def _save(self, expires):
-        self.storage[self.id] = (self.data, expires)
-
-    def _load(self):
-        return self.storage.get(self.id)
-
-    def _destroy(self):
-        self.storage.pop(self.id, None)
-
-
-# TODO: MemcachedStorage, DbStorageMixin, MySqlStorage, MongoStorage
-
-
-def create_session_from_request(request):
-    """
-    Creates a new session storage object from a watson.http.messages.Request
-    object. If an existing session exists within
-
-    Returns:
-        StorageMixin
-    """
-    storage = load_definition_from_string(request.session_class)
-    session_cookie = request.cookies[COOKIE_KEY]
-    # TODO: Retrieve this from the DI Container
-    return storage(id=session_cookie.value) if session_cookie else storage()

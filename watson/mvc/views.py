@@ -2,6 +2,7 @@
 from collections import namedtuple
 from json import JSONEncoder
 from jinja2 import FileSystemLoader, DictLoader, ChoiceLoader, Environment
+from watson.util import xml
 
 Model = namedtuple('Model', 'format template data')
 
@@ -232,7 +233,8 @@ class Jinja2Renderer(BaseRenderer):
 
 class XmlRenderer(BaseRenderer):
     def __call__(self, view_model):
-        return '<?xml version="1.0"?><xml>To be implemented</xml>'
+        _xml = xml.from_dict(view_model.data)
+        return xml.to_string(_xml, xml_declaration=True)
 
 
 class JsonRenderer(BaseRenderer):

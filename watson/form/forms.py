@@ -3,6 +3,7 @@ import collections
 from copy import deepcopy
 from watson.form.fields import FieldMixin, File
 from watson.html.elements import TagMixin, flatten_attributes
+from watson.common.datastructures import MultiDict
 from watson.common.decorators import cached_property
 from watson.common.imports import get_qualified_name
 
@@ -40,12 +41,18 @@ class Form(TagMixin):
 
     def __init__(self, name, method='post', action=None, detect_multipart=True, **kwargs):
         """Inititalize the form and set some default attributes.
+
+        Args:
+            string name: the name of the form
+            string method: the http method to use
+            string action: the url to submit the form to
+            boolean detect_multipart: automatically set multipart/form-data
         """
         self.attributes = {}
         self.attributes.update(kwargs)
         self.attributes.update({
             'name': name,
-            'method': method,
+            'method': method.lower(),
             'action': kwargs.get('action', '/'),
             'enctype': kwargs.get('enctype', 'application/x-www-form-urlencoded')
         })
@@ -119,10 +126,21 @@ class Form(TagMixin):
         Iterates through all the fields on the form and injects the value.
 
         Args:
-            dict data: A dict of key/value pairs to populate the form with.
+            dict|watson.http.messages.Request data: A dict of key/value pairs to populate the form with.
         """
         self.invalidate()
-        data = data or {}
+        if hasattr(data, 'post'):
+            raw_data = MultiDict()
+            for key, value in data.post.items():
+                raw_data[key] = value
+            for key, value in data.files.items():
+                raw_data[key] = value
+        else:
+            raw_data = data
+        self._set_data_on_fields(raw_data)
+
+    def _set_data_on_fields(self, data):
+        # internal method for setting the data on the fields
         for key, value in data.items():
             if key in self.fields:
                 self.fields[key].value = value
@@ -214,6 +232,8 @@ class Form(TagMixin):
         """Render the end tag of the form.
         """
         return '</form>'
+
+    # todo: render() to print out default form
 
     # convenience methods
 

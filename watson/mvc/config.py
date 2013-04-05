@@ -65,6 +65,9 @@ views = {
         '500': 'errors/500'
     }
 }
+session = {
+    'class': 'watson.http.sessions.FileStorage'
+}
 events = {
     events.EXCEPTION_EVENT: [('app_exception_listener',)],
     events.INIT_EVENT: [

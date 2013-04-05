@@ -65,8 +65,7 @@ class TestRequest(object):
 
     def test_session(self):
         environ = sample_environ(HTTP_COOKIE='watson.session=123456;')
-        request = create_request_from_environ(environ)
-        request.session_class = 'watson.http.sessions.MemoryStorage'
+        request = create_request_from_environ(environ, 'watson.http.sessions.MemoryStorage')
         assert request.session.id == '123456'
         assert isinstance(request.session, MemoryStorage)
 
@@ -82,6 +81,10 @@ class TestRequest(object):
         new_request = copy(request)
         assert isinstance(request.post, ImmutableMultiDict)
         assert isinstance(new_request.post, MultiDict)
+
+    def test_repr(self):
+        environ = sample_environ()
+        assert repr(create_request_from_environ(environ)) == '<watson.http.messages.Request method:GET url:http://127.0.0.1/>'
 
 
 class TestResponse(object):

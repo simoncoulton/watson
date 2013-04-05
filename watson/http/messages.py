@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 from copy import copy
 from wsgiref.util import request_uri
+from watson.common.datastructures import ImmutableMultiDict, MultiDict
+from watson.common.imports import get_qualified_name
 from watson.http import STATUS_CODES, REQUEST_METHODS
 from watson.http.cookies import CookieDict
 from watson.http.headers import HeaderDict, split_headers_server_vars
 from watson.http.uri import Url
 from watson.http.wsgi import get_form_vars
 from watson.http.sessions import create_session_from_request
-from watson.common.datastructures import ImmutableMultiDict, MultiDict
 
 
 class MessageMixin(object):
@@ -43,7 +44,7 @@ class MessageMixin(object):
         self.body = body or ''
 
 
-def create_request_from_environ(environ):
+def create_request_from_environ(environ, session_class=None):
     """Create a new Request object.
 
     Create a new Request object based on a set of environ variables. To create
@@ -54,15 +55,15 @@ def create_request_from_environ(environ):
     """
     headers, server, cookies = split_headers_server_vars(environ)
     get, post, files = get_form_vars(environ)
-    session = ImmutableMultiDict()
     if post.get('HTTP_REQUEST_METHOD', '').upper() in REQUEST_METHODS:
         method = post.get('HTTP_REQUEST_METHOD')
     else:
         method = server['REQUEST_METHOD']
-    return Request(method, ImmutableMultiDict(get), ImmutableMultiDict(post),
-                   ImmutableMultiDict(files), ImmutableMultiDict(headers),
-                   ImmutableMultiDict(server), ImmutableMultiDict(cookies),
-                   ImmutableMultiDict(session))
+    request = Request(method, ImmutableMultiDict(get), ImmutableMultiDict(post),
+                      ImmutableMultiDict(files), ImmutableMultiDict(headers),
+                      ImmutableMultiDict(server), ImmutableMultiDict(cookies))
+    request.session_class = session_class if session_class else Request._session_class
+    return request
 
 
 class Request(MessageMixin):
@@ -222,6 +223,11 @@ class Request(MessageMixin):
                                                            self.version,
                                                            self.headers,
                                                            self.body)
+
+    def __repr__(self):
+        return '<{0} method:{1} url:{2}>'.format(get_qualified_name(self),
+                                                 self.method,
+                                                 self.url)
 
     # TODO: Add copy method to create non-immutable dicts
     def __copy__(self):

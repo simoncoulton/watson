@@ -73,7 +73,7 @@ class HttpApplication(BaseApplication):
         application(environ, start_response)
     """
     def run(self, environ, start_response):
-        request = create_request_from_environ(environ)
+        request = create_request_from_environ(environ, self.config['session']['class'])
         try:
             route_result = self.dispatcher.trigger(Event(events.ROUTE_MATCH_EVENT, target=self, params={
                 'request': request,
