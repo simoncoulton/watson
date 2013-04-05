@@ -8,8 +8,7 @@ COOKIE_KEY = 'watson.session'
 
 
 class StorageMixin(dict):
-    """
-    The base mixin for all session storage adapters.
+    """The base mixin for all session storage adapters.
 
     By default, if no id is specified when the session is created a new
     session id will be generated. When a user is logged in, it is good
