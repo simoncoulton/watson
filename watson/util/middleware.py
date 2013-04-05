@@ -21,7 +21,7 @@ class StaticFileMiddleware(object):
     initial_dir = None
     script_path = None
 
-    def __init__(self, app, host='127.0.0.1', port=8000):
+    def __init__(self, app):
         self.script_path = os.path.abspath(__main__.__file__)
         self.initial_dir = os.getcwd()
         self.app = app
@@ -30,9 +30,9 @@ class StaticFileMiddleware(object):
         path = os.path.join(self.initial_dir, environ['PATH_INFO'][1:])
         try:
             return self.serve_static(path,
-                                    os.stat(os.path.join(path)),
-                                    environ,
-                                    start_response)
+                                     os.stat(os.path.join(path)),
+                                     environ,
+                                     start_response)
         except:
             return self.app(environ, start_response)
 
