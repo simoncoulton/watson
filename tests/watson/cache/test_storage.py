@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from unittest.mock import patch, Mock
+from unittest.mock import Mock
 from tempfile import gettempdir
 from nose.tools import raises
 from watson.cache.storage import BaseStorage, Memory, File, Memcached
