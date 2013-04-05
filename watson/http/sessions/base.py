@@ -146,6 +146,9 @@ class StorageMixin(dict):
 
     # Internals
 
+    def __bool__(self):
+        return True  # __iter__ breaks this :(
+
     def __setitem__(self, key, value):
         if not self.data:
             self._data = {}
