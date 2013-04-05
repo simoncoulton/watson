@@ -21,9 +21,9 @@ class StaticFileMiddleware(object):
     initial_dir = None
     script_path = None
 
-    def __init__(self, app):
+    def __init__(self, app, initial_dir=None):
         self.script_path = os.path.abspath(__main__.__file__)
-        self.initial_dir = os.getcwd()
+        self.initial_dir = initial_dir or os.getcwd()
         self.app = app
 
     def __call__(self, environ, start_response):
