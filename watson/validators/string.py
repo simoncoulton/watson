@@ -73,3 +73,19 @@ class RegEx(BaseValidator):
     def __call__(self, value):
         if not self.regex.match(value):
             raise ValueError(self.message.format(value=value, pattern=self.regex.pattern))
+
+
+class Csrf(BaseValidator):
+    """Validates a csrf token.
+
+    Usage:
+        validator = Csrf()
+        validator('submitted token')
+    """
+    def __init__(self, token=None, message='Cross-Site request forgery attempt detected, invalid token specified "{token}"'):
+        self.token = token
+        self.message = message
+
+    def __call__(self, value):
+        if value != self.token:
+            raise ValueError(self.message.format(token=value))

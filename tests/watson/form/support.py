@@ -1,7 +1,15 @@
 # -*- coding: utf-8 -*-
 # Support functions, classes
 from watson.form import Form, fields
+from watson.form.decorators import has_csrf
+from wsgiref import util
 
+
+def sample_environ(**kwargs):
+    environ = {}
+    util.setup_testing_defaults(environ)
+    environ.update(kwargs)
+    return environ
 
 form_user_mapping = {'first_name': ('personal', 'first_name'), 'email': ('personal', 'contact', 'email')}
 
@@ -12,6 +20,15 @@ class LoginForm(Form):
     first_name = fields.Text()
     last_name = fields.Text()
     email = fields.Text()
+
+
+@has_csrf
+class ProtectedForm(Form):
+    pass
+
+
+class UnprotectedForm(Form):
+    test = fields.Text()
 
 
 class UploadForm(Form):

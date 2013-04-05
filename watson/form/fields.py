@@ -3,8 +3,7 @@ import itertools
 from watson.common.imports import get_qualified_name
 from watson.filters import Trim
 from watson.html.elements import TagMixin, flatten_attributes
-from watson.validators import Required
-# todo: csrf field
+from watson import validators
 
 
 class Label(TagMixin):
@@ -66,7 +65,7 @@ class FieldMixin(TagMixin):
             kwargs['class'] = kwargs.get('_class')
             del kwargs['_class']
         if 'required' in kwargs:
-            self.validators.append(Required())
+            self.validators.append(validators.Required())
             kwargs['required'] = 'required'
         self._errors = []
         super(FieldMixin, self).__init__(**kwargs)
@@ -476,6 +475,14 @@ class Hidden(Input):
     """
     def __init__(self, name=None, value=None, **kwargs):
         super(Hidden, self).__init__(name, value, type='hidden', **kwargs)
+
+
+class Csrf(Input):
+    """Creates an <input type="hidden" /> element for use in csrf protection.
+    """
+    def __init__(self, name='csrf_token', value=None, **kwargs):
+        super(Csrf, self).__init__(name, value, type='hidden', label='Cross-Site Request Forgery', required=True, **kwargs)
+        self.validators.append(validators.Csrf())
 
 
 class Password(Input):
