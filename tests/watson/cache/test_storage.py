@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from unittest.mock import patch, Mock
+from unittest.mock import Mock
 from tempfile import gettempdir
 from nose.tools import raises
 from watson.cache.storage import BaseStorage, Memory, File, Memcached
@@ -108,6 +108,11 @@ class TestMemcache(object):
             'servers': ['127.0.0.1:11211', '192.168.100.1:11211']
         })
         assert repr(cache) == '<watson.cache.storage.Memcached servers:2>'
+
+    @raises(ImportError)
+    def test_open(self):
+        cache = Memcached()
+        cache.open()
 
     def test_set(self):
         cache = Memcached()

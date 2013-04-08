@@ -4,9 +4,10 @@ from watson.common.imports import load_definition_from_string
 from watson.http.sessions.base import StorageMixin, COOKIE_KEY
 from watson.http.sessions.file import FileStorage
 from watson.http.sessions.memory import MemoryStorage
+from watson.http.sessions.memcache import MemcacheStorage
 
 
-__all__ = ['create_session_from_request', 'StorageMixin', 'FileStorage', 'MemoryStorage']
+__all__ = ['create_session_from_request', 'StorageMixin', 'FileStorage', 'MemoryStorage', 'MemcacheStorage']
 
 
 def create_session_from_request(request):

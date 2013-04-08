@@ -233,7 +233,23 @@ class Form(TagMixin):
         """
         return '</form>'
 
-    # todo: render() to print out default form
+    def render(self, with_tag='div', with_label=True):
+        """Output the entire form as a string.
+
+        Called automatically by the __str__ method.
+
+        Args:
+            string with_tag: the tag to be used to separate the elements.
+            boolean with_label: render each field with it's label.
+
+        Returns:
+            A string representation of the form.
+        """
+        html = '{open}{fields}{close}'
+        fields = ['<{0}>{1}</{0}>'.format(with_tag,
+                                          field.render_with_label() if with_label else str(field))
+                  for field_name, field in self.fields.items()]
+        return html.format(open=self.open(), close=self.close(), fields=''.join(fields))
 
     # convenience methods
 

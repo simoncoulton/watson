@@ -6,10 +6,10 @@ from watson.http.sessions.base import StorageMixin
 
 
 class FileStorage(StorageMixin):
-    """
-    A file based storage adapter for session data. By default it will
-    store data in the systems temp directory, however this can be overriden
-    in the __init__.
+    """A file based storage adapter for session data.
+
+    By default it will store data in the systems temp directory, however this
+    can be overriden in the __init__.
     """
     storage = None
     file_prefix = 'session'

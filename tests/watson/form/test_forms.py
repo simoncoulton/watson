@@ -107,6 +107,10 @@ class TestForm(object):
         assert form.username.original_value == 'simon '
         assert form.errors == {'password': {'messages': ['Value is required'], 'label': 'password'}}
 
+    def test_render_entire_form(self):
+        form = LoginForm('test')
+        assert str(form) == '<form action="/" enctype="application/x-www-form-urlencoded" method="post" name="test"><div><label for="username">username</label><input id="username" name="username" required="required" type="text" /></div><div><label for="password">password</label><input id="password" name="password" required="required" type="password" /></div><div><label for="first_name">first_name</label><input id="first_name" name="first_name" type="text" /></div><div><label for="last_name">last_name</label><input id="last_name" name="last_name" type="text" /></div><div><label for="email">email</label><input id="email" name="email" type="text" /></div></form>'
+
 
 class TestMultiPartForm(object):
     def test_multi_part(self):

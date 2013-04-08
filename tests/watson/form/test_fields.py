@@ -183,8 +183,6 @@ class TestRadioInputField(object):
         field = fields.Radio(name='test', label='My Radio Group', values=(('Test', 1), ('Testing', 2)), value=2)
         assert str(field) == '<label for="test_0">Test<input id="test_0" name="test" type="radio" value="1" /></label><label for="test_1">Testing<input checked="checked" id="test_1" name="test" type="radio" value="2" /></label>'
 
-    # todo filter/validate
-
 
 class TestCheckboxInputField(object):
     def test_create(self):
