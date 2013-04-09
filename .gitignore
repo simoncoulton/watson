@@ -5,3 +5,6 @@ __pycache__
 *.sublime-project
 *.sublime-workspace
 docs/*
+*.egg-info/
+build
+dist

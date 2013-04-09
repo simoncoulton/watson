@@ -6,11 +6,11 @@ import watson
 with open('README.md') as f:
     readme = f.read()
 
-with open('LICENCE') as f:
+with open('LICENSE') as f:
     license = f.read()
 
 setup(
-    name='Watson',
+    name='watson3',
     version=watson.__version__,
     description='An easy to use Python 3 framework for creating web applications.',
     long_description=readme,
@@ -18,5 +18,14 @@ setup(
     author_email='simon.coulton@gmail.com',
     url='https://github.com/simoncoulton/watson',
     license=license,
-    packages=find_packages(exclude=('tests', 'docs'))
+    packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
+    classifiers=[
+        'Development Status :: 3 - Alpha',
+        'Environment :: Web Environment',
+        'Programming Language :: Python :: 3.3'
+    ],
+    include_package_data=True,
+    install_requires=[
+        'jinja2'
+    ]
 )
