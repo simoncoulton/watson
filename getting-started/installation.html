@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 	<head>
-		<title>A Python 3 Web Framework -   Watson Documentation</title>
+		<title>Installation -  Getting Started -  Watson Documentation</title>
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,700,600,400' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" type="text/css" href="/assets/css/main.css" />
 		<link rel="stylesheet" type="text/css" href="/assets/css/pygments.css" />
@@ -15,7 +15,7 @@
 				<a href="/getting-started">Getting Started</a>
 			</nav>
 			<div class="pagetitle">
-				<div class="wrapper">Documentation</div>
+				<div class="wrapper">Documentation: Getting Started</div>
 			</div>
 		</header>
 		<div>
@@ -33,7 +33,7 @@
 							    
 							  
 							    
-							      <li>
+							      <li class="active">
 							        <a href="/getting-started/installation.html">
 							          Installation
 							        </a>
@@ -151,45 +151,30 @@
 					</ul>
 				</nav>
 			    <div class="content">
-			    	<h2 class="section-title">A Python 3 Web Framework</h2>
+			    	<h2 class="section-title">Installation</h2>
 					
 <p><section></p>
 
-<blockquote>
-<p>It&#39;s elementary my dear Watson</p>
-</blockquote>
+<p>All stable versions of Watson are available via <a href="https://pypi.python.org/pypi/pip">pip</a> and can be installed using the following command <code>pip install watson3</code> via your CLI of choice.</p>
 
-<p>Watson is an easy to use framework designed to get out of your way and let you code your application rather than spend time wrangling with the framework. It follows the convention over configuration ideal, although the convention can be overriden if required. Out of the box it comes with a standard set of defaults to allow you to get coding straight away!</p>
+<p>Watson is maintained at <a href="https://github.com/simoncoulton/watson">Github</a>, and can be used to get the latest development version of the code if required.</p>
 
-<h3>Requirements</h3>
+<h4>Verifying the installation</h4>
 
-<p>Watson is designed for Python 3.3 and up.</p>
+<p>To ensure that Watson has been installed correctly, launch <code>python</code> from your CLI and then enter the following:</p>
+<div class="highlight"><pre><code class="text">&gt;&gt;&gt; import watson
+&gt;&gt;&gt; print(watson.__version__)
+# latest watson version will be printed here
+</code></pre></div>
+<p>Once you&#39;ve got Watson installed, head on over to the <a href="/getting-started/your-first-application.html">Your first application</a> area to learn how to create your first web application.
+</section></p>
 
-<h3>Dependencies</h3>
+<p><section class="standout">
+<span class="label blue">new feature</span> <span class="label red">new feature</span> <span class="label yellow">new feature</span></p>
 
-<p>Watson currently requires the following modules to work out of box:</p>
+<h4>Testing</h4>
 
-<ul>
-<li><a href="http://jinja.pocoo.org/docs/">Jinja2</a> <span class="sub">For view templating</span></li>
-</ul>
-
-<p>These will be installed automatically if you have installed Watson via pip.</p>
-
-<h3>Optional Dependencies</h3>
-
-<p>Some packages within Watson require third party packages to run correctly, these include:</p>
-
-<ul>
-<li>Memcached <span class="sub">pip package: python3-memcached</span></li>
-<li>Redis <span class="sub">pip package: redis</span></li>
-</ul>
-
-<p>Notes about these dependencies can be found within the relevant documentation in the <a href="/reference-library">Reference Library</a>.</p>
-
-<h3>Contributing</h3>
-
-<p>If you would like to contribute to Watson, please feel free to issue a pull request via Github with the associated tests for your code.
-Your name will be added to the AUTHORS file under contributors.
+<p>Lorem ipsum Labore culpa ex qui aliqua fugiat aliqua dolore officia ut Ut do aute culpa dolor.
 </section></p>
 
 
