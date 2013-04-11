@@ -1,3 +1,29 @@
+/* fonts */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Light'), local('OpenSans-Light'), url(../fonts/opensans-light.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url(../fonts/opensans.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url(../fonts/opensans-semibold.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Open Sans Bold'), local('OpenSans-Bold'), url(../fonts/opensans-bold.woff) format('woff');
+}
+
 /* bootstrap */
 
 /*!
@@ -553,24 +579,6 @@ pre code {
   overflow-y: scroll;
 }
 
-/* media queries */
-
-nav.secondary {
-	width: 260px;
-	float: left;
-	min-height: 100%;
-}
-
-.content {
-	float: left;
-	width: 700px;
-}
-
-.wrapper {
-	width: 960px;
-	margin: 0 auto;
-}
-
 /* docs */
 
 html, body {
@@ -680,6 +688,7 @@ footer ul {
 }
 
 nav.secondary {
+  background: -webkit-linear-gradient(left, #fff 0%, #fff 20%, #fff 80%, #f6f6f6 100%);
 	background: linear-gradient(to right, #fff 0%, #fff 20%, #fff 80%, #f6f6f6 100%);
 }
 
@@ -777,6 +786,87 @@ section, .section-title {
 .standout {
 	border-top: 1px solid #ebebeb;
 	border-bottom: 1px solid #ebebeb;
+  background: -webkit-linear-gradient(bottom, #f6f6f6 0%, #fff 20%);
 	background: linear-gradient(to top, #f6f6f6 0%, #fff 20%);
 	padding: 20px 40px;
+}
+
+/* media queries */
+
+nav.secondary {
+  width: 260px;
+  float: left;
+  min-height: 100%;
+}
+
+.content {
+  float: left;
+  width: 680px;
+}
+
+.wrapper {
+  width: 940px;
+  margin: 0 auto;
+}
+
+/* ipad portrait */
+@media (max-width: 768px) {
+  .wrapper {
+    width: 740px;
+  }
+
+  nav.secondary {
+    width: 240px;
+  }
+
+  .content {
+    width: 500px;
+  }
+
+  body > header + div {
+    padding: 20px 0;
+  }
+}
+
+@media (max-width: 320px) {
+  .wrapper {
+    width: 300px;
+  }
+
+  nav.secondary {
+    width: 300px;
+  }
+
+  .content {
+    width: 300px;
+  }
+
+  footer ul {
+    width: 150px;
+  }
+
+  nav.primary a {
+    float: right;
+    margin-left: 6px;
+    padding-top: 6px;
+    font-size: 0.55em;
+  }
+
+  nav.primary {
+    padding-bottom: 40px;
+  }
+
+  nav.primary > a:first-of-type {
+    float: none;
+    display: block;
+  }
+
+  .pagetitle {
+    font-size: 1.2em;
+    padding: 20px 0;
+  }
+
+  body > header + div {
+    padding: 20px 0;
+  }
 }
