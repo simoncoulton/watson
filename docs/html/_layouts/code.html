@@ -1,0 +1,46 @@
+{% extends '_layouts/base.html' %}
+
+{% block content %}
+<section class="standout">
+	<dl>
+		<dt>Package</dt>
+		<dd>{{ page.package }}</dd>
+	</dl>
+</section>
+<section>
+{{ content }}
+</section>
+
+<section>
+	{% for post in site.related_posts %}
+		{% if post.module == null %}
+			{% capture has_key_concepts %}1{% endcapture %}
+		{% endif %}
+		{% if post.module %}
+			{% capture has_see_also %}1{% endcapture %}
+		{% endif %}
+	{% endfor %}
+
+	{% if has_see_also %}
+	<h4>See also:</h4>
+	{% for post in site.related_posts %}
+	{% if post.module %}
+	<a class="label blue" href="{{ site.baseurl }}{{ post.url }}">{{ post.module }}</a>
+	{% endif %}
+	{% if post.module == null %}
+	{% capture key_concepts %}1{% endcapture %}
+	{% endif %}
+	{% endfor %}
+	{% endif %}
+
+	{% if has_key_concepts %}
+	<h4 class="key-concepts">Key Concepts:</h4>
+	{% for post in site.related_posts %}
+	{% if post.module == null %}
+	<a class="label yellow" href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
+	{% endif %}
+	{% endfor %}
+	{% endif %}
+</section>
+
+{% endblock %}

@@ -4,7 +4,7 @@ __pycache__
 *.pyc
 *.sublime-project
 *.sublime-workspace
-docs/*
+docs/tests*
 *.egg-info/
 build
 dist

@@ -1,0 +1,28 @@
+{% extends '_layouts/base.html' %}
+
+{% block content %}
+<section>
+{{ content }}
+</section>
+
+<section>
+	{% for post in site.related_posts %}
+		{% if post.module %}
+			{% capture has_see_also %}1{% endcapture %}
+		{% endif %}
+	{% endfor %}
+
+	{% if has_see_also %}
+	<h4>See also:</h4>
+	{% for post in site.related_posts %}
+	{% if post.module %}
+	<a class="label blue" href="{{ post.url }}">{{ post.module }}</a>
+	{% endif %}
+	{% if post.module == null %}
+	{% capture key_concepts %}1{% endcapture %}
+	{% endif %}
+	{% endfor %}
+	{% endif %}
+</section>
+
+{% endblock %}
