@@ -2,10 +2,9 @@
 layout: code
 tags: [events, collections, dispatcher, mvc]
 title: Collections
-area: Reference Library
 package: watson.events
 module: watson.events.collections
-api: [Exposed, Class]
+api: [ListenerCollection, ResultCollection]
 ---
 
 Collections documentation

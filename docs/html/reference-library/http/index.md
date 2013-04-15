@@ -1,12 +1,10 @@
 ---
-layout: codepage
-title: Messages
-section_title: Http
-tags: [http]
-date: YYYY-MM-DD HH:MM:SS
-package: 'watson.http'
+layout: reference_index
+title: Http
+package: watson.http
+module: watson.http
 ---
+<section>
 
-{% block content %}
-Introduction to http
-{% endblock %}
+Http Index
+</section>
