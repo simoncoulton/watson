@@ -4,7 +4,7 @@
 
 Watson is an easy to use framework designed to get out of your way and let you code your application rather than wrangle with the framework.
 
-You can find a sample hello world application in the `/examples` directory.
+You can find a sample hello world application in the `/examples` directory and more [documentation here][3].
 
 #### Build Status
 
@@ -26,8 +26,17 @@ These can be installed by running `pip install -r requirements.txt`
 
 ##### Memcached
 
+Memcached is utilized for both session storage and cache storage.
+
 Add python3-memcached to your applications `requirements.txt` file or `pip install python3-memcached`
 This is currently maintained [here][1].
+
+##### Redis
+
+Redis is utilized for both session storage and cache storage.
+
+Add redis to your applications `requirements.txt` file or `pip install redis`
+This is current maintained [here][2].
 
 ### Running the tests
 
@@ -44,4 +53,6 @@ Currently Watson has been tested on the following Python versions:
 * 3.3
 
 [1]: http://pypi.python.org/pypi/python3-memcached/
+[2]: https://github.com/andymccurdy/redis-py
+[3]: http://simoncoulton.github.com/watson
 
