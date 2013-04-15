@@ -12,7 +12,7 @@ All reference library content:
 
 {% for post in site.sort_by_module %}
 {% if post.module %}
-* [{{ post.module }}]({{ post.url }} "{{ post.title }}") <span class="sub">{{ post.title }}</span>
+* [{{ post.module }}]({{site.baseurl}}{{ post.url }} "{{ post.title }}") <span class="sub">{% for api in post.api %}{% if forloop.index > 1 %}, {% endif %}<a href="{{site.baseurl}}{{ post.url }}#{{ api }}">{{ i }} {{ api }}</a>{% endfor %}</span>
 {% endif %}
 {% endfor %}
 </section>

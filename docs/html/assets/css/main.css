@@ -742,6 +742,15 @@ span.sub {
 	margin-bottom: 4px;
 }
 
+span.sub a {
+  color: inherit;
+  text-decoration: none;
+}
+
+span.sub a:hover {
+  color: #7e7e7e;
+}
+
 p {
 	color: #7f7f7f;
 }

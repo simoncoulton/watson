@@ -16,7 +16,7 @@
 	<h4>See also:</h4>
 	{% for post in site.related_posts %}
 	{% if post.module %}
-	<a class="label blue" href="{{ post.url }}">{{ post.module }}</a>
+	<a class="label blue" href="{{ site.baseurl }}{{ post.url }}">{{ post.module }}</a>
 	{% endif %}
 	{% if post.module == null %}
 	{% capture key_concepts %}1{% endcapture %}
