@@ -8,152 +8,454 @@
 	</head>
 	<body>
 		<header>
-			<nav class="wrapper primary">
-				<a href="/watson/">Watson<span>It's elementary my dear Watson</span></a>
-				<a href="/watson/reference-library">Reference Library</a>
-				<a href="/watson/key-concepts">Key Concepts</a>
-				<a href="/watson/getting-started">Getting Started</a>
-			</nav>
-			<div class="pagetitle">
-				<div class="wrapper">Documentation: Getting Started</div>
-			</div>
-		</header>
+	<nav class="wrapper primary">
+		<a href="/watson/">Watson<span>It's elementary my dear Watson</span></a>
+		<a href="/watson/reference-library">Reference Library</a>
+		<a href="/watson/key-concepts">Key Concepts</a>
+		<a href="/watson/getting-started">Getting Started</a>
+	</nav>
+	<div class="pagetitle">
+		<div class="wrapper">Documentation: Getting Started</div>
+	</div>
+</header>
 		<div>
 			<div class="wrapper main clearfix">
 				<nav class="secondary">
-					<ul>
-						<li>
-							Getting Started
-							<ul>
-							  
-							    
-							  
-							    
-							  
-							    
-							  
-							    
-							      <li class="active">
-							        <a href="/watson/getting-started/installation.html">
-							          Installation
-							        </a>
-							      </li>
-							    
-							  
-							    
-							  
-							    
-							  
-							    
-							      <li>
-							        <a href="/watson/getting-started/configuration.html">
-							          Configuration
-							        </a>
-							      </li>
-							    
-							  
-							    
-							  
-							    
-							      <li>
-							        <a href="/watson/getting-started/your-first-application.html">
-							          Your First Application
-							        </a>
-							      </li>
-							    
-							  
-							</ul>
-						</li>
-						<li>
-							Key Concepts
-							<ul>
-								
-							    
-							  
-							    
-							  
-							    
-							      <li>
-							        <a href="/watson/key-concepts/events.html">
-							          Events
-							        </a>
-							      </li>
-							    
-							  
-							    
-							  
-							    
-							  
-							    
-							  
-							    
-							  
-							    
-							      <li>
-							        <a href="/watson/key-concepts/dependencyinjection.html">
-							          Dependency Injection
-							        </a>
-							      </li>
-							    
-							  
-							    
-							  
-							</ul>
-						</li>
-						<li>
-							Reference Library
-							<ul>
-							  
-							  	  
-							  
-							  	  
-							  
-							  	  
-							  
-							  	  
-							  
-							  	  
-							  
-							  	  
-							      <li>
-							        <a href="/watson/reference-library/events/dispatcher.html">
-							          watson.events.dispatcher
-							        </a>
-							      </li>
-							      
-							  
-							  	  
-							      <li>
-							        <a href="/watson/reference-library/http/cookies.html">
-							          watson.http.cookies
-							        </a>
-							      </li>
-							      
-							  
-							  	  
-							      <li>
-							        <a href="/watson/reference-library/http/messages.html">
-							          watson.http.messages
-							        </a>
-							      </li>
-							      
-							  
-							  	  
-							      <li>
-							        <a href="/watson/reference-library/http/sessions.html">
-							          watson.http.sessions
-							        </a>
-							      </li>
-							      
-							  
-							</ul>
-						</li>
-					</ul>
-				</nav>
+	<ul>
+		<li>
+			Getting Started
+			<ul>
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			      <li class="active">
+			        <a href="/watson/getting-started/installation.html">
+			          Installation
+			        </a>
+			      </li>
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/getting-started/configuration.html">
+			          Configuration
+			        </a>
+			      </li>
+			    
+			  
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/getting-started/your-first-application.html">
+			          Your First Application
+			        </a>
+			      </li>
+			    
+			  
+			</ul>
+		</li>
+		<li>
+			Key Concepts
+			<ul>
+				
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/key-concepts/events.html">
+			          Events
+			        </a>
+			      </li>
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/key-concepts/dependencyinjection.html">
+			          Dependency Injection
+			        </a>
+			      </li>
+			    
+			  
+			    
+			  
+			</ul>
+		</li>
+		<li>
+			Reference Library
+			<ul>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				<li>
+					<a href="/watson/reference-library/cache">watson.cache</a>
+				</li>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				<li>
+					<a href="/watson/reference-library/common">watson.common</a>
+				</li>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				<li>
+					<a href="/watson/reference-library/di">watson.di</a>
+				</li>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				<li>
+					<a href="/watson/reference-library/events">watson.events</a>
+				</li>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				<li>
+					<a href="/watson/reference-library/filters">watson.filters</a>
+				</li>
+				
+				
+				
+				
+				
+				
+				<li>
+					<a href="/watson/reference-library/form">watson.form</a>
+				</li>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				<li>
+					<a href="/watson/reference-library/html">watson.html</a>
+				</li>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				<li>
+					<a href="/watson/reference-library/http">watson.http</a>
+				</li>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				<li>
+					<a href="/watson/reference-library/mvc">watson.mvc</a>
+				</li>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				<li>
+					<a href="/watson/reference-library/util">watson.util</a>
+				</li>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				<li>
+					<a href="/watson/reference-library/validators">watson.validators</a>
+				</li>
+				
+				
+				
+				
+			</ul>
+		</li>
+	</ul>
+</nav>
 			    <div class="content">
 			    	<h2 class="section-title">Installation</h2>
-					
-<p><section></p>
+					<p><section></p>
 
 <p>All stable versions of Watson are available via <a href="https://pypi.python.org/pypi/pip">pip</a> and can be installed using the following command <code>pip install watson3</code> via your CLI of choice.</p>
 
@@ -177,40 +479,39 @@
 <p>Lorem ipsum Labore culpa ex qui aliqua fugiat aliqua dolore officia ut Ut do aute culpa dolor.
 </section></p>
 
-
 				</div>
 			</div>
 		</div>
 		<footer>
-			<div class="sub">
-				<div class="wrapper clearfix">
-					<ul>
-						<li class="title">Source </li>
-						<li><a href="https://github.com/simoncoulton/watson">GitHub Repository</a></li>
-						<li><a href="https://pypi.python.org/pypi/watson3/">Pypi</a></li>
-					</ul>
-					<ul>
-						<li class="title">Useful Resources</li>
-						<li><a href="http://docs.python.org/3/">Python 3</a></li>
-					</ul>
-				</div>
-			</div>
-			<div class="wrapper">
-				Design thanks to <a href="http://www.blazrobar.com">Blaz Robar</a>
-				<br />Content generated by <a href="https://github.com/mojombo/jekyll">Jekyll</a>
-			</div>
-		</footer>
-		
-		<script type="text/javascript">
-			var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-			document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-			</script>
-			<script type="text/javascript">
-			try {
-			  var pageTracker = _gat._getTracker("UA-37744723-1");
-			pageTracker._trackPageview();
-			} catch(err) {}
-		</script>
-		
+	<div class="sub">
+		<div class="wrapper clearfix">
+			<ul>
+				<li class="title">Source </li>
+				<li><a href="https://github.com/simoncoulton/watson">GitHub Repository</a></li>
+				<li><a href="https://pypi.python.org/pypi/watson3/">Pypi</a></li>
+			</ul>
+			<ul>
+				<li class="title">Useful Resources</li>
+				<li><a href="http://docs.python.org/3/">Python 3</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="wrapper">
+		Design thanks to <a href="http://www.blazrobar.com">Blaz Robar</a>
+		<br />Content generated by <a href="https://github.com/mojombo/jekyll">Jekyll</a>
+	</div>
+</footer>
+
+<script type="text/javascript">
+	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+	<script type="text/javascript">
+	try {
+	  var pageTracker = _gat._getTracker("UA-37744723-1");
+	pageTracker._trackPageview();
+	} catch(err) {}
+</script>
+
 	</body>
 </html>
