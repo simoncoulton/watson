@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 routes = {
     'home': {
         'path': '/',
