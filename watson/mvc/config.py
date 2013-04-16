@@ -3,6 +3,7 @@ import os
 from watson.mvc import events
 
 debug = {
+    'enabled': False,
     'profiling': {
         'enabled': False,
         'max_results': 20,
