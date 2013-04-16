@@ -13,12 +13,14 @@ area: Reference Library
 </section>
 
 <section>
+	{% assign has_key_concepts = 0 %}
+	{% assign has_see_also = 0 %}
 	{% for post in site.related_posts %}
 		{% if post.module == null %}
-			{% capture has_key_concepts %}1{% endcapture %}
+			{% assign has_key_concepts = 1 %}
 		{% endif %}
 		{% if post.module %}
-			{% capture has_see_also %}1{% endcapture %}
+			{% assign has_see_also = 1 %}
 		{% endif %}
 	{% endfor %}
 

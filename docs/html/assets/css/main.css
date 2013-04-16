@@ -482,13 +482,14 @@ abbr.initialism {
   text-transform: uppercase;
 }
 blockquote {
-  padding: 0 0 0 15px;
+  padding: 8px 0 8px 15px;
   margin: 0 0 20px;
   border-left: 5px solid #eeeeee;
+  background: #f7f7f7;
 }
 blockquote p {
   margin-bottom: 0;
-  font-size: 17.5px;
+  font-size: 14.5px;
   font-weight: 300;
   line-height: 1.25;
 }
@@ -556,8 +557,8 @@ pre {
   word-wrap: break-word;
   white-space: pre;
   white-space: pre-wrap;
-  background-color: #f5f5f5;
-  border: 1px solid #ccc;
+  background-color: #f7f7f7;
+  border: 1px solid #dfdfdf;
   border: 1px solid rgba(0, 0, 0, 0.15);
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
@@ -798,6 +799,10 @@ section, .section-title {
   background: -webkit-linear-gradient(bottom, #f6f6f6 0%, #fff 20%);
 	background: linear-gradient(to top, #f6f6f6 0%, #fff 20%);
 	padding: 20px 40px;
+}
+
+.main h4 {
+  margin-top: 20px;
 }
 
 /* media queries */

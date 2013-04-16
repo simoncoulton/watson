@@ -3,12 +3,9 @@ layout: tutorial
 title: Reference Library
 section_title: Reference Library
 tags: []
-date: YYYY-MM-DD HH:MM:SS
 ---
 
 <section>
-
-All reference library content:
 
 {% assign current_package = '' %}
 {% for post in site.sort_by_module %}

@@ -18,11 +18,5 @@ To ensure that Watson has been installed correctly, launch `python` from your CL
 	# latest watson version will be printed here
 
 
-Once you've got Watson installed, head on over to the [Your first application](/getting-started/your-first-application.html) area to learn how to create your first web application.
-</section>
-
-<section class="standout">
-<span class="label blue">new feature</span> <span class="label red">new feature</span> <span class="label yellow">new feature</span>
-#### Testing
-Lorem ipsum Labore culpa ex qui aliqua fugiat aliqua dolore officia ut Ut do aute culpa dolor.
+Once you've got Watson installed, head on over to the [Your first application]({{ site.baseurl }}/getting-started/your-first-application.html) area to learn how to create your first web application.
 </section>
