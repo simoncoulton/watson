@@ -71,7 +71,7 @@ class Runner(object):
 
         This is used when the -h or --help command is invoked.
         """
-        help = """Usage: {name} [subcommand], or append -h (--help) for additional help.
+        help = """Usage: {name} [command], or append -h (--help) for additional help.
         """
         return help.format(name=self.name)
 
@@ -95,15 +95,14 @@ Commands:
     def get_command_usage(self, command):
         help = """Usage: {name} {command} {arguments_list}
 
-Arguments:
-{arguments}
+Arguments:{arguments}
 """
         if command.arguments:
             arguments_list = []
             arguments_help_list = []
             for argument, help_text in command.arguments:
                 arguments_list.append('[{0}]'.format(argument))
-                arguments_help_list.append('    {0}: {1}\n'.format(argument, help_text))
+                arguments_help_list.append('\n    {0}: {1}'.format(argument, help_text))
             return help.format(name=self.name,
                                command=command.name,
                                arguments="".join(arguments_help_list),
