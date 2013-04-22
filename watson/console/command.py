@@ -43,9 +43,6 @@ class BaseCommand(object):
     _parsed_args = None
     _parsed_options = None
 
-    def __init__(self, *args):
-        self.args = args
-
     @property
     def parsed_args(self):
         """Returns the parsed arguments.

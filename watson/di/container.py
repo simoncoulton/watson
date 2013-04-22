@@ -127,7 +127,7 @@ class IocContainer(EventDispatcherAware):
 
         Args:
             string name: The name used to reference the dependency
-            mixed item: The dependency to add (either qualified name or ins)
+            mixed item: The dependency to add (either qualified name or instance)
         """
         definition = self.definitions.get(name, {'item': item, 'type': type})
         self.definitions[name] = definition

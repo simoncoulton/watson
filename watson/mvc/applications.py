@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from types import ModuleType
 from watson.console import Runner
+from watson.console.command import find_commands_in_module
+from watson.common.datastructures import dict_deep_update, module_to_dict
+from watson.common.imports import get_qualified_name
 from watson.di import ContainerAware
 from watson.di.container import IocContainer
 from watson.events.dispatcher import EventDispatcherAware
@@ -9,7 +12,7 @@ from watson.http.messages import create_request_from_environ, Response
 from watson.mvc.exceptions import ApplicationError
 from watson.mvc import config as DefaultConfig
 from watson.mvc import events
-from watson.common.datastructures import dict_deep_update, module_to_dict
+from watson.support.console import commands as DefaultConsoleCommands
 
 
 class BaseApplication(ContainerAware, EventDispatcherAware):
@@ -119,7 +122,7 @@ class HttpApplication(BaseApplication):
         self.dispatcher.trigger(render_event)
 
 
-class ConsoleApplication(BaseApplication):
+class ConsoleApplication(Runner, BaseApplication):
     """
     An application structure suitable for the command line.
 
@@ -130,11 +133,14 @@ class ConsoleApplication(BaseApplication):
     runner = None
 
     def __init__(self, config=None, argv=None):
-        super(ConsoleApplication, self).__init__(config)
-        self.runner = Runner(argv, self.config.get('commands', []))
+        config = dict_deep_update({
+            'commands': find_commands_in_module(DefaultConsoleCommands)
+        }, config or {})
+        BaseApplication.__init__(self, config)
+        Runner.__init__(self, argv, commands=config.get('commands'))
 
-    def run(self):
-        return self.runner.execute()
-
-    def __call__(self):
-        return self.run()
+    def get_command(self, command_name):
+        command = self.commands[command_name]
+        if not isinstance(command, str):
+            self.container.add(command_name, get_qualified_name(command))
+        return self.container.get(command_name)

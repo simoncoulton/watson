@@ -83,7 +83,8 @@ class Runner(object):
         """
         help = """{usage}
 Commands:
-    {commands}"""
+    {commands}
+"""
         commands = []
         for name, command in self.commands.items():
             commands.append('{0}: {1}'.format(name, command.help))
@@ -95,7 +96,8 @@ Commands:
         help = """Usage: {name} {command} {arguments_list}
 
 Arguments:
-{arguments}"""
+{arguments}
+"""
         if command.arguments:
             arguments_list = []
             arguments_help_list = []
@@ -108,9 +110,13 @@ Arguments:
                                arguments_list=' '.join(arguments_list))
         else:
             help = """{name} {command}
-{help}"""
+{help}
+"""
             return help.format(name=self.name, command=command.name,
                                help=command.help)
+
+    def get_command(self, command_name):
+        return self.commands[command_name]()
 
     def execute(self):
         parser = NoInvalidOptionParser(add_help_option=False)
@@ -125,7 +131,7 @@ Arguments:
             if help_index >= 0:
                 self._argv.pop(help_index)
             command_name = self._argv.pop(0)
-            command = self.commands[command_name](*self._argv)
+            command = self.get_command(command_name)
             if command.options:
                 parser.add_options(command.options)
             parser.usage = self.get_command_usage(command)
