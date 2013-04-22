@@ -81,3 +81,20 @@ class BaseCommand(object):
 
     def __call__(self):
         return self.execute()
+
+
+def find_commands_in_module(module):
+    """Retrieves a list of all commands within a module.
+
+    Returns:
+        A list of commands from the module.
+    """
+    commands = []
+    for key in dir(module):
+        item = getattr(module, key)
+        try:
+            if issubclass(item, BaseCommand) and item != BaseCommand:
+                commands.append(item)
+        except:
+            pass
+    return commands
