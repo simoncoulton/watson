@@ -13,7 +13,7 @@ class ApplicationInitListener(ContainerAware):
     """
     def __call__(self, event):
         profiler = self.container.get('profiler')
-        profiler.register_class(event.target, 'run')
+        profiler.register_class(event.target, '__call__')
 
 
 class Profiler(object):
