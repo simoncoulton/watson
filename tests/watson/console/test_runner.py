@@ -12,12 +12,12 @@ class TestConsoleError(object):
 
 class TestRunner:
     def test_create(self):
-        runner = Runner(commands=[
+        runner = Runner(['test.py'], commands=[
             'tests.watson.console.support.SampleStringCommand',
             SampleNonStringCommand
         ])
         assert len(runner.commands) == 2
-        assert runner.name == 'py.test'
+        assert runner.name == 'test.py'
 
     def test_add_commands(self):
         runner = Runner()
