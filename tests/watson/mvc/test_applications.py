@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from watson.di.container import IocContainer
-from watson.mvc.applications import HttpApplication
+from watson.mvc.applications import HttpApplication, ConsoleApplication
 from watson.mvc import config
-from watson.mvc.controllers import RestController
 from watson.common.datastructures import module_to_dict
-from tests.watson.mvc.support import sample_environ, start_response
+from tests.watson.mvc.support import sample_environ, start_response, SampleNonStringCommand
+from tests.watson.mvc import sample_config
 
 
 class TestHttpApplication(object):
@@ -12,6 +12,8 @@ class TestHttpApplication(object):
         application = HttpApplication()
         assert isinstance(application.container, IocContainer)
         assert application.config == module_to_dict(config, '__')
+        application_module = HttpApplication(sample_config)
+        assert application_module.config['debug']['enabled']
 
     def test_call(self):
         application = HttpApplication({
@@ -19,7 +21,7 @@ class TestHttpApplication(object):
                 'home': {
                     'path': '/',
                     'defaults': {
-                        'controller': 'tests.watson.mvc.test_applications.TestController'
+                        'controller': 'tests.watson.mvc.support.TestController'
                     }
                 }
             },
@@ -34,12 +36,20 @@ class TestHttpApplication(object):
 
 
 class TestConsoleApplication(object):
-    pass
+    def test_create(self):
+        application = ConsoleApplication()
+        assert isinstance(application.container, IocContainer)
 
+    def test_register_commands(self):
+        application = ConsoleApplication({
+            'commands': ['tests.watson.mvc.support.SampleStringCommand',
+                         SampleNonStringCommand]
+        })
+        assert len(application.config['commands']) == 2
 
-class TestController(RestController):
-    def GET(self):
-        return 'Hello World!'
-
-    def POST(self):
-        return 'Posted Hello World!'
+    def test_execute_command(self):
+        application = ConsoleApplication({
+            'commands': ['tests.watson.mvc.support.SampleStringCommand',
+                         SampleNonStringCommand]
+        }, ['py.test', 'string'])
+        assert application() == 'Executed!'

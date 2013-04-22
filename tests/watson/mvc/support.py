@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Support functions, classes
 from wsgiref import util
+from watson.console.command import BaseCommand
 from watson.mvc.controllers import ActionController, RestController
 from watson.mvc.views import Model
 
@@ -31,3 +32,22 @@ class SampleRestController(RestController):
 
 def sample_view_model():
     return Model(format='html', template=None, data={"test": {"nodes": {"node": ["Testing", "Another node"]}}})
+
+
+class TestController(RestController):
+    def GET(self):
+        return 'Hello World!'
+
+    def POST(self):
+        return 'Posted Hello World!'
+
+
+class SampleNonStringCommand(BaseCommand):
+    name = 'nonstring'
+
+
+class SampleStringCommand(BaseCommand):
+    name = 'string'
+
+    def execute(self):
+        return 'Executed!'

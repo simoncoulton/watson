@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from types import ModuleType
+from watson.console import Runner
 from watson.di import ContainerAware
 from watson.di.container import IocContainer
 from watson.events.dispatcher import EventDispatcherAware
@@ -121,5 +122,19 @@ class HttpApplication(BaseApplication):
 class ConsoleApplication(BaseApplication):
     """
     An application structure suitable for the command line.
+
+    Usage:
+        application = ConsoleApplication({...})
+        application()
     """
-    # todo
+    runner = None
+
+    def __init__(self, config=None, argv=None):
+        super(ConsoleApplication, self).__init__(config)
+        self.runner = Runner(argv, self.config.get('commands', []))
+
+    def run(self):
+        return self.runner.execute()
+
+    def __call__(self):
+        return self.run()
