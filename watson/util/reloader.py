@@ -65,10 +65,14 @@ def reloader_thread():
         time.sleep(1)
 
 
-def restart_with_reloader():
+def restart_with_reloader(script_dir=None):
     import __main__
     while True:
-        args = [sys.executable, os.path.abspath(__main__.__file__)]
+        if not script_dir:
+            script = os.path.abspath(__main__.__file__)
+        else:
+            script = os.path.abspath(os.path.join(script_dir, __main__.__file__))
+        args = [sys.executable, script]
         new_environ = os.environ.copy()
         new_environ['RUN_MAIN'] = 'true'
         exit_code = os.spawnve(os.P_WAIT, sys.executable, args, new_environ)
@@ -76,7 +80,7 @@ def restart_with_reloader():
             return exit_code
 
 
-def reloader(main_func, args, kwargs):
+def reloader(main_func, args, kwargs, script_dir=None):
     if os.environ.get('RUN_MAIN') == 'true':
         thread.start_new_thread(main_func, args, kwargs)
         try:
@@ -85,7 +89,7 @@ def reloader(main_func, args, kwargs):
             pass
     else:
         try:
-            exit_code = restart_with_reloader()
+            exit_code = restart_with_reloader(script_dir)
             if exit_code < 0:
                 os.kill(os.getpid(), -exit_code)
             else:
@@ -95,5 +99,5 @@ def reloader(main_func, args, kwargs):
             pass
 
 
-def main(main_func, args=None, kwargs=None):
-    reloader(main_func, args or (), kwargs or {})
+def main(main_func, args=None, kwargs=None, script_dir=None):
+    reloader(main_func, args or (), kwargs or {}, script_dir)
