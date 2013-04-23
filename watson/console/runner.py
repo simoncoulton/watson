@@ -85,7 +85,8 @@ class Runner(object):
         help = '\n'.join([
             '{usage}',
             '',
-            'Commands:\n    {commands}'
+            'Commands:\n    {commands}',
+            ''
         ])
         commands = []
         for name, command in self.commands.items():
@@ -98,7 +99,8 @@ class Runner(object):
         help = '\n'.join([
             colors.header('{name} {command} {arguments_list}'),
             '',
-            'Arguments:{arguments}'
+            'Arguments:{arguments}',
+            ''
         ])
         if command.arguments:
             arguments_list = []
