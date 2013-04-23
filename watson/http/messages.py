@@ -8,7 +8,7 @@ from watson.http.cookies import CookieDict
 from watson.http.headers import HeaderDict, split_headers_server_vars
 from watson.http.uri import Url
 from watson.http.wsgi import get_form_vars
-from watson.http.sessions import create_session_from_request
+from watson.http.sessions import SessionMixin
 
 
 class MessageMixin(object):
@@ -44,7 +44,7 @@ class MessageMixin(object):
         self.body = body or ''
 
 
-def create_request_from_environ(environ, session_class=None):
+def create_request_from_environ(environ, session_class=None, session_options=None):
     """Create a new Request object.
 
     Create a new Request object based on a set of environ variables. To create
@@ -62,11 +62,12 @@ def create_request_from_environ(environ, session_class=None):
     request = Request(method, ImmutableMultiDict(get), ImmutableMultiDict(post),
                       ImmutableMultiDict(files), ImmutableMultiDict(headers),
                       ImmutableMultiDict(server), ImmutableMultiDict(cookies))
-    request.session_class = session_class if session_class else Request._session_class
+    if session_class:
+        request.define_session(session_class, session_options or {})
     return request
 
 
-class Request(MessageMixin):
+class Request(MessageMixin, SessionMixin):
     """
     Provides a simple and usable interface for dealing with Http Requests.
     Requests are designed to be immutable and not altered after they are
@@ -96,8 +97,6 @@ class Request(MessageMixin):
     _headers = None
     _server = None
     _cookies = None
-    _session = None
-    _session_class = 'watson.http.sessions.FileStorage'
 
     @property
     def method(self):
@@ -162,20 +161,6 @@ class Request(MessageMixin):
             A watson.http.cookies.CookieDict object
         """
         return self._cookies
-
-    @property
-    def session(self):
-        if not self._session:
-            self._session = create_session_from_request(self)
-        return self._session
-
-    @property
-    def session_class(self):
-        return self._session_class
-
-    @session_class.setter
-    def session_class(self, _class):
-        self._session_class = str(_class)
 
     @property
     def url(self):

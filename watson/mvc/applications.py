@@ -77,7 +77,9 @@ class HttpApplication(BaseApplication):
         application(environ, start_response)
     """
     def run(self, environ, start_response):
-        request = create_request_from_environ(environ, self.config['session']['class'])
+        request = create_request_from_environ(environ,
+                                              self.config['session']['class'],
+                                              self.config['session'].get('options'))
         try:
             route_result = self.dispatcher.trigger(Event(events.ROUTE_MATCH_EVENT, target=self, params={
                 'request': request,
@@ -99,11 +101,12 @@ class HttpApplication(BaseApplication):
                 view_model = dispatch_result.first()
             except ApplicationError as exc:
                 response, view_model = self.__raise_exception_event(exception=exc, request=request, route_match=route_match)
-        try:
-            self.__render(request=request, response=response, view_model=view_model)
-        except ApplicationError as exc:
-            response, view_model = self.__raise_exception_event(exception=exc, request=request, route_match=route_match)
-            self.__render(request=request, response=response, view_model=view_model)
+        if not isinstance(view_model, Response):
+            try:
+                self.__render(request=request, response=response, view_model=view_model)
+            except ApplicationError as exc:
+                response, view_model = self.__raise_exception_event(exception=exc, request=request, route_match=route_match)
+                self.__render(request=request, response=response, view_model=view_model)
         start_response(*response.start())
         return [response()]
 
