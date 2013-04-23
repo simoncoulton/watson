@@ -121,6 +121,8 @@ class RunTests(BaseCommand, ContainerAware):
                 pass
         if test_runner:
             sys.modules[test_runner].main(cli_args.split(' '))
+        else:
+            raise ConsoleError("You must install either 'nose' or 'py.test' to run the unit tests.")
 
 
 BLANK_PY_TEMPLATE = """# -*- coding: utf-8 -*-
