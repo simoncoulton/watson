@@ -2,6 +2,7 @@
 import optparse
 import os
 import stat
+import sys
 from string import Template
 from watson.console import ConsoleError
 from watson.console.command import BaseCommand
@@ -32,7 +33,7 @@ class CreateApplication(BaseCommand, ContainerAware):
         if self.parsed_options.dir:
             root = os.path.abspath(self.parsed_options.dir)
         else:
-            root = os.path.abspath('./')
+            root = os.getcwd()
         basepath = os.path.join(root, project_name)
         paths = [
             basepath,
@@ -49,7 +50,9 @@ class CreateApplication(BaseCommand, ContainerAware):
             os.path.join(basepath, 'public', 'css'),
             os.path.join(basepath, 'public', 'img'),
             os.path.join(basepath, 'public', 'js'),
-            os.path.join(basepath, 'tests')
+            os.path.join(basepath, 'tests'),
+            os.path.join(basepath, 'tests', app_name),
+            os.path.join(basepath, 'tests', app_name, 'controllers'),
         ]
         files = [
             (os.path.join(basepath, app_name, '__init__.py'), BLANK_PY_TEMPLATE),
@@ -62,6 +65,10 @@ class CreateApplication(BaseCommand, ContainerAware):
             (os.path.join(basepath, app_name, 'controllers', '__init__.py'), SAMPLE_CONTROLLER_INIT_TEMPLATE),
             (os.path.join(basepath, app_name, 'controllers', 'index.py'), SAMPLE_CONTROLLER_TEMPLATE),
             (os.path.join(basepath, app_name, 'views', 'index', 'get.html'), SAMPLE_VIEW_TEMPLATE),
+            (os.path.join(basepath, 'tests', '__init__.py'), BLANK_PY_TEMPLATE),
+            (os.path.join(basepath, 'tests', app_name, '__init__.py'), BLANK_PY_TEMPLATE),
+            (os.path.join(basepath, 'tests', app_name, 'controllers', '__init__.py'), BLANK_PY_TEMPLATE),
+            (os.path.join(basepath, 'tests', app_name, 'controllers', 'test_index.py'), SAMPLE_TEST_SUITE),
             (os.path.join(basepath, 'console.py'), CONSOLE_TEMPLATE),
         ]
         for path in paths:
@@ -90,6 +97,30 @@ class RunDevelopmentServer(BaseCommand, ContainerAware):
         app = load_definition_from_string('{0}.app.application'.format(APP_MODULE))
         os.chdir(APP_DIR)
         make_dev_server(app, do_reload=True, script_dir=SCRIPT_DIR)
+
+
+class RunTests(BaseCommand, ContainerAware):
+    name = 'runtests'
+    help = 'Runs the unit tests for the project.'
+
+    def execute(self):
+        from __main__ import APP_MODULE
+        test_runner = None
+        cli_args = ''
+        sys.argv = [sys.argv.pop(0)]
+        try:
+            import pytest
+            test_runner = 'pytest'
+            cli_args = '--cov {0}'.format(APP_MODULE)
+        except:
+            try:
+                import nose
+                test_runner = 'nose'
+                cli_args = '--cover-package={0}'.format(APP_MODULE)
+            except:
+                pass
+        if test_runner:
+            sys.modules[test_runner].main(cli_args.split(' '))
 
 
 BLANK_PY_TEMPLATE = """# -*- coding: utf-8 -*-
@@ -166,6 +197,17 @@ SAMPLE_VIEW_TEMPLATE = """<!DOCTYPE html>
 </html>
 """
 
+SAMPLE_TEST_SUITE = """# -*- coding: utf-8 -*-
+import watson
+from ${app_name}.controllers.index import Index
+
+
+class TestSuiteIndex(object):
+    def test_get(self):
+        index = Index()
+        assert index.GET() == 'Welcome to Watson v{0}!'.format(watson.__version__)
+"""
+
 CONSOLE_TEMPLATE = """#!/usr/bin/env python
 import os
 import sys
@@ -176,8 +218,9 @@ APP_DIR = os.path.join(SCRIPT_DIR, '${app_name}')
 try:
     import watson
 except:
-    sys.stdout.write('You must have Watson installed, please run `pip install watson3`\\n')
-    sys.exit(1)
+    # sys.stdout.write('You must have Watson installed, please run `pip install watson3`\\n')
+    # sys.exit(1)
+    sys.path.append('/Volumes/Data/DevRoot/www/watson')
 
 from watson.mvc.applications import ConsoleApplication
 
