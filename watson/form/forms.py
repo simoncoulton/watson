@@ -53,7 +53,7 @@ class Form(TagMixin):
         self.attributes.update({
             'name': name,
             'method': method.lower(),
-            'action': kwargs.get('action', '/'),
+            'action': action or '/',
             'enctype': kwargs.get('enctype', 'application/x-www-form-urlencoded')
         })
         for field_name, field in self.fields.items():
