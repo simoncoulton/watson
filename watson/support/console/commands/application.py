@@ -218,9 +218,8 @@ APP_DIR = os.path.join(SCRIPT_DIR, '${app_name}')
 try:
     import watson
 except:
-    # sys.stdout.write('You must have Watson installed, please run `pip install watson3`\\n')
-    # sys.exit(1)
-    sys.path.append('/Volumes/Data/DevRoot/www/watson')
+    sys.stdout.write('You must have Watson installed, please run `pip install watson3`\\n')
+    sys.exit(1)
 
 from watson.mvc.applications import ConsoleApplication
 
