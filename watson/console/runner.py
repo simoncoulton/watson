@@ -129,14 +129,16 @@ Arguments:{arguments}
                     help_index = self._argv.index(_help)
             if help_index >= 0:
                 self._argv.pop(help_index)
-            command_name = self._argv.pop(0)
-            command = self.get_command(command_name)
-            if command.options:
-                parser.add_options(command.options)
-            parser.usage = self.get_command_usage(command)
+            if self._argv:
+                command_name = self._argv.pop(0)
+                command = self.get_command(command_name)
+                if command.options:
+                    parser.add_options(command.options)
+                parser.usage = self.get_command_usage(command)
             if help_index >= 0:
                 parser.print_help()
-        except:
+        except Exception as exc:
+            raise exc
             pass  # no command, and no help
         if not command:
             sys.stdout.write(self.available_commands_usage)

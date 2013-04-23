@@ -73,9 +73,10 @@ def restart_with_reloader(script_dir=None):
         else:
             script = os.path.abspath(os.path.join(script_dir, __main__.__file__))
         args = [sys.executable, script]
-        if len(sys.argv) > 1:
-            sys.argv.pop(0)
-            args = args + sys.argv
+        sys_argv = sys.argv[:]
+        if len(sys_argv) > 1:
+            sys_argv.pop(0)
+            args = args + sys_argv
         new_environ = os.environ.copy()
         new_environ['RUN_MAIN'] = 'true'
         exit_code = os.spawnve(os.P_WAIT, sys.executable, args, new_environ)
