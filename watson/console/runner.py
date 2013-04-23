@@ -4,6 +4,7 @@ import optparse
 import os
 import sys
 from watson.common.imports import load_definition_from_string
+from watson.console import colors, styles
 
 
 class Runner(object):
@@ -71,8 +72,8 @@ class Runner(object):
 
         This is used when the -h or --help command is invoked.
         """
-        help = """Usage: {name} [command], or append -h (--help) for additional help.
-        """
+        help = 'Usage: ' + colors.header("""{name} [command], or append -h (--help) for additional help.
+        """)
         return help.format(name=self.name)
 
     @property
@@ -81,36 +82,39 @@ class Runner(object):
 
         This is used when no commands have been specified.
         """
-        help = """{usage}
-Commands:
-    {commands}
-"""
+        help = '\n'.join([
+            '{usage}',
+            '',
+            'Commands:\n    {commands}'
+        ])
         commands = []
         for name, command in self.commands.items():
-            commands.append('{0}: {1}'.format(name, command.help))
+            commands.append('{0}: {1}'.format(styles.bold(name), command.help))
 
         return help.format(commands="\n    ".join(commands),
                            usage=self.usage)
 
     def get_command_usage(self, command):
-        help = """Usage: {name} {command} {arguments_list}
-
-Arguments:{arguments}
-"""
+        help = '\n'.join([
+            colors.header('{name} {command} {arguments_list}'),
+            '',
+            'Arguments:{arguments}'
+        ])
         if command.arguments:
             arguments_list = []
             arguments_help_list = []
             for argument, help_text in command.arguments:
                 arguments_list.append('[{0}]'.format(argument))
-                arguments_help_list.append('\n    {0}: {1}'.format(argument, help_text))
+                arguments_help_list.append('\n    {0}: {1}'.format(styles.bold(argument), help_text))
             return help.format(name=self.name,
                                command=command.name,
                                arguments="".join(arguments_help_list),
                                arguments_list=' '.join(arguments_list))
         else:
-            help = """{name} {command}
-{help}
-"""
+            help = '\n'.join([
+                colors.header('{name} {command}'),
+                '{help}'
+            ])
             return help.format(name=self.name, command=command.name,
                                help=command.help)
 
@@ -160,7 +164,7 @@ Arguments:{arguments}
                 command.parsed_options = options
                 return command()
             except ConsoleError as exc:
-                sys.stdout.write('Error: {0}\n'.format(exc))
+                sys.stdout.write(colors.fail('Error: {0}\n'.format(exc)))
 
     def __call__(self):
         return self.execute()
