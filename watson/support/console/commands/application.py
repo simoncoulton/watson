@@ -93,10 +93,10 @@ class RunDevelopmentServer(BaseCommand, ContainerAware):
     help = 'Runs the development server for the current application.'
 
     def execute(self):
-        from __main__ import APP_MODULE, APP_DIR, SCRIPT_DIR
+        from __main__ import APP_MODULE, APP_DIR, SCRIPT_DIR, PUBLIC_DIR
         app = load_definition_from_string('{0}.app.application'.format(APP_MODULE))
         os.chdir(APP_DIR)
-        make_dev_server(app, do_reload=True, script_dir=SCRIPT_DIR)
+        make_dev_server(app, do_reload=True, script_dir=SCRIPT_DIR, public_dir=PUBLIC_DIR)
 
 
 class RunTests(BaseCommand, ContainerAware):
@@ -217,6 +217,7 @@ import sys
 SCRIPT_DIR, SCRIPT_FILE = os.path.split(os.path.abspath(__file__))
 APP_MODULE = '${app_name}'
 APP_DIR = os.path.join(SCRIPT_DIR, '${app_name}')
+PUBLIC_DIR = os.path.join(SCRIPT_DIR, 'public')
 try:
     import watson
 except:
