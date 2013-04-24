@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import collections
 from copy import deepcopy
-from watson.form.fields import FieldMixin, File
+from watson.form.fields import FieldMixin, File, Hidden
 from watson.html.elements import TagMixin, flatten_attributes
 from watson.common.datastructures import MultiDict
 from watson.common.decorators import cached_property
@@ -48,14 +48,18 @@ class Form(TagMixin):
             string action: the url to submit the form to
             boolean detect_multipart: automatically set multipart/form-data
         """
+        method = method.lower()
         self.attributes = {}
         self.attributes.update(kwargs)
         self.attributes.update({
             'name': name,
-            'method': method.lower(),
+            'method': method,
             'action': action or '/',
             'enctype': kwargs.get('enctype', 'application/x-www-form-urlencoded')
         })
+        if self.method not in ('get', 'post'):
+            self.attributes['method'] = 'post'
+            self.__class__.http_request_method = Hidden(value=method.upper())
         for field_name, field in self.fields.items():
             if detect_multipart and isinstance(field, File):
                 self.attributes['enctype'] = 'multipart/form-data'
@@ -228,10 +232,20 @@ class Form(TagMixin):
         """
         return '<form {0}>'.format(flatten_attributes(self.attributes))
 
-    def close(self):
+    def close(self, include_http_request=True):
         """Render the end tag of the form.
+
+        If the form has the http_request_method input then include it in the
+        tag by default.
+
+        Args:
+            boolean include_http_request: Whether or not to include the HTTP_REQUEST_METHOD field
         """
-        return '</form>'
+        tag = '{0}</form>'
+        field = ''
+        if include_http_request and hasattr(self, 'http_request_method'):
+            field = str(self.http_request_method)
+        return tag.format(field)
 
     def render(self, with_tag='div', with_label=True):
         """Output the entire form as a string.
@@ -249,7 +263,7 @@ class Form(TagMixin):
         fields = ['<{0}>{1}</{0}>'.format(with_tag,
                                           field.render_with_label() if with_label else str(field))
                   for field_name, field in self.fields.items()]
-        return html.format(open=self.open(), close=self.close(), fields=''.join(fields))
+        return html.format(open=self.open(), close=self.close(False), fields=''.join(fields))
 
     # convenience methods
 
