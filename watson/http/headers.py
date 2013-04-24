@@ -25,8 +25,8 @@ class HeaderDict(MultiDict):
         """
         vals = [str(value)]
         if options:
-            vals.extend(['{0}={1}'.format(key, value) for
-                                    key, value in options.items()])
+            vals.extend(['{0}={1}'.format(key, val) for
+                        key, val in options.items()])
         self.set(parse_from_environ_header_field(field), '; '.join(vals), replace)
 
     def get_option(self, field, option, default=None):
@@ -122,6 +122,7 @@ def split_headers_server_vars(environ):
             headers.add(http_header(key), environ[key])
             if key == 'HTTP_COOKIE':
                 cookies = CookieDict(environ[key])
+                cookies.modified = False
         else:
             server[key] = environ[key]
     return headers, server, cookies

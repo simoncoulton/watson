@@ -61,7 +61,7 @@ def create_request_from_environ(environ, session_class=None, session_options=Non
         method = server['REQUEST_METHOD']
     request = Request(method, ImmutableMultiDict(get), ImmutableMultiDict(post),
                       ImmutableMultiDict(files), ImmutableMultiDict(headers),
-                      ImmutableMultiDict(server), ImmutableMultiDict(cookies))
+                      ImmutableMultiDict(server), cookies)
     if session_class:
         request.define_session(session_class, session_options or {})
     return request
@@ -254,10 +254,17 @@ class Request(MessageMixin, SessionMixin):
             request = ... # request made via GET
             request.is_method('get') # True
 
+        Args:
+            string|list|tuple method: the method or list of methods to check
+
         Returns:
             Boolean
         """
-        return self.method == method.upper()
+        if isinstance(method, (tuple, list)):
+            method = [m.upper() for m in method]
+        else:
+            method = method.upper()
+        return self.method in method
 
     def host(self):
         """

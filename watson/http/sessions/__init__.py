@@ -30,3 +30,8 @@ class SessionMixin(object):
             session_cookie = self.cookies[COOKIE_KEY]
             self._session = storage(id=session_cookie.value, **self._session_options) if session_cookie else storage(**self._session_options)
         return self._session
+
+    def session_to_cookie(self):
+        session_cookie = self.cookies[COOKIE_KEY]
+        if not session_cookie or (session_cookie and self.session.id != session_cookie.value):
+            self.cookies[COOKIE_KEY] = self.session.id

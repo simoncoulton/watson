@@ -41,17 +41,24 @@ class DispatchExecuteListener(BaseListener):
         controller.request = event.params['request']
         try:
             model_data = controller.execute(**route_match.params)
+            short_circuit = False
             if isinstance(model_data, str):
                 model_data = {'content': model_data}
             elif isinstance(model_data, Response):
-                return model_data
-            controller_path = controller.get_execute_method_path(**route_match.params)
-            controller_template = os.path.join(*controller_path)
-            return Model(format=route_match.params.get('format', 'html'),
-                         template=self.templates.get(controller_template, controller_template),
-                         data=model_data)
+                short_circuit = True
+                response = model_data
+            if not short_circuit:
+                controller_path = controller.get_execute_method_path(**route_match.params)
+                controller_template = os.path.join(*controller_path)
+                response = Model(format=route_match.params.get('format', 'html'),
+                                 template=self.templates.get(controller_template, controller_template),
+                                 data=model_data)
         except Exception as exc:
             raise InternalServerError('An error occurred executing controller: {0}'.format(get_qualified_name(controller))) from exc
+        controller.request.session_to_cookie()
+        if controller.request.cookies.modified:
+            controller.response.cookies.merge(controller.request.cookies)
+        return response
 
 
 class ExceptionListener(BaseListener):
