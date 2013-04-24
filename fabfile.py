@@ -26,7 +26,7 @@ def test():
         try:
             import pytest
             test_runner = 'py.test'
-            cli_args = '-s --cov-report html --cov watson tests/'
+            cli_args = '--cov-report html --cov watson'
         except:
             pass  # pytest not available
         if test_runner:
