@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from nose.tools import raises
+from unittest.mock import Mock
 from watson.http.messages import Request, Response
 from watson.mvc.controllers import BaseController, HttpControllerMixin
+from watson.mvc.routing import Router
 from tests.watson.mvc.support import SampleActionController, SampleRestController
 
 
@@ -34,6 +36,42 @@ class TestBaseHttpController(object):
     def test_invalid_response(self):
         base = HttpControllerMixin()
         base.response = 'test'
+
+    def test_route_to_url(self):
+        base = HttpControllerMixin()
+        router = Router({
+            'test': {
+                'path': '/test',
+            },
+            'segment': {
+                'path': '/segment[/:part]',
+                'type': 'segment'
+            }
+        })
+        base.container = Mock()
+        base.container.get.return_value = router
+        assert base.url('test') == '/test'
+        assert base.url('segment', {'part': 'test'}) == '/segment/test'
+
+    def test_redirect(self):
+        base = HttpControllerMixin()
+        router = Router({
+            'test': {
+                'path': '/test',
+            },
+            'segment': {
+                'path': '/segment[/:part]',
+                'type': 'segment',
+                'defaults': {'part': 'test'}
+            }
+        })
+        base.container = Mock()
+        base.container.get.return_value = router
+        response = base.redirect('/test', is_url=True)
+        assert response.headers['location'] == '/test'
+        response = base.redirect('segment')
+        assert response.headers['location'] == '/segment/test'
+        assert response.status_code == 302
 
 
 class TestActionController(object):

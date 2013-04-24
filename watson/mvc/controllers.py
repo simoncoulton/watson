@@ -32,7 +32,8 @@ class HttpControllerMixin(BaseController):
 
     @property
     def request(self):
-        """
+        """The HTTP request relating to the controller.
+
         Returns:
             watson.http.messages.Request
         """
@@ -40,8 +41,10 @@ class HttpControllerMixin(BaseController):
 
     @request.setter
     def request(self, request):
-        """
-        Set the request object.
+        """Set the request object.
+
+        Args:
+            watson.http.messages.Request request: The request associated with the controller.
 
         Raises:
             TypeError if the request type is not of watson.http.messages.Request
@@ -52,7 +55,8 @@ class HttpControllerMixin(BaseController):
 
     @property
     def response(self):
-        """
+        """The HTTP response related to the controller.
+
         If no response object has been set, then a new one will be generated.
 
         Returns:
@@ -64,8 +68,10 @@ class HttpControllerMixin(BaseController):
 
     @response.setter
     def response(self, response):
-        """
-        Set the request object.
+        """Set the request object.
+
+        Args:
+            watson.http.messages.Response response: The response associated with the controller.
 
         Raises:
             TypeError if the request type is not of watson.http.messages.Response
@@ -74,7 +80,40 @@ class HttpControllerMixin(BaseController):
             raise TypeError('Invalid response type, expected watson.http.messages.Response')
         self._response = response
 
-    # todo redirect
+    def url(self, route_name, params=None):
+        """Converts a route into a url.
+
+        Args:
+            string route_name: The name of the route to convert
+            dict params: The params to use on the route
+
+        Returns:
+            The assembled url.
+        """
+        if not params:
+            params = {}
+        router = self.container.get('router')
+        return router.assemble(route_name, **params)
+
+    def redirect(self, path, params=None, status_code=302, is_url=False):
+        """Redirect to a different route.
+
+        Redirecting will bypass the rendering of the view, and the body of the
+        request will be displayed.
+
+        Args:
+            string path: The URL or route name to redirect to
+            dict params: The params to send to the route
+            int status_code: The status code to use for the redirect
+            bool is_url: Whether or not the path is a url or route
+
+        Returns:
+            A watson.http.messages.Response object.
+        """
+        self.response.status_code = status_code
+        url = path if is_url else self.url(path, params)
+        self.response.headers.add('location', url, replace=True)
+        return self.response
 
 
 class ActionController(HttpControllerMixin):

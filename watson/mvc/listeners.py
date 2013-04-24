@@ -3,6 +3,7 @@ import os
 import sys
 from watson.di import ContainerAware
 from watson.http import MIME_TYPES
+from watson.http.messages import Response
 from watson.mvc.exceptions import NotFoundError, InternalServerError
 from watson.mvc.views import Model
 from watson.mvc.exceptions import ExceptionHandler
@@ -42,6 +43,8 @@ class DispatchExecuteListener(BaseListener):
             model_data = controller.execute(**route_match.params)
             if isinstance(model_data, str):
                 model_data = {'content': model_data}
+            elif isinstance(model_data, Response):
+                return model_data
             controller_path = controller.get_execute_method_path(**route_match.params)
             controller_template = os.path.join(*controller_path)
             return Model(format=route_match.params.get('format', 'html'),

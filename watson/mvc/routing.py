@@ -109,8 +109,9 @@ class SegmentRoute(BaseRoute):
         return matched, params
 
     def assemble(self, **kwargs):
-        params = kwargs or {}
-        params.update(self.get('defaults', {}))
+        params = self.get('defaults', {})
+        new_params = kwargs or {}
+        params.update(new_params)
         return ''.join(self.__build_path(self.segments, params))
 
     def __build_path(self, segments, params):

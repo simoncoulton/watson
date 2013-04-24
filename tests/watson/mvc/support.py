@@ -24,6 +24,9 @@ class SampleActionController(ActionController):
     def blah_action(self):
         return 'blah_action'
 
+    def blah_syntax_error_action(self):
+        a = b
+
 
 class SampleRestController(RestController):
     def GET(self):
