@@ -39,12 +39,9 @@ class ListenerCollection(list):
         Args:
             callable callback: the callback to be removed.
         """
-        i = len(self) - 1
-        while i >= 0:
-            if self[i].callback == callback:
-                listener = self[i]
+        for listener in list(self):
+            if listener.callback == callback:
                 super(ListenerCollection, self).remove(listener)
-            i -= 1
 
     def sort_priority(self):
         """Sort the collection based on the priority of the callbacks.

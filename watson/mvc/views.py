@@ -131,6 +131,21 @@ class Jinja2Renderer(BaseRenderer):
                     margin-bottom: 4px;
                     margin-left: 160px;
                 }
+                dd table {
+                    margin: 0;
+                    table-layout: fixed;
+                }
+                dd table td {
+                    font-family: inherit;
+                    padding: 2px 0;
+                    color: inherit;
+                }
+                dd table tr > td:first-of-type {
+                    width: 200px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
                 dl.watson-error dd {
                     color: #f6f6f6;
                     padding-top: 2px;
@@ -161,13 +176,41 @@ class Jinja2Renderer(BaseRenderer):
                 <dt>Session Id:</dt>
                 <dd>{{ request.session.id }}</dd>
                 <dt>Headers:</dt>
-                <dd>{{ request.headers }}</dd>
+                <dd>
+                    <table>
+                    {% for key in request.headers %}
+                        <tr><td>{{ key }}</td><td>{{ request.headers[key] }}</td></tr>
+                    {% endfor %}
+                    </table>
+                </dd>
                 <dt>Get Vars:</dt>
-                <dd>{{ request.get }}</dd>
+                <dd>
+                    <table>
+                    {% for key in request.get %}
+                        <tr><td>{{ key }}</td><td>{{ request.get[key] }}</td></tr>
+                    {% else %}
+                        -
+                    {% endfor %}
+                    </table>
+                </dd>
                 <dt>Post Vars:</dt>
-                <dd>{{ request.post }}</dd>
+                <dd>
+                    <table>
+                    {% for key in request.post %}
+                        <tr><td>{{ key }}</td><td>{{ request.post[key] }}</td></tr>
+                    {% else %}
+                        -
+                    {% endfor %}
+                    </table>
+                </dd>
                 <dt>Server:</dt>
-                <dd>{{ request.server }}</dd>
+                <dd>
+                    <table>
+                    {% for key in request.server %}
+                        <tr><td>{{ key }}</td><td>{{ request.server[key] }}</td></tr>
+                    {% endfor %}
+                    </table>
+                </dd>
             </dl>
             <h1>Stack Trace</h1>
             <table class="watson-stack-frames">
