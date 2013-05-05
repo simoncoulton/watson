@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+from io import BytesIO, BufferedReader
 from nose.tools import raises
 from unittest.mock import Mock
-from watson.http.messages import Request, Response
+from watson.http.messages import Request, Response, create_request_from_environ
 from watson.mvc.controllers import BaseController, HttpControllerMixin
 from watson.mvc.routing import Router
-from tests.watson.mvc.support import SampleActionController, SampleRestController
+from tests.watson.mvc.support import SampleActionController, SampleRestController, sample_environ
 
 
 class TestNotImplementedController(object):
@@ -65,6 +66,7 @@ class TestBaseHttpController(object):
                 'defaults': {'part': 'test'}
             }
         })
+        base.request = create_request_from_environ(sample_environ())
         base.container = Mock()
         base.container.get.return_value = router
         response = base.redirect('/test', is_url=True)
@@ -72,6 +74,21 @@ class TestBaseHttpController(object):
         response = base.redirect('segment')
         assert response.headers['location'] == '/segment/test'
         assert response.status_code == 302
+
+    def test_post_redirect_get(self):
+        base = HttpControllerMixin()
+        router = Router({'test': {'path': '/test'}})
+        environ = sample_environ(PATH_INFO='/', REQUEST_METHOD='POST')
+        environ['wsgi.input'] = BufferedReader(BytesIO(b'post_var_one=test&post_var_two=blah'))
+        base.request = create_request_from_environ(environ, 'watson.http.sessions.MemoryStorage')
+        base.container = Mock()
+        base.container.get.return_value = router
+        response = base.redirect('test')
+        assert response.status_code == 303
+        assert base.redirect_vars == base.request.session['post_redirect_get']
+
+    def test_flash_message(self):
+        pass
 
 
 class TestActionController(object):

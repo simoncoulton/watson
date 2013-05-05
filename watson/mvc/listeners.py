@@ -38,6 +38,7 @@ class DispatchExecuteListener(BaseListener):
         except Exception as exc:
             raise InternalServerError('Controller not found for route: {0}'.format(route_match.name)) from exc
         event.params['controller_class'] = controller
+        controller.event = event
         controller.request = event.params['request']
         try:
             model_data = controller.execute(**route_match.params)
