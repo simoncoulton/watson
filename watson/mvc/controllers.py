@@ -146,20 +146,24 @@ class HttpControllerMixin(BaseController):
             self.response.status_code = status_code if status_code != 302 else 303
             self.request.session['post_redirect_get'] = dict(self.request.post)
         if clear:
-            del self.request.session['post_redirect_get']
+            self.clear_redirect_vars()
         url = path if is_url else self.url(path, params)
         self.response.headers.add('location', url, replace=True)
         return self.response
 
     @property
     def redirect_vars(self):
+        """Returns the post variables from a redirected request.
+        """
         post_vars = {}
         if hasattr(self.request, 'session'):
             post_vars = self.request.session.get('post_redirect_get', {})
         return post_vars
 
     def clear_redirect_vars(self):
-        self.request.session['post_redirect_get'] = {}
+        """Clears the redirected variables.
+        """
+        del self.request.session['post_redirect_get']
 
 
 class ActionController(HttpControllerMixin):
