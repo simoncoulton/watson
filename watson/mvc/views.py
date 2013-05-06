@@ -178,16 +178,16 @@ class Jinja2Renderer(BaseRenderer):
                 <dt>Headers:</dt>
                 <dd>
                     <table>
-                    {% for key in request.headers %}
-                        <tr><td>{{ key }}</td><td>{{ request.headers[key] }}</td></tr>
+                    {% for key, value in request.headers|dictsort %}
+                        <tr><td>{{ key }}</td><td>{{ value }}</td></tr>
                     {% endfor %}
                     </table>
                 </dd>
                 <dt>Get Vars:</dt>
                 <dd>
                     <table>
-                    {% for key in request.get %}
-                        <tr><td>{{ key }}</td><td>{{ request.get[key] }}</td></tr>
+                    {% for key, value in request.get|dictsort %}
+                        <tr><td>{{ key }}</td><td>{{ value }}</td></tr>
                     {% else %}
                         -
                     {% endfor %}
@@ -196,8 +196,8 @@ class Jinja2Renderer(BaseRenderer):
                 <dt>Post Vars:</dt>
                 <dd>
                     <table>
-                    {% for key in request.post %}
-                        <tr><td>{{ key }}</td><td>{{ request.post[key] }}</td></tr>
+                    {% for key, value in request.post|dictsort %}
+                        <tr><td>{{ key }}</td><td>{{ value }}</td></tr>
                     {% else %}
                         -
                     {% endfor %}
@@ -206,8 +206,8 @@ class Jinja2Renderer(BaseRenderer):
                 <dt>Server:</dt>
                 <dd>
                     <table>
-                    {% for key in request.server %}
-                        <tr><td>{{ key }}</td><td>{{ request.server[key] }}</td></tr>
+                    {% for key, value in request.server|dictsort %}
+                        <tr><td>{{ key }}</td><td>{{ value }}</td></tr>
                     {% endfor %}
                     </table>
                 </dd>
