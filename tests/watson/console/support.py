@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import optparse
 from watson.console import ConsoleError
 from watson.console.command import BaseCommand
 
@@ -27,12 +26,12 @@ class SampleNoHelpNoExecuteCommand(BaseCommand):
 class SampleOptionsCommand(BaseCommand):
     name = 'runoptions'
     help = 'Options command!'
-    options = [
-        optparse.make_option('-f', '--filename', help='Use filename with command')
+    arguments = [
+        (('-f', '--filename',), {'help': 'Use filename with command'}),
     ]
 
     def execute(self):
-        if self.parsed_options.filename:
+        if self.parsed_args.filename:
             return True
         return None
 
@@ -41,8 +40,8 @@ class SampleArgumentsCommand(BaseCommand):
     name = 'runargs'
     help = 'Arguments command!'
     arguments = [
-        ('argument1', 'the argument that needs to be passed'),
-        ('argument2', 'the second argument')
+        {'dest': 'argument1', 'help': 'the argument that needs to be passed'},
+        {'dest': 'argument2', 'help': 'the second argument'}
     ]
 
     def execute(self):
@@ -55,14 +54,12 @@ class SampleArgumentsWithOptionsCommand(BaseCommand):
     name = 'runargsoptions'
     help = 'Arguments/Options command!'
     arguments = [
-        ('argument1', 'the argument that needs to be passed'),
-        ('argument2', 'the second argument')
-    ]
-    options = [
-        optparse.make_option('-f', '--filename', help='Use filename with command')
+        (('-f', '--filename',), {'help': 'Use filename with command', 'required': False}),
+        {'dest': 'argument1', 'help': 'the argument that needs to be passed'},
+        {'dest': 'argument2', 'help': 'the second argument'},
     ]
 
     def execute(self):
-        if 'argument1' in self.parsed_args and self.parsed_options.filename:
+        if 'argument1' in self.parsed_args and self.parsed_args.filename:
             return True
         return False

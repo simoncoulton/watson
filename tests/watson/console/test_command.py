@@ -7,7 +7,7 @@ from tests.watson.console import support
 class TestBaseCommand(object):
     def test_init(self):
         command = BaseCommand()
-        assert not command.options
+        assert not command.arguments
 
     @raises(NotImplementedError)
     def test_execute(self):

@@ -7,6 +7,8 @@ class BaseCommand(object):
 
     Help is automatically invoked when the `-h` or `--help` option is used.
 
+    http://docs.python.org/dev/library/argparse.html#the-add-argument-method
+
     Usage:
         # can be executed by `script.py mycommand`
         class MyCommand(BaseCommand):
@@ -16,32 +18,29 @@ class BaseCommand(object):
                 return True
 
         # can be executed by `script.py mycommand -t something`
-        import optparse
         class MyCommand(BaseCommand):
             name = 'mycommand'
-            options = [
-                optparse.make_option('-t', help='Do something with -t')
+            arguments = [
+                (['-t', '--test'], {'help': 'Do something with -t'})
             ]
 
             def execute(self):
-                return True if self.parsed_options.t else False
+                return True if self.parsed_args.t else False
 
         # can be executed by `script.py mycommand something`
         class MyCommand(BaseCommand):
             name = 'mycommand'
             arguments = [
-                ('argument1', 'This is the help for the argument')
+                {'dest': 'argument1', 'help': 'This is the help for the argument'}
             ]
 
             def execute(self):
-                return True if 'argument1' in self.parsed_args else False
+                return True if self.parsed_args.argument1 else False
     """
     name = None
-    options = []
     arguments = []
     help = 'Missing help.'
     _parsed_args = None
-    _parsed_options = None
 
     @property
     def parsed_args(self):
@@ -57,21 +56,6 @@ class BaseCommand(object):
         """Set the parsed arguments.
         """
         self._parsed_args = args
-
-    @property
-    def parsed_options(self):
-        """Returns the parsed options.
-
-        Returns:
-            see optparse.parse_args() for more information.
-        """
-        return self._parsed_options
-
-    @parsed_options.setter
-    def parsed_options(self, options):
-        """Set the parsed options.
-        """
-        self._parsed_options = options
 
     def execute(self):
         raise NotImplementedError('execute() must be implemented.')
