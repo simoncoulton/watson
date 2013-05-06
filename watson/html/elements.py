@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import collections
 
 
 class TagMixin(object):
@@ -13,8 +14,7 @@ class TagMixin(object):
     attributes = None
 
     def __init__(self, **kwargs):
-        self.attributes = {}
-        self.attributes.update(kwargs)
+        self.attributes = collections.ChainMap(kwargs)
 
     def __str__(self):
         return self.render()

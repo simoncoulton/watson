@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import collections
 import re
 from watson.http import REQUEST_METHODS, MIME_TYPES
 from watson.common.imports import get_qualified_name
@@ -78,7 +79,7 @@ class BaseRoute(dict):
         formats = None
         if accept_format:
             formats = [format for format in MIME_TYPES if
-                        accept_format in MIME_TYPES[format]]
+                       accept_format in MIME_TYPES[format]]
             if formats:
                 params['format'] = formats[0]
         if 'format' in self and formats:
@@ -109,9 +110,7 @@ class SegmentRoute(BaseRoute):
         return matched, params
 
     def assemble(self, **kwargs):
-        params = self.get('defaults', {})
-        new_params = kwargs or {}
-        params.update(new_params)
+        params = collections.ChainMap(kwargs or {}, self.get('defaults', {}))
         return ''.join(self.__build_path(self.segments, params))
 
     def __build_path(self, segments, params):

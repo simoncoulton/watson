@@ -13,7 +13,7 @@ class ApplicationInitListener(ContainerAware):
     """
     def __call__(self, event):
         profiler = self.container.get('profiler')
-        profiler.register_class(event.target, '__call__')
+        profiler.register_class(event.target, 'run')
 
 
 class Profiler(object):
@@ -85,6 +85,5 @@ class Profiler(object):
                     'file': func[0]
                 })
         self.stats = stats
-        # print(stats)
-        # p.print_stats()
+        p.print_stats()
         return response

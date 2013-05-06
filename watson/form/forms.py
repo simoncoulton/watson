@@ -50,14 +50,12 @@ class Form(TagMixin):
             boolean detect_multipart: automatically set multipart/form-data
         """
         method = method.lower()
-        self.attributes = {}
-        self.attributes.update(kwargs)
-        self.attributes.update({
+        self.attributes = collections.ChainMap({
             'name': name,
             'method': method,
             'action': action or '/',
             'enctype': kwargs.get('enctype', 'application/x-www-form-urlencoded')
-        })
+        }, kwargs)
         if self.method not in ('get', 'post'):
             self.attributes['method'] = 'post'
             self.__class__.http_request_method = Hidden(value=method.upper())

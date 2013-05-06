@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
+import collections
 from datetime import datetime, timedelta
 import os
 import pickle
 from tempfile import gettempdir
-try:
-    import memcache
-except ImportError:
-    pass
 from watson.common.imports import get_qualified_name
 from watson.common.contextmanagers import ignored
+with ignored(ImportError):
+    import memcache
 
 
 class BaseStorage(object):
@@ -174,10 +173,7 @@ class File(BaseStorage):
             cache['key'] = 'value' # /tmp/my-cache-key contains a serialized 'value'
         """
         settings = {'dir': gettempdir(), 'prefix': 'cache'}
-        if not config:
-            config = {}
-        settings.update(config)
-        self.config = settings
+        self.config = collections.ChainMap(config or {}, settings)
 
     def __setitem__(self, key, value, timeout=0):
         expires = datetime.now() + timedelta(seconds=int(timeout)) if timeout else None

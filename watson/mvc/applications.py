@@ -64,7 +64,10 @@ class BaseApplication(ContainerAware, EventDispatcherAware):
                 self.dispatcher.add(event, self.container.get(callback_priority_pair[0]), priority, once_only)
         self.dispatcher.trigger(Event(events.INIT_EVENT, target=self))
 
-    def __call__(self):
+    def __call__(self, *args, **kwargs):
+        return self.run(*args, **kwargs)
+
+    def run(self):
         raise NotImplementedError('You must implement __call__')
 
 
@@ -141,6 +144,9 @@ class ConsoleApplication(Runner, BaseApplication):
         }, config or {})
         BaseApplication.__init__(self, config)
         Runner.__init__(self, argv, commands=config.get('commands'))
+
+    def run(self):
+        self()
 
     def get_command(self, command_name):
         command = self.commands[command_name]

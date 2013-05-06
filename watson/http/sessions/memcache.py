@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import collections
 from watson.http.sessions import StorageMixin
 from watson.common.contextmanagers import ignored
 with ignored(ImportError):
@@ -13,10 +14,7 @@ class MemcacheStorage(StorageMixin):
     def __init__(self, id=None, timeout=None, autosave=True, config=None):
         super(MemcacheStorage, self).__init__(id, timeout, autosave)
         settings = {'servers': ['127.0.0.1:11211']}
-        if not config:
-            config = {}
-        settings.update(config)
-        self.config = settings
+        self.config = collections.ChainMap(config or {}, settings)
 
     def open(self):
         if not self.client:
