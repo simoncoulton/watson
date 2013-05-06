@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from watson.console.styles import format_style
+from watson.console.styles import format_style, TERMINATE
 
 
 HEADER = '\033[95m'
@@ -9,21 +9,21 @@ WARNING = '\033[93m'
 FAIL = '\033[91m'
 
 
-def header(string):
-    return format_style(string, HEADER)
+def header(string, terminate=True):
+    return format_style(string, HEADER, TERMINATE if terminate else '')
 
 
-def ok_green(string):
-    return format_style(string, OK_GREEN)
+def ok_green(string, terminate=True):
+    return format_style(string, OK_GREEN, TERMINATE if terminate else '')
 
 
-def ok_blue(string):
-    return format_style(string, OK_BLUE)
+def ok_blue(string, terminate=True):
+    return format_style(string, OK_BLUE, TERMINATE if terminate else '')
 
 
-def warning(string):
-    return format_style(string, WARNING)
+def warning(string, terminate=True):
+    return format_style(string, WARNING, TERMINATE if terminate else '')
 
 
-def fail(string):
-    return format_style(string, FAIL)
+def fail(string, terminate=True):
+    return format_style(string, FAIL, TERMINATE if terminate else '')
