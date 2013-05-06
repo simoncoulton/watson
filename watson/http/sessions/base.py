@@ -2,6 +2,7 @@
 import datetime
 from hashlib import sha1
 from random import random
+from watson.common.contextmanagers import ignored
 
 
 COOKIE_KEY = 'watson.session'
@@ -168,10 +169,8 @@ class StorageMixin(dict):
     def __delitem__(self, key):
         if not self.data:
             self.load()
-        try:
+        with ignored(KeyError):
             del self.data[key]
-        except KeyError:
-            pass  # fail silently
 
     def __iter__(self):
         if not self.data:

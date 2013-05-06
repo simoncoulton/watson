@@ -8,6 +8,7 @@ try:
 except ImportError:
     pass
 from watson.common.imports import get_qualified_name
+from watson.common.contextmanagers import ignored
 
 
 class BaseStorage(object):
@@ -181,10 +182,8 @@ class File(BaseStorage):
     def __setitem__(self, key, value, timeout=0):
         expires = datetime.now() + timedelta(seconds=int(timeout)) if timeout else None
         with open(self.__file_path(key), 'wb') as file:
-            try:
+            with ignored(Exception):
                 pickle.dump((value, expires), file, pickle.HIGHEST_PROTOCOL)
-            except:
-                pass
 
     def __getitem__(self, key, default=None):
         if self.expired(key):
@@ -194,10 +193,8 @@ class File(BaseStorage):
             return value
 
     def __delitem__(self, key):
-        try:
+        with ignored(OSError):
             os.unlink(self.__file_path(key))
-        except OSError:
-            pass
 
     def expired(self, key):
         value, expires = self._stored(key)
@@ -218,14 +215,10 @@ class File(BaseStorage):
 
     def _stored(self, key, default=None):
         value, expires = default, None
-        try:
+        with ignored(OSError):
             with open(self.__file_path(key), 'rb') as file:
-                try:
+                with ignored(Exception):
                     (value, expires) = pickle.load(file)
-                except:
-                    pass
-        except:
-            pass
         return value, expires
 
     def __cache_file(self, file):

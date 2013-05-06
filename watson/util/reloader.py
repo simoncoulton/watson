@@ -33,6 +33,7 @@ import sys
 import os
 import time
 import _thread as thread
+from watson.common.contextmanagers import ignored
 
 _mtimes = {}
 
@@ -87,10 +88,8 @@ def restart_with_reloader(script_dir=None):
 def reloader(main_func, args, kwargs, script_dir=None):
     if os.environ.get('RUN_MAIN') == 'true':
         thread.start_new_thread(main_func, args, kwargs)
-        try:
+        with ignored(KeyboardInterrupt):
             reloader_thread()
-        except KeyboardInterrupt:
-            pass
     else:
         try:
             exit_code = restart_with_reloader(script_dir)
@@ -100,7 +99,6 @@ def reloader(main_func, args, kwargs, script_dir=None):
                 sys.exit(exit_code)
         except KeyboardInterrupt:
             print('\nTerminated.')
-            pass
 
 
 def main(main_func, args=None, kwargs=None, script_dir=None):

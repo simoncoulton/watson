@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 from watson.http.sessions import StorageMixin
-try:
+from watson.common.contextmanagers import ignored
+with ignored(ImportError):
     import memcache
-except ImportError:
-    pass
 
 
 class MemcacheStorage(StorageMixin):

@@ -3,9 +3,10 @@ import os
 import stat
 import sys
 from string import Template
+from watson.common.contextmanagers import ignored
+from watson.common.imports import load_definition_from_string
 from watson.console import ConsoleError
 from watson.console.command import BaseCommand
-from watson.common.imports import load_definition_from_string
 from watson.di import ContainerAware
 from watson.util.server import make_dev_server
 
@@ -114,12 +115,10 @@ class RunTests(BaseCommand, ContainerAware):
                 test_runner = 'pytest'
                 cli_args = '--cov {0}'.format(APP_MODULE)
             except:
-                try:
+                with ignored(ImportError):
                     import nose
                     test_runner = 'nose'
                     cli_args = '--cover-package={0}'.format(APP_MODULE)
-                except:
-                    pass
             if test_runner:
                 sys.modules[test_runner].main(cli_args.split(' '))
             else:

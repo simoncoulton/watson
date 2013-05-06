@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from watson.common.contextmanagers import ignored
 
 
 class BaseCommand(object):
@@ -73,9 +74,7 @@ def find_commands_in_module(module):
     commands = []
     for key in dir(module):
         item = getattr(module, key)
-        try:
+        with ignored(Exception):
             if issubclass(item, BaseCommand) and item != BaseCommand:
                 commands.append(item)
-        except:
-            pass
     return commands
