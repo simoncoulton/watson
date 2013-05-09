@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import collections
 import re
 from watson.di import ContainerAware
 from watson.events.types import Event
@@ -7,8 +8,7 @@ from watson.common.imports import get_qualified_name
 
 
 class BaseController(ContainerAware):
-    """
-    The interface for controller classes.
+    """The interface for controller classes.
     """
     def execute(self, **kwargs):
         raise NotImplementedError('You must implement execute')
@@ -20,9 +20,8 @@ class BaseController(ContainerAware):
         return '<{0}>'.format(get_qualified_name(self))
 
 
-class HttpControllerMixin(BaseController):
-    """
-    A mixin for controllers that can contain http request and response objects.
+class HttpControllerMixin(object):
+    """A mixin for controllers that can contain http request and response objects.
 
     Attributes:
         _request: The request made that has triggered the controller
@@ -155,18 +154,110 @@ class HttpControllerMixin(BaseController):
     def redirect_vars(self):
         """Returns the post variables from a redirected request.
         """
-        post_vars = {}
-        if hasattr(self.request, 'session'):
-            post_vars = self.request.session.get('post_redirect_get', {})
-        return post_vars
+        return self.request.session.get('post_redirect_get', {})
 
     def clear_redirect_vars(self):
         """Clears the redirected variables.
         """
         del self.request.session['post_redirect_get']
 
+    @property
+    def flash_messages(self):
+        """Retrieves all the flash messages associated with the controller.
 
-class ActionController(HttpControllerMixin):
+        Usage:
+            # within controller action
+            self.flash_messages.add('Some message')
+            return {
+                'flash_messages': self.flash_messages
+            }
+
+            # within view
+            {% for namespace, message in flash_messages %}
+                {{ message }}
+            {% endfor %}
+
+        Returns:
+            A watson.mvc.controllers.FlashMessagesContainer object.
+        """
+        if not hasattr(self, '_flash_messages_container'):
+            self._flash_messages_container = FlashMessagesContainer(self.request.session)
+        return self._flash_messages_container
+
+
+class FlashMessagesContainer(object):
+    """Contains all the flash messages associated with a controller.
+
+    Flash messages persist across requests until they are displayed to the user.
+    """
+    messages = None
+    session = None
+    session_key = 'flash_messages'
+
+    def __init__(self, session):
+        """Initializes the container.
+
+        Args:
+            watson.http.session.StorageMixin session: A session object containing
+                the flash messages data.
+        """
+        self.session = session
+        if self.session_key in self.session:
+            self.messages = self.session[self.session_key].messages
+        else:
+            self.clear()
+        self.session[self.session_key] = self
+
+    def add(self, message, namespace='info'):
+        """Adds a flash message within the specified namespace.
+
+        Args:
+            string message: The message to add to the container.
+            string namespace: The namespace to sit the message in.
+        """
+        if namespace not in self.messages:
+            self.messages[namespace] = []
+        self.messages[namespace].append(message)
+
+    def add_messages(self, messages, namespace='info'):
+        """Adds a list of messages to the specified namespace.
+
+        Args:
+            list|tuple messages: The messages to add to the container.
+            string namespace: The namespace to sit the messages in.
+        """
+        for message in messages:
+            self.add(message, namespace)
+
+    def clear(self):
+        """Clears the flash messages from the container and session.
+
+        This is called automatically after the flash messages have been
+        iterated over.
+        """
+        del self.session[self.session_key]
+        self.messages = collections.OrderedDict()
+
+    # Internals
+
+    def __iter__(self):
+        for namespace, messages in self.messages.items():
+            for message in messages:
+                yield (namespace, message)
+        else:
+            self.clear()
+
+    def __getitem__(self, key):
+        return self.messages.get(key)
+
+    def __len__(self):
+        return len(self.messages)
+
+    def __repr__(self):
+        return '<{0} messages: {1}>'.format(get_qualified_name(self), len(self))
+
+
+class ActionController(BaseController, HttpControllerMixin):
     """
     Usage:
         class MyController(ActionController):
@@ -186,7 +277,7 @@ class ActionController(HttpControllerMixin):
                 re.sub('.-', '_', kwargs.get('action', 'index').lower())]
 
 
-class RestController(HttpControllerMixin):
+class RestController(BaseController, HttpControllerMixin):
     """
     Usage:
         class MyController(RestController):

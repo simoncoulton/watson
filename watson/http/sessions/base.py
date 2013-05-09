@@ -171,6 +171,8 @@ class StorageMixin(dict):
             self.load()
         with ignored(KeyError):
             del self.data[key]
+            if self.autosave:
+                self.save()
 
     def __iter__(self):
         if not self.data:

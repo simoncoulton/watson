@@ -26,7 +26,6 @@ class TestBaseHttpController(object):
         base.request = Request('GET')
         assert isinstance(base.request, Request)
         assert isinstance(base.response, Response)
-        assert repr(base) == '<watson.mvc.controllers.HttpControllerMixin>'
 
     @raises(TypeError)
     def test_invalid_request(self):
@@ -88,7 +87,14 @@ class TestBaseHttpController(object):
         assert base.redirect_vars == base.request.session['post_redirect_get']
 
     def test_flash_message(self):
-        pass
+        controller = SampleActionController()
+        controller.request = Request('GET')
+        controller.flash_messages.add('testing')
+        controller.flash_messages.add('something')
+        assert controller.flash_messages['info'] == ['testing', 'something']
+        for namespace, message in controller.flash_messages:
+            assert namespace == 'info'
+        assert not controller.flash_messages.messages
 
 
 class TestActionController(object):

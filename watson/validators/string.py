@@ -11,7 +11,7 @@ class Length(BaseValidator):
         validator('Test')  # True
         validator('Testing maximum')  # raises ValueError
     """
-    def __init__(self, min=-1, max=-1, message='"{value}" does not meet the required length of {length}'):
+    def __init__(self, min=-1, max=-1, message='"{value}" does not meet the required length'):
         """Initializes the validator.
 
         Min, max, length are interpolated into the message.
