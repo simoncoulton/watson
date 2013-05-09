@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from nose.tools import raises
 from watson.http.messages import create_request_from_environ
-from watson.mvc.routing import create_route_from_definition
-from watson.mvc.routing import StaticRoute, SegmentRoute, Router
+from watson.mvc.routing import Route, Router
 from tests.watson.mvc.support import sample_environ
 
 sample_routes = {
@@ -18,48 +17,158 @@ sample_routes = {
     },
     'dump_format_segment_requires': {
         'path': '/dump.:format',
-        'type': 'segment',
         'requires': {
             'format': 'json'
         }
     },
     'dump_format_segment_optional': {
         'path': '/dump[.:format]',
-        'type': 'segment',
     },
     'edit_user': {
         'path': '/edit/:id',
-        'type': 'segment'
     },
     'search': {
         'path': '/search[/:keyword]',
-        'type': 'segment',
         'defaults': {
             'keyword': 'blah'
         }
     },
     'subdomain': {
         'path': '/subdomain/:sub',
-        'type': 'segment',
         'subdomain': 'clients'
     }
 }
 
 
-class TestRouting(object):
-    def test_create_route_from_definition(self):
-        segment_route = {
-            'path': '/',
-            'type': 'SegmentRoute'
-        }
-        static_route = {
-            'path': '/'
-        }
-        assert isinstance(create_route_from_definition('home', segment_route), SegmentRoute)
-        assert isinstance(create_route_from_definition('home', static_route), StaticRoute)
+class TestRoute(object):
+    def test_create_route(self):
+        route = Route(name='home', path='/')
+        assert route.path == '/'
+        assert route.name == 'home'
+        assert repr(route) == '<watson.mvc.routing.Route name:home path:/ match:\/$>'
+
+    def test_static_match(self):
+        route = Route(name='home', path='/')
+        invalid_request = create_request_from_environ(sample_environ(PATH_INFO='/test'))
+        valid_request = create_request_from_environ(sample_environ(PATH_INFO='/'))
+        assert not route.match(invalid_request).matched
+        assert route.match(valid_request).matched
+
+    def test_optional_segment_match(self):
+        route = Route(name="search", path='/search[/:keyword]')
+        invalid_request = create_request_from_environ(sample_environ(PATH_INFO='/searching'))
+        valid_request = create_request_from_environ(sample_environ(PATH_INFO='/search'))
+        valid_request_with_param = create_request_from_environ(sample_environ(PATH_INFO='/search/test'))
+        assert not route.match(invalid_request).matched
+        assert route.match(valid_request).matched
+        assert route.match(valid_request_with_param).matched
+
+    def test_optional_segment_with_defaults(self):
+        route = Route(name="search", path='/search[/:keyword]', defaults={'keyword': 'blah'})
+        invalid_request = create_request_from_environ(sample_environ(PATH_INFO='/searching'))
+        valid_request = create_request_from_environ(sample_environ(PATH_INFO='/search'))
+        valid_request_with_param = create_request_from_environ(sample_environ(PATH_INFO='/search/test'))
+        valid_request_with_default = route.match(valid_request)
+        assert not route.match(invalid_request).matched
+        assert valid_request_with_default.matched
+        assert valid_request_with_default.params == {'keyword': 'blah'}
+        assert route.match(valid_request_with_param).matched
+
+    def test_optional_segment_with_required(self):
+        route = Route(name="search", path='/search[/:keyword]', requires={'keyword': 'blah'})
+        valid_request = create_request_from_environ(sample_environ(PATH_INFO='/search/blah'))
+        invalid_request = create_request_from_environ(sample_environ(PATH_INFO='/search/test'))
+        assert not route.match(invalid_request).matched
+        assert route.match(valid_request).matched
+
+    def test_mandatory_segment_match(self):
+        route = Route("search", path='/search/:keyword')
+        invalid_request = create_request_from_environ(sample_environ(PATH_INFO='/searching'))
+        valid_request_no_param = create_request_from_environ(sample_environ(PATH_INFO='/search'))
+        valid_request_with_param = create_request_from_environ(sample_environ(PATH_INFO='/search/test'))
+        assert not route.match(invalid_request).matched
+        assert not route.match(valid_request_no_param).matched
+        assert route.match(valid_request_with_param).matched
+
+    @raises(ValueError)
+    def test_segment_bracket_mismatch(self):
+        Route(name='mismatch', path='/search:keyword]')
+
+    def test_format_match(self):
+        valid_request = create_request_from_environ(sample_environ(PATH_INFO='/dump', HTTP_ACCEPT='application/json'))
+        invalid_request = create_request_from_environ(sample_environ(PATH_INFO='/dump', HTTP_ACCEPT='application/xml'))
+        valid_request_segment = create_request_from_environ(sample_environ(PATH_INFO='/dump.json'))
+        route = Route(name='json', path='/dump', requires={'format': 'json'})
+        route_format = Route(name='json', path='/dump.:format', requires={'format': 'json'})
+        assert route.match(valid_request).matched
+        assert not route.match(invalid_request).matched
+        assert route_format.match(valid_request_segment).matched
+
+    def test_accept_method_match(self):
+        valid_request = create_request_from_environ(sample_environ(PATH_INFO='/test', REQUEST_METHOD='POST'))
+        invalid_request = create_request_from_environ(sample_environ(PATH_INFO='/test', REQUEST_METHOD='GET'))
+        route = Route(name='test', path='/test', accepts=('POST',))
+        assert route.match(valid_request).matched
+        assert not route.match(invalid_request).matched
+
+    def test_subdomain_match(self):
+        valid_request = create_request_from_environ(sample_environ(PATH_INFO='/test', SERVER_NAME='clients.test.com'))
+        invalid_request = create_request_from_environ(sample_environ(PATH_INFO='/test', SERVER_NAME='clients2.test.com'))
+        route = Route(name='test', path='/test', subdomain='clients')
+        assert route.match(valid_request).matched
+        assert not route.match(invalid_request).matched
+
+    def test_assemble_static_route(self):
+        route = Route(name='test', path='/testing')
+        assert route.assemble() == '/testing'
+
+    def test_assemble_segment_route(self):
+        route = Route(name='test', path='/search[/:keyword]')
+        assert route.assemble(keyword='test') == '/search/test'
+
+    @raises(KeyError)
+    def test_assemble_segment_route_missing_param(self):
+        route = Route(name='test', path='/search/:keyword')
+        route.assemble()
 
 
 class TestRouter(object):
+    def test_create_from_dict(self):
+        router = Router({
+            'home': {
+                'path': '/'
+            }
+        })
+        assert len(router) == 1
+        router_objects = Router({
+            'home': Route(name='home', path='/')
+        })
+        assert len(router_objects) == 1
+        for route in router:
+            assert True
+        assert router.assemble('home') == '/'
+        assert repr(router) == '<watson.mvc.routing.Router routes:1>'
+
+    def test_create_from_list(self):
+        router = Router([
+            {
+                'name': 'home',
+                'path': '/'
+            }
+        ])
+        assert len(router) == 1
+        router_objects = Router([
+            Route(name='home', path='/')
+        ])
+        assert len(router_objects) == 1
+
+    @raises(KeyError)
+    def test_assemble_invalid_route(self):
+        router = Router()
+        router.assemble('test')
+
+
+class aTestRouter(object):
     def test_create_router(self):
         router = Router(sample_routes)
         assert repr(router) == '<watson.mvc.routing.Router routes:{0}>'.format(len(sample_routes))
@@ -80,94 +189,3 @@ class TestRouter(object):
     def test_assemble_invalid(self):
         router = Router(sample_routes)
         router.assemble('test')
-
-
-class TestStaticRoute(object):
-    def test_create_static_route(self):
-        route = StaticRoute({'path': '/'})
-        assert repr(route) == '<watson.mvc.routing.StaticRoute path:/>'
-
-    def test_static_match(self):
-        route = StaticRoute({'path': '/dump'})
-        request = create_request_from_environ(sample_environ(PATH_INFO='/dump'))
-        matched, params = route.match(request)
-        assert matched
-
-    def test_assemble(self):
-        route = StaticRoute({'path': '/dump'})
-        assert route.assemble() == '/dump'
-
-
-class TestSegmentRoute(object):
-    def test_covert_segment_to_regex(self):
-        route = SegmentRoute({'name': 'home', 'path': '/:test'})
-        assert route.regex.pattern == '\/(?P<test>[^/]+)'
-        assert route.name == 'home'
-        assert repr(route) == '<watson.mvc.routing.SegmentRoute path:\/(?P<test>[^/]+)>'
-
-    def test_convert_segment_to_regex_optional(self):
-        route = SegmentRoute({'path': '/[:test]'})
-        assert route.regex.pattern == '\/(?:(?P<test>[^/]+))?'
-
-    def test_match_pattern(self):
-        route = SegmentRoute(sample_routes['search'])
-        request = create_request_from_environ(sample_environ(PATH_INFO='/search/my-term'))
-        matched, params = route.match(request)
-        assert matched
-        assert params['keyword'] == 'my-term'
-
-    def test_accept_method(self):
-        route = SegmentRoute(sample_routes['home'])
-        request = create_request_from_environ(sample_environ(PATH_INFO='/', REQUEST_METHOD='POST'))
-        matched, params = route.match(request)
-        assert not matched
-
-    def test_subdomain(self):
-        route = SegmentRoute(sample_routes['subdomain'])
-        request = create_request_from_environ(sample_environ(PATH_INFO='/subdomain/test', REQUEST_METHOD='POST', SERVER_NAME='clients.test.com'))
-        matched, params = route.match(request)
-        assert matched
-
-    def test_format_accept(self):
-        route = SegmentRoute(sample_routes['dump'])
-        request = create_request_from_environ(sample_environ(PATH_INFO='/dump', HTTP_ACCEPT='application/json'))
-        matched, params = route.match(request)
-        assert matched
-
-    def test_format_accept_invalid(self):
-        route = SegmentRoute(sample_routes['dump'])
-        request = create_request_from_environ(sample_environ(PATH_INFO='/dump', HTTP_ACCEPT='application/xml'))
-        matched, params = route.match(request)
-        assert not matched
-
-    def test_format_segment_requires(self):
-        route = SegmentRoute(sample_routes['dump_format_segment_requires'])
-        request = create_request_from_environ(sample_environ(PATH_INFO='/dump.json'))
-        matched, params = route.match(request)
-        assert matched
-
-    def test_format_segment_optional(self):
-        route = SegmentRoute(sample_routes['dump_format_segment_optional'])
-        request = create_request_from_environ(sample_environ(PATH_INFO='/dump.xml'))
-        matched, params = route.match(request)
-        assert matched
-        assert params['format'] == 'xml'
-
-    def test_assemble(self):
-        route = SegmentRoute(sample_routes['search'])
-        assert route.assemble() == '/search/blah'
-        route = SegmentRoute(sample_routes['dump_format_segment_requires'])
-        assert route.assemble(format='json') == '/dump.json'
-
-    @raises(KeyError)
-    def test_assemble_missing_param(self):
-        route = SegmentRoute(sample_routes['edit_user'])
-        route.assemble()
-
-    def test_assemble_param(self):
-        route = SegmentRoute(sample_routes['edit_user'])
-        assert route.assemble(id=1) == '/edit/1'
-
-    @raises(ValueError)
-    def test_bracket_mismatch(self):
-        SegmentRoute({'path': '/[test]]'})
