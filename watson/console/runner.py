@@ -142,7 +142,7 @@ class Runner(object):
                 command.parsed_args = parser.parse_args(self._argv)
                 return command()
             except ConsoleError as exc:
-                sys.stderr.write(colors.fail('Error: {0}\n'.format(exc)))
+                sys.stderr.write(colors.fail('Error: {0}\n'.format(str(exc).strip("'"))))
 
     def __call__(self):
         return self.execute()
