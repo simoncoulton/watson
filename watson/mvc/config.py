@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
+# Default configuration for a Watson application.
+# The container itself can be referenced by a simple lambda function such as:
+# lambda container: container
+#
+# Consult the documentation for more indepth setting information.
 import os
 from watson.mvc import events
 
+# Debug settings
 debug = {
     'enabled': False,
     'profiling': {
@@ -10,6 +16,8 @@ debug = {
         'sort': 'cumulative',
     }
 }
+
+# IocContainer settings
 dependencies = {
     'definitions': {
         'shared_event_dispatcher': {'item': 'watson.events.dispatcher.EventDispatcher'},
@@ -48,6 +56,8 @@ dependencies = {
         }
     }
 }
+
+# View settings
 views = {
     'default_format': 'html',
     'renderers': {
@@ -66,9 +76,13 @@ views = {
         '500': 'errors/500'
     }
 }
+
+# Session settings
 session = {
     'class': 'watson.http.sessions.FileStorage'
 }
+
+# Application event settings
 events = {
     events.EXCEPTION_EVENT: [('app_exception_listener',)],
     events.INIT_EVENT: [

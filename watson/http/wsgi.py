@@ -5,8 +5,12 @@ from watson.common.contextmanagers import ignored
 from watson.common.datastructures import MultiDict
 
 
+__all__ = ['get_form_vars']
+
+
 def get_form_vars(environ):
-    """
+    """Convert environ vars into GET/POST/FILES objects.
+
     Process all get and post vars from a <form> and return MultiDict of
     each.
     """

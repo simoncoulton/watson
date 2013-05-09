@@ -2,9 +2,10 @@
 
 
 class ContainerAware(object):
-    """
-    Provides an interface for classes retrieved from a container to have the
-    container injected into them.
+    """An interface for classes that should have a container.
+
+    Primarily used by the IocContainer, any class that subclasses it will
+    have the container it was called from automatically injected into it.
     """
     _container = None
 

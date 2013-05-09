@@ -16,20 +16,31 @@ from watson.support.console import commands as DefaultConsoleCommands
 
 
 class BaseApplication(ContainerAware, EventDispatcherAware):
-    """
-    The core application structure used for both WSGI and console based
-    applications.
+    """The core application structure for a Watson application.
+
     It makes heavy use of the IocContainer and EventDispatcher classes to handle
     the wiring and executing of methods.
+    The default configuration for Watson applications can be seen at watson.mvc.config.
     """
     _config = None
 
     @property
     def config(self):
+        """Returns the configuration of the application.
+        """
         return self._config
 
     @config.setter
     def config(self, config):
+        """Sets the configuration for the application.
+
+        Usage:
+            app = BaseApplication()
+            app.config = {'some': 'settings'}
+
+        Args:
+            mixed config: The configuration to use.
+        """
         if isinstance(config, ModuleType):
             conf = module_to_dict(config, '__')
         else:
@@ -39,26 +50,49 @@ class BaseApplication(ContainerAware, EventDispatcherAware):
 
     @property
     def container(self):
+        """Returns the applications IocContainer.
+
+        If no container has been created, a new container will be created
+        based on the dependencies within the application configuration.
+        """
         if not self._container:
             self.container = IocContainer(self.config['dependencies'])
         return self._container
 
     @container.setter
     def container(self, container):
+        """Sets the application IocContainer.
+
+        Adds the application to the container, which can then be accessed via
+        the 'application' key.
+        """
         container.add('application', self)
         self._container = container
 
     def __init__(self, config=None):
+        """Initializes the application.
+
+        Registers any events that are within the application configuration.
+
+        Usage:
+            app = BaseApplication()
+
+        Events:
+            Dispatches the INIT_EVENT.
+
+        Args:
+            mixed config: See the BaseApplication.config properties.
+        """
         self.config = config or {}
         self.dispatcher = self.container.get('shared_event_dispatcher')
         for event, listeners in self.config['events'].items():
             for callback_priority_pair in listeners:
                 try:
-                    priority = callback_priority_pair[1]
+                    priority = callback_priority_pair.priority
                 except:
                     priority = 1
                 try:
-                    once_only = callback_priority_pair[2]
+                    once_only = callback_priority_pair.once_only
                 except:
                     once_only = False
                 self.dispatcher.add(event, self.container.get(callback_priority_pair[0]), priority, once_only)
@@ -72,8 +106,9 @@ class BaseApplication(ContainerAware, EventDispatcherAware):
 
 
 class HttpApplication(BaseApplication):
-    """
-    An application structure suitable for use with the WSGI protocol.
+    """An application structure suitable for use with the WSGI protocol.
+
+    For more information regarding creating an application consult the documentation.
 
     Usage:
         application = HttpApplication({..})
@@ -129,8 +164,9 @@ class HttpApplication(BaseApplication):
 
 
 class ConsoleApplication(Runner, BaseApplication):
-    """
-    An application structure suitable for the command line.
+    """An application structure suitable for the command line.
+
+    For more information regarding creating an application consult the documentation.
 
     Usage:
         application = ConsoleApplication({...})

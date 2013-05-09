@@ -258,7 +258,8 @@ class FlashMessagesContainer(object):
 
 
 class ActionController(BaseController, HttpControllerMixin):
-    """
+    """A controller thats methods can be accessed with an _action suffix.
+
     Usage:
         class MyController(ActionController):
             def my_func_action(self):
@@ -278,7 +279,8 @@ class ActionController(BaseController, HttpControllerMixin):
 
 
 class RestController(BaseController, HttpControllerMixin):
-    """
+    """A controller thats methods can be accessed by the request method name.
+
     Usage:
         class MyController(RestController):
             def GET(self):
