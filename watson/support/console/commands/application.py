@@ -24,9 +24,9 @@ class CreateApplication(BaseCommand, ContainerAware):
     ]
 
     def execute(self):
-        if 'project_name' not in self.parsed_args:
+        if not self.parsed_args.project_name:
             raise ConsoleError('No project name specified')
-        if 'app_name' not in self.parsed_args:
+        if not self.parsed_args.app_name:
             raise ConsoleError('No app name specified')
         project_name = self.parsed_args.project_name
         app_name = self.parsed_args.app_name
@@ -58,9 +58,9 @@ class CreateApplication(BaseCommand, ContainerAware):
             (os.path.join(basepath, app_name, '__init__.py'), BLANK_PY_TEMPLATE),
             (os.path.join(basepath, app_name, 'app.py'), APP_PY_TEMPLATE),
             (os.path.join(basepath, app_name, 'config', '__init__.py'), BLANK_PY_TEMPLATE),
-            (os.path.join(basepath, app_name, 'config', 'prod.py'), PROD_CONFIG_PY_TEMPLATE),
-            (os.path.join(basepath, app_name, 'config', 'dev.py'), DEV_CONFIG_PY_TEMPLATE),
-            (os.path.join(basepath, app_name, 'config', 'local.py'), DEV_CONFIG_PY_TEMPLATE),
+            (os.path.join(basepath, app_name, 'config', 'prod.py.dist'), PROD_CONFIG_PY_TEMPLATE),
+            (os.path.join(basepath, app_name, 'config', 'dev.py.dist'), DEV_CONFIG_PY_TEMPLATE),
+            (os.path.join(basepath, app_name, 'config', 'config.py'), DEV_CONFIG_PY_TEMPLATE),
             (os.path.join(basepath, app_name, 'config', 'routes.py'), ROUTES_PY_TEMPLATE),
             (os.path.join(basepath, app_name, 'controllers', '__init__.py'), SAMPLE_CONTROLLER_INIT_TEMPLATE),
             (os.path.join(basepath, app_name, 'controllers', 'index.py'), SAMPLE_CONTROLLER_TEMPLATE),
@@ -177,9 +177,9 @@ BLANK_PY_TEMPLATE = """# -*- coding: utf-8 -*-
 
 APP_PY_TEMPLATE = """# -*- coding: utf-8 -*-
 from watson.mvc.applications import HttpApplication
-from ${app_name}.config import local
+from ${app_name}.config import config
 
-application = HttpApplication(local)
+application = HttpApplication(config)
 """
 
 ROUTES_PY_TEMPLATE = """# -*- coding: utf-8 -*-
@@ -272,8 +272,9 @@ except:
     sys.exit(1)
 
 from watson.mvc.applications import ConsoleApplication
+from ${app_name}.config import config
 
 if __name__ == '__main__':
-    application = ConsoleApplication()
+    application = ConsoleApplication(config)
     application()
 """
