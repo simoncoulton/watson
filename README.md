@@ -8,10 +8,10 @@ You can find a sample hello world application in the `/examples` directory and m
 
 #### Build Status
 
-Branch | Status
------------- | -------------
-Master | ![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=master)
-Develop | ![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=develop)
+Branch | Status | Coverage
+------------ | ------------- | ------------- 
+Master | ![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=master) | ![Coverage](https://coveralls.io/repos/simoncoulton/watson/badge.png?branch=master)
+Develop | ![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=develop) | ![Coverage](https://coveralls.io/repos/simoncoulton/watson/badge.png?branch=develop)
 
 
 ### Dependencies
@@ -30,13 +30,6 @@ Memcached is utilized for both session storage and cache storage.
 
 Add python3-memcached to your applications `requirements.txt` file or `pip install python3-memcached`
 This is currently maintained [here][1].
-
-##### Redis
-
-Redis is utilized for both session storage and cache storage.
-
-Add redis to your applications `requirements.txt` file or `pip install redis`
-This is current maintained [here][2].
 
 ### Running the tests
 
