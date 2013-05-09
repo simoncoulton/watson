@@ -8,5 +8,6 @@ before_script:
     - mkdir -p docs/tests/html
 script:
     - nosetests --config=nose.cfg
+    - coverage report -m
 after_success:
     - coveralls --verbose
