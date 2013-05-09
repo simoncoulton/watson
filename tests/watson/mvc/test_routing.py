@@ -4,41 +4,6 @@ from watson.http.messages import create_request_from_environ
 from watson.mvc.routing import Route, Router
 from tests.watson.mvc.support import sample_environ
 
-sample_routes = {
-    'home': {
-        'path': '/',
-        'accepts': ('GET',)
-    },
-    'dump': {
-        'path': '/dump',
-        'requires': {
-            'format': 'json'
-        }
-    },
-    'dump_format_segment_requires': {
-        'path': '/dump.:format',
-        'requires': {
-            'format': 'json'
-        }
-    },
-    'dump_format_segment_optional': {
-        'path': '/dump[.:format]',
-    },
-    'edit_user': {
-        'path': '/edit/:id',
-    },
-    'search': {
-        'path': '/search[/:keyword]',
-        'defaults': {
-            'keyword': 'blah'
-        }
-    },
-    'subdomain': {
-        'path': '/subdomain/:sub',
-        'subdomain': 'clients'
-    }
-}
-
 
 class TestRoute(object):
     def test_create_route(self):
@@ -165,27 +130,4 @@ class TestRouter(object):
     @raises(KeyError)
     def test_assemble_invalid_route(self):
         router = Router()
-        router.assemble('test')
-
-
-class aTestRouter(object):
-    def test_create_router(self):
-        router = Router(sample_routes)
-        assert repr(router) == '<watson.mvc.routing.Router routes:{0}>'.format(len(sample_routes))
-
-    def test_matches(self):
-        router = Router(sample_routes)
-        request = create_request_from_environ(sample_environ(PATH_INFO='/'))
-        matches = router.matches(request)
-        assert len(matches) == 1
-        assert matches[0].name == 'home'
-        assert repr(matches[0]) == '<watson.mvc.routing.RouteMatch name:home>'
-
-    def test_assemble(self):
-        router = Router(sample_routes)
-        assert router.assemble('dump') == '/dump'
-
-    @raises(Exception)
-    def test_assemble_invalid(self):
-        router = Router(sample_routes)
         router.assemble('test')

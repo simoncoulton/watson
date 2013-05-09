@@ -2,12 +2,14 @@
 import os
 import stat
 import sys
+from wsgiref import util
 from string import Template
 from watson.common.contextmanagers import ignored
 from watson.common.imports import load_definition_from_string
-from watson.console import ConsoleError
+from watson.console import ConsoleError, colors
 from watson.console.command import BaseCommand
 from watson.di import ContainerAware
+from watson.http.messages import create_request_from_environ
 from watson.util.server import make_dev_server
 
 
@@ -120,6 +122,48 @@ class RunTests(BaseCommand, ContainerAware):
                 sys.modules[test_runner].main(cli_args.split(' '))
             else:
                 raise ConsoleError("You must install either 'nose' or 'py.test' to run the unit tests.")
+        except:
+            _no_application_error()
+
+
+class Routes(BaseCommand, ContainerAware):
+    name = 'routes'
+    help = 'Aids in the debugging of routes associated.'
+    arguments = [
+        (('-u', '--url'), {'help': 'Validate the specified url against the router.', 'required': False}),
+        (('-m', '--method'), {'help': 'The http request method.', 'required': False}),
+        (('-f', '--format'), {'help': 'The http request format.', 'required': False}),
+        (('-s', '--server'), {'help': 'The hostname.', 'required': False}),
+    ]
+
+    def execute(self):
+        try:
+            router = self.container.get('router')
+            if not router.routes:
+                raise ConsoleError('There are no routes associated with the application.')
+            if self.parsed_args.url:
+                environ = {}
+                util.setup_testing_defaults(environ)
+                environ.update({
+                    'REQUEST_METHOD': self.parsed_args.method or 'GET',
+                    'HTTP_ACCEPT': self.parsed_args.format or 'text/html',
+                    'PATH_INFO': self.parsed_args.url,
+                    'SERVER_NAME': self.parsed_args.server or '127.0.0.1'
+                })
+                request = create_request_from_environ(environ)
+                matches = router.matches(request)
+                if matches:
+                    sys.stdout.write(colors.header('Displaying {0} matching routes for the application:\n'.format(len(matches))))
+                    for match in matches:
+                        sys.stdout.write('{0}\t\t\{1}\t\t{2}\n'.format(colors.ok_green(match.route.name), match.route.path, match.route.regex.pattern))
+                else:
+                    raise ConsoleError('There are no matching routes.')
+            else:
+                sys.stdout.write(colors.header('Displaying {0} routes for the application:\n'.format(len(router))))
+                for name, route in router:
+                    sys.stdout.write('{0}\t\t{1}\n'.format(name, route.path))
+        except ConsoleError:
+            raise
         except:
             _no_application_error()
 
