@@ -5,9 +5,16 @@ from types import ModuleType
 
 
 def dict_deep_update(d1, d2):
-    """
-    Recursively merge two dictionaries together rather than a shallow
-    update().
+    """Recursively merge two dictionaries.
+
+    Merges two dictionaries together rather than a shallow update().
+
+    Args:
+        dict d1: The original dict.
+        dict d2: The dict to merge with d1.
+
+    Returns:
+        A new dict containing the merged dicts.
     """
     if not isinstance(d2, dict):
         return d2
@@ -21,8 +28,7 @@ def dict_deep_update(d1, d2):
 
 
 def module_to_dict(module, ignore_starts_with=''):
-    """
-    Load the contents of a module into a dict.
+    """Load the contents of a module into a dict.
 
     Usage:
         # my_module.py contents:
@@ -46,24 +52,37 @@ def module_to_dict(module, ignore_starts_with=''):
 
 
 class MultiDict(OrderedDict):
-    """
+    """A dictionary type that can contain multiple items for a single key.
+
     Dictionary type that will create a list of values if more than one item is
     set for that particular key.
+
+    Usage:
+        multi_dict = MultiDict()
+        multi_dict['one'] = 1
+        multi_dict['one'] = 'itchi'
+        print(multi_dict)  # {'one': [1, 'itchi']}
     """
 
     def set(self, key, value, replace=False):
-        self.__setitem__(key, value, replace)
+        """Add a new item to the dictionary.
 
-    def __setitem__(self, key, value, replace=False):
-        """
         Set the key to value on the dictionary, converting the existing value
         to a list if it is a string, otherwise append the value.
 
+        Usage:
+            multi_dict = MultiDict()
+            multi_dict.set('item', 'value')  # or multi_dict['item'] = 'value'
+
         Args:
-            mixed key: The key for the item
-            mixed value: The value of the item
-            boolean replace: Whether or not to replace the key
+            mixed key: The key used to the store the value.
+            mixed value: The value to store.
+            boolean replace: Whether or not the value should be replaced.
         """
+        self.__setitem__(key, value, replace)
+
+    def __setitem__(self, key, value, replace=False):
+        # See MultiDict.set for more information.
         if key in self and not replace:
             if not isinstance(self[key], list):
                 existing = [self[key]]
@@ -92,17 +111,17 @@ class ImmutableMixin:
 
 
 class ImmutableDict(dict, ImmutableMixin):
-    """
-    Creates an immutable dict. While not truly immutable (_mutable can
-    be changed), it works effectively.
+    """Creates an immutable dict.
+
+    While not truly immutable (_mutable can be changed), it works effectively.
     """
     def __init__(self, *args):
         super(ImmutableDict, self).__init__(*args)
         self.make_immutable()
 
     def __setitem__(self, key, value, replace=False):
-        self._is_immutable()
-        super(ImmutableDict, self).__setitem__(key, value, replace)
+        self._is_immutable()  # pragma: no cover
+        super(ImmutableDict, self).__setitem__(key, value, replace)  # pragma: no cover
 
     def __delitem__(self, key):
         self._is_immutable()
@@ -120,44 +139,46 @@ class ImmutableDict(dict, ImmutableMixin):
         return duplicate
 
     def appendlist(self, key, value):
-        self._is_immutable()
-        super(ImmutableDict, self).appendlist(key, value)
+        self._is_immutable()  # pragma: no cover
+        super(ImmutableDict, self).appendlist(key, value)  # pragma: no cover
 
     def clear(self):
         self._is_immutable()
-        super(ImmutableDict, self).clear()
+        super(ImmutableDict, self).clear()  # pragma: no cover
 
     def copy(self):
         return self.__deepcopy__({})
 
     def pop(self, key, *args):
-        self._is_immutable()
-        return super(ImmutableDict, self).pop(key, *args)
+        self._is_immutable()  # pragma: no cover
+        return super(ImmutableDict, self).pop(key, *args)  # pragma: no cover
 
     def popitem(self):
-        self._is_immutable()
-        return super(ImmutableDict, self).popitem()
+        self._is_immutable()  # pragma: no cover
+        return super(ImmutableDict, self).popitem()  # pragma: no cover
 
     def setdefault(self, key, default=None):
-        self._is_immutable()
-        return super(ImmutableDict, self).setdefault(key, default)
+        self._is_immutable()  # pragma: no cover
+        return super(ImmutableDict, self).setdefault(key, default)  # pragma: no cover
 
     def update(self, *args):
-        self._is_immutable()
-        super(ImmutableDict, self).update(*args)
+        self._is_immutable()  # pragma: no cover
+        super(ImmutableDict, self).update(*args)  # pragma: no cover
 
 
 class ImmutableMultiDict(MultiDict, ImmutableMixin):
+    """Creates an immuatable MultiDict.
+    """
     def __init__(self, *args):
         super(ImmutableMultiDict, self).__init__(*args)
         self.make_immutable()
 
     def __setitem__(self, key, value, replace=False):
-        self._is_immutable()
-        super(ImmutableMultiDict, self).__setitem__(key, value, replace)
+        self._is_immutable()  # pragma: no cover
+        super(ImmutableMultiDict, self).__setitem__(key, value, replace)  # pragma: no cover
 
     def __delitem__(self, key):
-        self._is_immutable()
+        self._is_immutable()  # pragma: no cover
 
     def __copy__(self):
         duplicate = MultiDict()
@@ -172,28 +193,28 @@ class ImmutableMultiDict(MultiDict, ImmutableMixin):
         return duplicate
 
     def appendlist(self, key, value):
-        self._is_immutable()
-        super(ImmutableMultiDict, self).appendlist(key, value)
+        self._is_immutable()  # pragma: no cover
+        super(ImmutableMultiDict, self).appendlist(key, value)  # pragma: no cover
 
     def clear(self):
-        self._is_immutable()
-        super(MultiDict, self).clear()
+        self._is_immutable()  # pragma: no cover
+        super(MultiDict, self).clear()  # pragma: no cover
 
     def copy(self):
         return self.__deepcopy__(MultiDict())
 
     def pop(self, key, *args):
-        self._is_immutable()
-        return super(ImmutableMultiDict, self).pop(key, *args)
+        self._is_immutable()  # pragma: no cover
+        return super(ImmutableMultiDict, self).pop(key, *args)  # pragma: no cover
 
     def popitem(self):
-        self._is_immutable()
-        return super(ImmutableMultiDict, self).popitem()
+        self._is_immutable()  # pragma: no cover
+        return super(ImmutableMultiDict, self).popitem()  # pragma: no cover
 
     def setdefault(self, key, default=None):
-        self._is_immutable()
-        return super(ImmutableMultiDict, self).setdefault(key, default)
+        self._is_immutable()  # pragma: no cover
+        return super(ImmutableMultiDict, self).setdefault(key, default)  # pragma: no cover
 
     def update(self, *args):
-        self._is_immutable()
-        super(ImmutableMultiDict, self).update(*args)
+        self._is_immutable()  # pragma: no cover
+        super(ImmutableMultiDict, self).update(*args)  # pragma: no cover

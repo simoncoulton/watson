@@ -50,8 +50,8 @@ class ConstructorInjectionProcessor(BaseProcessor):
                 kwargs['container'] = self.container
             init = event.target.get('init', {})
             if isinstance(init, dict):
-                for kw, args in init.items():
-                    kwargs[kw] = get_param_from_container(args, self.container)
+                for key, val in init.items():
+                    kwargs[key] = get_param_from_container(val, self.container)
             elif isinstance(init, list):
                 for arg in init:
                     args.append(get_param_from_container(arg, self.container))

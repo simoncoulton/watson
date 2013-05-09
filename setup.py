@@ -24,8 +24,9 @@ setup(
         'Environment :: Web Environment',
         'Programming Language :: Python :: 3.3'
     ],
+    scripts=['watson/bin/watson-console.py'],
     include_package_data=True,
     install_requires=[
-        'jinja2'
+        'jinja2 == 2.6'
     ]
 )

@@ -1,0 +1,8 @@
+markdown: redcarpet
+pygments: true
+pretty_style: html_extension
+permalink: none
+auto: true
+lsi: false
+safe: false
+baseurl: /watson

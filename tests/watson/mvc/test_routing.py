@@ -91,7 +91,7 @@ class TestStaticRoute(object):
         route = StaticRoute({'path': '/dump'})
         request = create_request_from_environ(sample_environ(PATH_INFO='/dump'))
         matched, params = route.match(request)
-        assert matched == True
+        assert matched
 
     def test_assemble(self):
         route = StaticRoute({'path': '/dump'})
@@ -113,44 +113,44 @@ class TestSegmentRoute(object):
         route = SegmentRoute(sample_routes['search'])
         request = create_request_from_environ(sample_environ(PATH_INFO='/search/my-term'))
         matched, params = route.match(request)
-        assert matched == True
+        assert matched
         assert params['keyword'] == 'my-term'
 
     def test_accept_method(self):
         route = SegmentRoute(sample_routes['home'])
         request = create_request_from_environ(sample_environ(PATH_INFO='/', REQUEST_METHOD='POST'))
         matched, params = route.match(request)
-        assert matched == False
+        assert not matched
 
     def test_subdomain(self):
         route = SegmentRoute(sample_routes['subdomain'])
         request = create_request_from_environ(sample_environ(PATH_INFO='/subdomain/test', REQUEST_METHOD='POST', SERVER_NAME='clients.test.com'))
         matched, params = route.match(request)
-        assert matched == True
+        assert matched
 
     def test_format_accept(self):
         route = SegmentRoute(sample_routes['dump'])
         request = create_request_from_environ(sample_environ(PATH_INFO='/dump', HTTP_ACCEPT='application/json'))
         matched, params = route.match(request)
-        assert matched == True
+        assert matched
 
     def test_format_accept_invalid(self):
         route = SegmentRoute(sample_routes['dump'])
         request = create_request_from_environ(sample_environ(PATH_INFO='/dump', HTTP_ACCEPT='application/xml'))
         matched, params = route.match(request)
-        assert matched == False
+        assert not matched
 
     def test_format_segment_requires(self):
         route = SegmentRoute(sample_routes['dump_format_segment_requires'])
         request = create_request_from_environ(sample_environ(PATH_INFO='/dump.json'))
         matched, params = route.match(request)
-        assert matched == True
+        assert matched
 
     def test_format_segment_optional(self):
         route = SegmentRoute(sample_routes['dump_format_segment_optional'])
         request = create_request_from_environ(sample_environ(PATH_INFO='/dump.xml'))
         matched, params = route.match(request)
-        assert matched == True
+        assert matched
         assert params['format'] == 'xml'
 
     def test_assemble(self):

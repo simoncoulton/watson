@@ -2,11 +2,12 @@ language: python
 python:
     - 3.3
 install:
-    - pip install -r requirements.txt
-    - pip install coveralls
+    - pip install -r requirements.txt --use-mirrors
+    - pip install coveralls --use-mirrors
 before_script:
     - mkdir -p docs/tests/html
 script:
     - nosetests --config=nose.cfg
+    - coverage report -m
 after_success:
-    - coveralls
+    - coveralls --verbose

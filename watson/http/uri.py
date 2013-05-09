@@ -4,8 +4,7 @@ from urllib.parse import urlparse, ParseResult
 
 
 class Url(object):
-    """
-    An object based representation of a Url.
+    """An object based representation of a Url.
     """
     @property
     def scheme(self):
@@ -65,9 +64,13 @@ class Url(object):
         return self._parts.password
 
     def __init__(self, url):
-        """
+        """Initialize the url object.
+
         Create a new Url object from either a well formed url string,
         a dict of key/values, or a ParseResult.
+
+        Args:
+            mixed url: The value to generate the url from.
         """
         if isinstance(url, ParseResult):
             self._parts = url

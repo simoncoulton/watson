@@ -4,7 +4,7 @@ from watson.util.middleware import StaticFileMiddleware
 from watson.util.reloader import main
 
 
-def make_dev_server(app, host='127.0.0.1', port=8000, do_reload=True):
+def make_dev_server(app, host='127.0.0.1', port=8000, do_reload=True, script_dir=None, public_dir=None):
     """
     A simple local development server utilizing the existing simple_server
     module, but allows for serving of static files.
@@ -26,9 +26,9 @@ def make_dev_server(app, host='127.0.0.1', port=8000, do_reload=True):
         do_reload: Whether or not to automatically reload the application when
                    source code changes.
     """
-    wrapped_app = StaticFileMiddleware(app)
+    wrapped_app = StaticFileMiddleware(app, initial_dir=public_dir)
     if do_reload:
-        main(__run_server, (wrapped_app, host, port))
+        main(__run_server, (wrapped_app, host, port), script_dir=script_dir)
     else:
         try:
             __run_server(wrapped_app, host, port)

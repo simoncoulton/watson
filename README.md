@@ -4,14 +4,14 @@
 
 Watson is an easy to use framework designed to get out of your way and let you code your application rather than wrangle with the framework.
 
-You can find a sample hello world application in the `/examples` directory.
+You can find a sample hello world application in the `/examples` directory and more [documentation here][3].
 
 #### Build Status
 
-Branch | Status
------------- | -------------
-Master | ![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=master)
-Develop | ![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=develop)
+Branch | Status | Coverage
+------------ | ------------- | ------------- 
+Master | ![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=master) | ![Coverage](https://coveralls.io/repos/simoncoulton/watson/badge.png?branch=master)
+Develop | ![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=develop) | ![Coverage](https://coveralls.io/repos/simoncoulton/watson/badge.png?branch=develop)
 
 
 ### Dependencies
@@ -25,6 +25,8 @@ These can be installed by running `pip install -r requirements.txt`
 #### Optional Dependencies
 
 ##### Memcached
+
+Memcached is utilized for both session storage and cache storage.
 
 Add python3-memcached to your applications `requirements.txt` file or `pip install python3-memcached`
 This is currently maintained [here][1].
@@ -44,4 +46,6 @@ Currently Watson has been tested on the following Python versions:
 * 3.3
 
 [1]: http://pypi.python.org/pypi/python3-memcached/
+[2]: https://github.com/andymccurdy/redis-py
+[3]: http://simoncoulton.github.com/watson
 

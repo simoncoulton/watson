@@ -85,6 +85,5 @@ class Profiler(object):
                     'file': func[0]
                 })
         self.stats = stats
-        # print(stats)
-        # p.print_stats()
+        p.print_stats()
         return response

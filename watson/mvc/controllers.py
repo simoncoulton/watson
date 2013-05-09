@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
+import collections
 import re
 from watson.di import ContainerAware
+from watson.events.types import Event
 from watson.http.messages import Response, Request
 from watson.common.imports import get_qualified_name
 
 
 class BaseController(ContainerAware):
-    """
-    The interface for controller classes.
+    """The interface for controller classes.
     """
     def execute(self, **kwargs):
         raise NotImplementedError('You must implement execute')
@@ -19,9 +20,8 @@ class BaseController(ContainerAware):
         return '<{0}>'.format(get_qualified_name(self))
 
 
-class HttpControllerMixin(BaseController):
-    """
-    A mixin for controllers that can contain http request and response objects.
+class HttpControllerMixin(object):
+    """A mixin for controllers that can contain http request and response objects.
 
     Attributes:
         _request: The request made that has triggered the controller
@@ -29,10 +29,36 @@ class HttpControllerMixin(BaseController):
     """
     _request = None
     _response = None
+    _event = None
+
+    @property
+    def event(self):
+        """The event that was triggered that caused the execution of the
+        controller.
+
+        Returns:
+            watson.events.types.Event
+        """
+        return self._event
+
+    @event.setter
+    def event(self, event):
+        """Set the request object.
+
+        Args:
+            watson.events.types.Event event: The triggered event.
+
+        Raises:
+            TypeError if the event type is not a subclass of watson.events.types.Event
+        """
+        if not isinstance(event, Event):
+            raise TypeError('Invalid request type, expected watson.events.types.Event')
+        self._event = event
 
     @property
     def request(self):
-        """
+        """The HTTP request relating to the controller.
+
         Returns:
             watson.http.messages.Request
         """
@@ -40,8 +66,10 @@ class HttpControllerMixin(BaseController):
 
     @request.setter
     def request(self, request):
-        """
-        Set the request object.
+        """Set the request object.
+
+        Args:
+            watson.http.messages.Request request: The request associated with the controller.
 
         Raises:
             TypeError if the request type is not of watson.http.messages.Request
@@ -52,7 +80,8 @@ class HttpControllerMixin(BaseController):
 
     @property
     def response(self):
-        """
+        """The HTTP response related to the controller.
+
         If no response object has been set, then a new one will be generated.
 
         Returns:
@@ -64,8 +93,10 @@ class HttpControllerMixin(BaseController):
 
     @response.setter
     def response(self, response):
-        """
-        Set the request object.
+        """Set the request object.
+
+        Args:
+            watson.http.messages.Response response: The response associated with the controller.
 
         Raises:
             TypeError if the request type is not of watson.http.messages.Response
@@ -74,11 +105,161 @@ class HttpControllerMixin(BaseController):
             raise TypeError('Invalid response type, expected watson.http.messages.Response')
         self._response = response
 
-    # todo redirect
+    def url(self, route_name, params=None):
+        """Converts a route into a url.
+
+        Args:
+            string route_name: The name of the route to convert
+            dict params: The params to use on the route
+
+        Returns:
+            The assembled url.
+        """
+        if not params:
+            params = {}
+        router = self.container.get('router')
+        return router.assemble(route_name, **params)
+
+    def redirect(self, path, params=None, status_code=302, is_url=False, clear=False):
+        """Redirect to a different route.
+
+        Redirecting will bypass the rendering of the view, and the body of the
+        request will be displayed.
+
+        Also supports Post Redirect Get (http://en.wikipedia.org/wiki/Post/Redirect/Get)
+        which can allow post variables to accessed from a GET resource after a
+        redirect (to repopulate form fields for example).
+
+        Args:
+            string path: The URL or route name to redirect to
+            dict params: The params to send to the route
+            int status_code: The status code to use for the redirect
+            bool is_url: Whether or not the path is a url or route
+            bool clear: Whether or not the session data should be cleared
+
+        Returns:
+            A watson.http.messages.Response object.
+        """
+        self.response.status_code = status_code
+        if self.request.is_method(('POST', 'PUT')):
+            self.response.status_code = status_code if status_code != 302 else 303
+            self.request.session['post_redirect_get'] = dict(self.request.post)
+        if clear:
+            self.clear_redirect_vars()
+        url = path if is_url else self.url(path, params)
+        self.response.headers.add('location', url, replace=True)
+        return self.response
+
+    @property
+    def redirect_vars(self):
+        """Returns the post variables from a redirected request.
+        """
+        return self.request.session.get('post_redirect_get', {})
+
+    def clear_redirect_vars(self):
+        """Clears the redirected variables.
+        """
+        del self.request.session['post_redirect_get']
+
+    @property
+    def flash_messages(self):
+        """Retrieves all the flash messages associated with the controller.
+
+        Usage:
+            # within controller action
+            self.flash_messages.add('Some message')
+            return {
+                'flash_messages': self.flash_messages
+            }
+
+            # within view
+            {% for namespace, message in flash_messages %}
+                {{ message }}
+            {% endfor %}
+
+        Returns:
+            A watson.mvc.controllers.FlashMessagesContainer object.
+        """
+        if not hasattr(self, '_flash_messages_container'):
+            self._flash_messages_container = FlashMessagesContainer(self.request.session)
+        return self._flash_messages_container
 
 
-class ActionController(HttpControllerMixin):
+class FlashMessagesContainer(object):
+    """Contains all the flash messages associated with a controller.
+
+    Flash messages persist across requests until they are displayed to the user.
     """
+    messages = None
+    session = None
+    session_key = 'flash_messages'
+
+    def __init__(self, session):
+        """Initializes the container.
+
+        Args:
+            watson.http.session.StorageMixin session: A session object containing
+                the flash messages data.
+        """
+        self.session = session
+        if self.session_key in self.session:
+            self.messages = self.session[self.session_key].messages
+        else:
+            self.clear()
+        self.session[self.session_key] = self
+
+    def add(self, message, namespace='info'):
+        """Adds a flash message within the specified namespace.
+
+        Args:
+            string message: The message to add to the container.
+            string namespace: The namespace to sit the message in.
+        """
+        if namespace not in self.messages:
+            self.messages[namespace] = []
+        self.messages[namespace].append(message)
+
+    def add_messages(self, messages, namespace='info'):
+        """Adds a list of messages to the specified namespace.
+
+        Args:
+            list|tuple messages: The messages to add to the container.
+            string namespace: The namespace to sit the messages in.
+        """
+        for message in messages:
+            self.add(message, namespace)
+
+    def clear(self):
+        """Clears the flash messages from the container and session.
+
+        This is called automatically after the flash messages have been
+        iterated over.
+        """
+        del self.session[self.session_key]
+        self.messages = collections.OrderedDict()
+
+    # Internals
+
+    def __iter__(self):
+        for namespace, messages in self.messages.items():
+            for message in messages:
+                yield (namespace, message)
+        else:
+            self.clear()
+
+    def __getitem__(self, key):
+        return self.messages.get(key)
+
+    def __len__(self):
+        return len(self.messages)
+
+    def __repr__(self):
+        return '<{0} messages: {1}>'.format(get_qualified_name(self), len(self))
+
+
+class ActionController(BaseController, HttpControllerMixin):
+    """A controller thats methods can be accessed with an _action suffix.
+
     Usage:
         class MyController(ActionController):
             def my_func_action(self):
@@ -97,8 +278,9 @@ class ActionController(HttpControllerMixin):
                 re.sub('.-', '_', kwargs.get('action', 'index').lower())]
 
 
-class RestController(HttpControllerMixin):
-    """
+class RestController(BaseController, HttpControllerMixin):
+    """A controller thats methods can be accessed by the request method name.
+
     Usage:
         class MyController(RestController):
             def GET(self):

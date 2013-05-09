@@ -5,8 +5,7 @@ import sys
 
 
 def load_definition_from_string(qualified_module):
-    """
-    Load a definition based on a fully qualified string.
+    """Load a definition based on a fully qualified string.
 
     Usage:
         definition = load_definition_from_string('watson.http.messages.Request')
@@ -25,8 +24,7 @@ def load_definition_from_string(qualified_module):
 
 
 def get_qualified_name(obj):
-    """
-    Retrieve the full module path of an object.
+    """Retrieve the full module path of an object.
 
     Usage:
         from watson.http.messages import Request
@@ -38,8 +36,8 @@ def get_qualified_name(obj):
     except AttributeError:
         try:
             name = obj.__class__.__name__
-        except:
-            name = obj.__name__
+        except:  # pragma: no cover
+            name = obj.__name__  # pragma: no cover
     try:
         module = obj.__module__
         return '{0}.{1}'.format(module, name)

@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+	<head>
+		<title>{% if page.title %}{{ page.title }} - {% endif %} {% if page.area %}{{ page.area }} - {% endif %} Watson Documentation</title>
+		<link rel="stylesheet" type="text/css" href="/watson/assets/css/main.css" />
+		<link rel="stylesheet" type="text/css" href="/watson/assets/css/pygments.css" />
+		<meta name="viewport" content="initial-scale=1, user-scalable=no, width=device-width" />
+	</head>
+	<body>
+		{% include header.html %}
+		<div>
+			<div class="wrapper main clearfix">
+				{% include menu.html %}
+			    <div class="content">
+			    	<h2 class="section-title">{{ page.title }}</h2>
+					{{ content }}
+				</div>
+			</div>
+		</div>
+		{% include footer.html %}
+	</body>
+</html>

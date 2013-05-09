@@ -7,17 +7,32 @@ from watson.http.sessions.memory import MemoryStorage
 from watson.http.sessions.memcache import MemcacheStorage
 
 
-__all__ = ['create_session_from_request', 'StorageMixin', 'FileStorage', 'MemoryStorage', 'MemcacheStorage']
+__all__ = ['StorageMixin', 'FileStorage', 'MemoryStorage', 'MemcacheStorage', 'SessionMixin']
 
 
-def create_session_from_request(request):
+class SessionMixin(object):
+    """Provides a mixin for Request objects to utilize sessions.
     """
-    Creates a new session storage object from a watson.http.messages.Request
-    object. If an existing session exists within
+    _session_class = 'watson.http.sessions.FileStorage'
+    _session_options = None
+    _session = None
 
-    Returns:
-        watson.http.sessions.StorageMixin
-    """
-    storage = load_definition_from_string(request.session_class)
-    session_cookie = request.cookies[COOKIE_KEY]
-    return storage(id=session_cookie.value) if session_cookie else storage()
+    def define_session(self, _class, options=None):
+        self._session_class = str(_class)
+        self._session_options = options or {}
+
+    @property
+    def session(self):
+        if not self._session:
+            if not self._session_options:
+                self._session_options = {}
+            storage = load_definition_from_string(self._session_class)
+            session_cookie = self.cookies[COOKIE_KEY]
+            self._session = storage(id=session_cookie.value, **self._session_options) if session_cookie else storage(**self._session_options)
+        return self._session
+
+    def session_to_cookie(self):
+        session_cookie = self.cookies[COOKIE_KEY]
+        if not session_cookie or (session_cookie and self.session.id != session_cookie.value):
+            self.cookies.add(COOKIE_KEY, value=self.session.id, **self.session.cookie_params)
+            self.cookies[COOKIE_KEY] = self.session.id

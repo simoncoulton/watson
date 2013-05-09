@@ -14,6 +14,8 @@ class CookieDict(SimpleCookie):
         print(cookie)  # my_cookie=some value
         print(cd['my_cookie'])  # my_cookie=some value
     """
+    modified = False
+
     def add(self, name, value='', expires=0, path='/', domain=None, secure=False,
             httponly=False, comment=None):
         """Convenience method to add cookies to the dict.
@@ -54,6 +56,7 @@ class CookieDict(SimpleCookie):
         Args:
             name: the name of the cookie
         """
+        self.modified = True
         self[name].expire()
 
     def expire(self):
@@ -62,7 +65,17 @@ class CookieDict(SimpleCookie):
         for name in self:
             self.delete(name)
 
+    def merge(self, cookie_dict):
+        """Merges an existing cookie dict into another cookie dict.
+
+        Args:
+            CookieDict cookie_dict: The cookie dict to merge
+        """
+        for cookie, morsel in cookie_dict.items():
+            self.add(cookie, morsel.value, morsel['expires'], morsel['path'], morsel['domain'], morsel['secure'], morsel['httponly'], morsel['comment'])
+
     def __set(self, key, real_value, coded_value):
+        self.modified = True
         # Override the __set method so that we create TastyMorsel's instead.
         M = self.get(key, TastyMorsel())
         M.set(key, real_value, coded_value)

@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 from cgi import FieldStorage
 from urllib.parse import parse_qsl
+from watson.common.contextmanagers import ignored
 from watson.common.datastructures import MultiDict
 
 
+__all__ = ['get_form_vars']
+
+
 def get_form_vars(environ):
-    """
+    """Convert environ vars into GET/POST/FILES objects.
+
     Process all get and post vars from a <form> and return MultiDict of
     each.
     """
@@ -26,7 +31,7 @@ def _process_field_storage(fields, get=None, post=None, files=None):
         post = MultiDict()
     if not files:
         files = MultiDict()
-    try:
+    with ignored(Exception):
         for name in fields:
             field = fields[name] if isinstance(name, str) else name
             if isinstance(field, list):
@@ -38,6 +43,4 @@ def _process_field_storage(fields, get=None, post=None, files=None):
             else:
                 if field.name not in get:
                     get[field.name] = field.value
-    except:
-        pass
     return get, post, files

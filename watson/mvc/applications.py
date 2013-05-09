@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 from types import ModuleType
+from watson.console import Runner
+from watson.console.command import find_commands_in_module
+from watson.common.datastructures import dict_deep_update, module_to_dict
+from watson.common.imports import get_qualified_name
 from watson.di import ContainerAware
 from watson.di.container import IocContainer
 from watson.events.dispatcher import EventDispatcherAware
@@ -8,24 +12,35 @@ from watson.http.messages import create_request_from_environ, Response
 from watson.mvc.exceptions import ApplicationError
 from watson.mvc import config as DefaultConfig
 from watson.mvc import events
-from watson.common.datastructures import dict_deep_update, module_to_dict
+from watson.support.console import commands as DefaultConsoleCommands
 
 
 class BaseApplication(ContainerAware, EventDispatcherAware):
-    """
-    The core application structure used for both WSGI and console based
-    applications.
+    """The core application structure for a Watson application.
+
     It makes heavy use of the IocContainer and EventDispatcher classes to handle
     the wiring and executing of methods.
+    The default configuration for Watson applications can be seen at watson.mvc.config.
     """
     _config = None
 
     @property
     def config(self):
+        """Returns the configuration of the application.
+        """
         return self._config
 
     @config.setter
     def config(self, config):
+        """Sets the configuration for the application.
+
+        Usage:
+            app = BaseApplication()
+            app.config = {'some': 'settings'}
+
+        Args:
+            mixed config: The configuration to use.
+        """
         if isinstance(config, ModuleType):
             conf = module_to_dict(config, '__')
         else:
@@ -35,45 +50,74 @@ class BaseApplication(ContainerAware, EventDispatcherAware):
 
     @property
     def container(self):
+        """Returns the applications IocContainer.
+
+        If no container has been created, a new container will be created
+        based on the dependencies within the application configuration.
+        """
         if not self._container:
             self.container = IocContainer(self.config['dependencies'])
         return self._container
 
     @container.setter
     def container(self, container):
+        """Sets the application IocContainer.
+
+        Adds the application to the container, which can then be accessed via
+        the 'application' key.
+        """
         container.add('application', self)
         self._container = container
 
     def __init__(self, config=None):
+        """Initializes the application.
+
+        Registers any events that are within the application configuration.
+
+        Usage:
+            app = BaseApplication()
+
+        Events:
+            Dispatches the INIT_EVENT.
+
+        Args:
+            mixed config: See the BaseApplication.config properties.
+        """
         self.config = config or {}
         self.dispatcher = self.container.get('shared_event_dispatcher')
         for event, listeners in self.config['events'].items():
             for callback_priority_pair in listeners:
                 try:
-                    priority = callback_priority_pair[1]
+                    priority = callback_priority_pair.priority
                 except:
                     priority = 1
                 try:
-                    once_only = callback_priority_pair[2]
+                    once_only = callback_priority_pair.once_only
                 except:
                     once_only = False
                 self.dispatcher.add(event, self.container.get(callback_priority_pair[0]), priority, once_only)
         self.dispatcher.trigger(Event(events.INIT_EVENT, target=self))
 
-    def __call__(self):
+    def __call__(self, *args, **kwargs):
+        return self.run(*args, **kwargs)
+
+    def run(self):
         raise NotImplementedError('You must implement __call__')
 
 
 class HttpApplication(BaseApplication):
-    """
-    An application structure suitable for use with the WSGI protocol.
+    """An application structure suitable for use with the WSGI protocol.
+
+    For more information regarding creating an application consult the documentation.
 
     Usage:
         application = HttpApplication({..})
         application(environ, start_response)
     """
     def run(self, environ, start_response):
-        request = create_request_from_environ(environ, self.config['session']['class'])
+        request = create_request_from_environ(environ,
+                                              self.config['session']['class'],
+                                              self.config['session'].get('options'))
         try:
             route_result = self.dispatcher.trigger(Event(events.ROUTE_MATCH_EVENT, target=self, params={
                 'request': request,
@@ -95,11 +139,12 @@ class HttpApplication(BaseApplication):
                 view_model = dispatch_result.first()
             except ApplicationError as exc:
                 response, view_model = self.__raise_exception_event(exception=exc, request=request, route_match=route_match)
-        try:
-            self.__render(request=request, response=response, view_model=view_model)
-        except ApplicationError as exc:
-            response, view_model = self.__raise_exception_event(exception=exc, request=request, route_match=route_match)
-            self.__render(request=request, response=response, view_model=view_model)
+        if not isinstance(view_model, Response):
+            try:
+                self.__render(request=request, response=response, view_model=view_model)
+            except ApplicationError as exc:
+                response, view_model = self.__raise_exception_event(exception=exc, request=request, route_match=route_match)
+                self.__render(request=request, response=response, view_model=view_model)
         start_response(*response.start())
         return [response()]
 
@@ -118,8 +163,29 @@ class HttpApplication(BaseApplication):
         self.dispatcher.trigger(render_event)
 
 
-class ConsoleApplication(BaseApplication):
+class ConsoleApplication(Runner, BaseApplication):
+    """An application structure suitable for the command line.
+
+    For more information regarding creating an application consult the documentation.
+
+    Usage:
+        application = ConsoleApplication({...})
+        application()
     """
-    An application structure suitable for the command line.
-    """
-    # todo
+    runner = None
+
+    def __init__(self, config=None, argv=None):
+        config = dict_deep_update({
+            'commands': find_commands_in_module(DefaultConsoleCommands)
+        }, config or {})
+        BaseApplication.__init__(self, config)
+        Runner.__init__(self, argv, commands=config.get('commands'))
+
+    def run(self):
+        self()
+
+    def get_command(self, command_name):
+        command = self.commands[command_name]
+        if not isinstance(command, str):
+            self.container.add(command_name, get_qualified_name(command))
+        return self.container.get(command_name)

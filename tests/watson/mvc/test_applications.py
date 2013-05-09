@@ -1,10 +1,18 @@
 # -*- coding: utf-8 -*-
+from nose.tools import raises
 from watson.di.container import IocContainer
-from watson.mvc.applications import HttpApplication
+from watson.mvc.applications import HttpApplication, ConsoleApplication, BaseApplication
 from watson.mvc import config
-from watson.mvc.controllers import RestController
 from watson.common.datastructures import module_to_dict
-from tests.watson.mvc.support import sample_environ, start_response
+from tests.watson.mvc.support import sample_environ, start_response, SampleNonStringCommand
+from tests.watson.mvc import sample_config
+
+
+class TestBaseApplication(object):
+    @raises(NotImplementedError)
+    def test_call(self):
+        base = BaseApplication()
+        base()
 
 
 class TestHttpApplication(object):
@@ -12,6 +20,8 @@ class TestHttpApplication(object):
         application = HttpApplication()
         assert isinstance(application.container, IocContainer)
         assert application.config == module_to_dict(config, '__')
+        application_module = HttpApplication(sample_config)
+        assert application_module.config['debug']['enabled']
 
     def test_call(self):
         application = HttpApplication({
@@ -19,7 +29,7 @@ class TestHttpApplication(object):
                 'home': {
                     'path': '/',
                     'defaults': {
-                        'controller': 'tests.watson.mvc.test_applications.TestController'
+                        'controller': 'tests.watson.mvc.support.TestController'
                     }
                 }
             },
@@ -32,14 +42,61 @@ class TestHttpApplication(object):
         response = application(sample_environ(PATH_INFO='/', REQUEST_METHOD='POST', HTTP_ACCEPT='application/json'), start_response)
         assert response == [b'{"content": "Posted Hello World!"}']
 
+    def test_raise_exception_event_not_found(self):
+        application = HttpApplication()
+        response = application(sample_environ(PATH_INFO='/'), start_response)
+        assert '<h1>Not Found</h1>' in response[0].decode('utf-8')
+
+    def test_raise_exception_event_server_error(self):
+        application = HttpApplication({
+            'routes': {
+                'home': {
+                    'path': '/',
+                    'defaults': {
+                        'controller': 'tests.watson.mvc.support.TestController'
+                    }
+                }
+            }
+        })
+        response = application(sample_environ(PATH_INFO='/'), start_response)
+        assert '<h1>Internal Server Error</h1>' in response[0].decode('utf-8')
+
+    def test_application_logic_error(self):
+        application = HttpApplication({
+            'routes': {
+                'home': {
+                    'path': '/',
+                    'defaults': {
+                        'controller': 'tests.watson.mvc.support.SampleActionController',
+                        'action': 'blah_syntax_error'
+                    }
+                }
+            },
+            'views': {
+                'templates': {
+                    'watson/mvc/test_applications/testcontroller/blah_syntax_error': 'blank'
+                }
+            }
+        })
+        response = application(sample_environ(PATH_INFO='/'), start_response)
+        assert '<h1>Internal Server Error</h1>' in response[0].decode('utf-8')
+
 
 class TestConsoleApplication(object):
-    pass
+    def test_create(self):
+        application = ConsoleApplication()
+        assert isinstance(application.container, IocContainer)
 
+    def test_register_commands(self):
+        application = ConsoleApplication({
+            'commands': ['tests.watson.mvc.support.SampleStringCommand',
+                         SampleNonStringCommand]
+        })
+        assert len(application.config['commands']) == 2
 
-class TestController(RestController):
-    def GET(self):
-        return 'Hello World!'
-
-    def POST(self):
-        return 'Posted Hello World!'
+    def test_execute_command(self):
+        application = ConsoleApplication({
+            'commands': ['tests.watson.mvc.support.SampleStringCommand',
+                         SampleNonStringCommand]
+        }, ['py.test', 'string'])
+        assert application() == 'Executed!'

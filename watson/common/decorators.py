@@ -3,6 +3,18 @@ from functools import update_wrapper
 
 
 def cached_property(func):
+    """Allows expensive property calls to be cached.
+
+    Usage:
+        class MyClass(object):
+            @cached_property
+            def expensive_call(self):
+                # do something expensive
+
+        klass = MyClass()
+        klass.expensive_call  # initial call is made
+        klass.expensive_call  # return value is retrieved from an internal cache
+    """
     prop = '_{name}'.format(name=func.__name__)
 
     def _get_property(self):

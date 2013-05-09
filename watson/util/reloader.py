@@ -33,6 +33,7 @@ import sys
 import os
 import time
 import _thread as thread
+from watson.common.contextmanagers import ignored
 
 _mtimes = {}
 
@@ -65,10 +66,18 @@ def reloader_thread():
         time.sleep(1)
 
 
-def restart_with_reloader():
+def restart_with_reloader(script_dir=None):
     import __main__
     while True:
-        args = [sys.executable, os.path.abspath(__main__.__file__)]
+        if not script_dir:
+            script = os.path.abspath(__main__.__file__)
+        else:
+            script = os.path.abspath(os.path.join(script_dir, __main__.__file__))
+        args = [sys.executable, script]
+        sys_argv = sys.argv[:]
+        if len(sys_argv) > 1:
+            sys_argv.pop(0)
+            args = args + sys_argv
         new_environ = os.environ.copy()
         new_environ['RUN_MAIN'] = 'true'
         exit_code = os.spawnve(os.P_WAIT, sys.executable, args, new_environ)
@@ -76,24 +85,21 @@ def restart_with_reloader():
             return exit_code
 
 
-def reloader(main_func, args, kwargs):
+def reloader(main_func, args, kwargs, script_dir=None):
     if os.environ.get('RUN_MAIN') == 'true':
         thread.start_new_thread(main_func, args, kwargs)
-        try:
+        with ignored(KeyboardInterrupt):
             reloader_thread()
-        except KeyboardInterrupt:
-            pass
     else:
         try:
-            exit_code = restart_with_reloader()
+            exit_code = restart_with_reloader(script_dir)
             if exit_code < 0:
                 os.kill(os.getpid(), -exit_code)
             else:
                 sys.exit(exit_code)
         except KeyboardInterrupt:
             print('\nTerminated.')
-            pass
 
 
-def main(main_func, args=None, kwargs=None):
-    reloader(main_func, args or (), kwargs or {})
+def main(main_func, args=None, kwargs=None, script_dir=None):
+    reloader(main_func, args or (), kwargs or {}, script_dir)
