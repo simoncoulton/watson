@@ -5,70 +5,149 @@ from watson.http import REQUEST_METHODS, MIME_TYPES
 from watson.common.imports import get_qualified_name
 
 
-def create_route_from_definition(name, definition):
-    definition['name'] = name
-    return StaticRoute(definition) if definition.get('type', 'StaticRoute') == 'StaticRoute' else SegmentRoute(definition)
-
-
 class Router(object):
-    _routes = None
+    """Responsible for maintaining a list of routes.
 
-    @property
-    def routes(self):
-        return self._routes
-
-    @routes.setter
-    def routes(self, routes):
-        self._routes = {name: create_route_from_definition(name, definition) for name, definition in routes.items()}
+    Attributes:
+        OrderedDict routes: A dict of routes
+    """
+    routes = None
 
     def __init__(self, routes=None):
-        self.routes = routes or {}
+        if not routes:
+            routes = {}
+        self.routes = collections.OrderedDict()
+        if isinstance(routes, dict):
+            self._from_dict(routes)
+        else:
+            self._from_list(routes)
 
     def matches(self, request):
+        """Match a request against all the routes.
+
+        Args:
+            watson.http.messages.Request request: The request to match.
+
+        Returns:
+            A list of RouteMatch namedtuples.
+        """
         matches = []
         for name, route in self.routes.items():
-            matched, params = route.match(request)
-            if matched:
-                matches.append(RouteMatch(route, params))
+            route_match = route.match(request)
+            if route_match.matched:
+                matches.append(route_match)
         return matches
 
     def assemble(self, route_name, **kwargs):
+        """Converts the route into a path.
+
+        Applies any keyword arguments as params on the route. This is a
+        convenience method for accessing the assemble method on an individual
+        route.
+
+        Args:
+            string route_name: The name of the route
+
+        Raises:
+            KeyError if the route does not exist on the router.
+        """
         if route_name in self.routes:
             return self.routes[route_name].assemble(**kwargs)
         else:
-            raise Exception('No route named {0} can be found.'.format(route_name))
+            raise KeyError('No route named {0} can be found.'.format(route_name))
+
+    def add_route(self, route):
+        """Adds an instantiated route to the router.
+
+        Args:
+            watson.mvc.routing.Route route: The route to add.
+        """
+        self.routes[route.name] = route
+
+    # Internals
+
+    def _from_list(self, routes):
+        # Creates a router from a list of route objects or definitions.
+        for route in routes:
+            if not isinstance(route, Route):
+                route = Route(**route)
+            self.add_route(route)
+
+    def _from_dict(self, routes):
+        # Creates a router from a dict of named route definitions.
+        for name, route in routes.items():
+            if not isinstance(route, Route):
+                route = Route(name=name, **route)
+            self.add_route(route)
+
+    def __len__(self):
+        return len(self.routes)
+
+    def __iter__(self):
+        for name, route in self.routes.items():
+            yield name, route
 
     def __repr__(self):
         return '<{0} routes:{1}>'.format(get_qualified_name(self), len(self.routes))
 
 
-class RouteMatch(object):
-    route = None
-    params = None
+RouteMatch = collections.namedtuple('RouteMatch', 'route params matched')
+
+
+class Route(dict):
+    """A route is designed to validate a request against a specific path.
+
+    Attributes:
+        SRE_Pattern regex: The regular expression to match, generated from the path
+        list segments: A list of segments from the path
+    """
+    regex = None
+    segments = None
 
     @property
     def name(self):
-        return self.route.name
-
-    def __init__(self, route, params=None):
-        self.route = route
-        self.params = params or {}
-
-    def __repr__(self):
-        return '<{0} name:{1}>'.format(get_qualified_name(self), self.name)
-
-
-class BaseRoute(dict):
-    @property
-    def name(self):
+        """Convenience method to return the name of the route.
+        """
         return self['name']
 
-    def __init__(self, *args, **kwargs):
-        super(BaseRoute, self).__init__(*args, **kwargs)
+    @property
+    def path(self):
+        """Convenience method to return the path of the route.
+        """
+        return self['path']
+
+    def __init__(self, name, path, *args, **kwargs):
+        """Initializes a new route.
+
+        Args:
+            string name: The name of the route
+            string path: The path to match
+
+        Optional Args:
+            list|tuple accepts: A list of accepted http request methods
+            dict defaults: A dict of defaults for optional params
+            dict requires: A dict of required params to match
+            string subdomain: The subdomain to match
+        """
+        kwargs.update({
+            'name': name,
+            'path': path
+        })
+        super(Route, self).__init__(*args, **kwargs)
+        if not self.regex:
+            self.regex, self.segments = self.__create_regex_from_segment_path(self['path'], self.get('requires', {}))
         if 'format' in self.get('requires', ()):
             self['format'] = re.compile(self['requires']['format'])
 
     def match(self, request):
+        """Matches a request against the route.
+
+        Args:
+            watson.http.messages.Request request: The request to match.
+
+        Returns:
+            A RouteMatch namedtuple containing the keys route, params, matched.
+        """
         matched = True
         params = self.get('defaults', {}).copy()
         if request.method not in self.get('accepts', REQUEST_METHODS):
@@ -87,33 +166,28 @@ class BaseRoute(dict):
                 params['format'] = formats[0]
             else:
                 matched = False
-        return matched, params
-
-
-class SegmentRoute(BaseRoute):
-    regex = None
-    segments = None
-
-    def __init__(self, *args, **kwargs):
-        super(SegmentRoute, self).__init__(*args, **kwargs)
-        if not self.regex:
-            self.regex, self.segments = self.__create_regex_from_segment_path(self['path'], self.get('requires', {}))
-
-    def match(self, request):
-        matched, params = super(SegmentRoute, self).match(request)
         if matched:
             matches = self.regex.match(request.url.path)
-            if not matches:
-                matched = False
-            else:
+            if matches:
                 params.update((k, v) for k, v in matches.groupdict().items() if v is not None)
-        return matched, params
+            else:
+                matched = False
+        return RouteMatch(self, params, matched)
 
     def assemble(self, **kwargs):
-        params = collections.ChainMap(kwargs or {}, self.get('defaults', {}))
+        """Converts the route into a path.
+
+        Applies any keyword arguments as params on the route.
+
+        Usage:
+            route = Route('search', path='/search/:keyword')
+            route.assemble(keyword='test')  # /search/test
+        """
+        params = collections.ChainMap(self.get('defaults', {}), kwargs or {})
         return ''.join(self.__build_path(self.segments, params))
 
     def __build_path(self, segments, params):
+        # Used to assemble a route
         path = []
         for segment in segments:
             if isinstance(segment[1], list):
@@ -131,9 +205,9 @@ class SegmentRoute(BaseRoute):
         return ''.join(path)
 
     def __create_regex_from_segment_path(self, path, requires=None):
-        """
-        Converts a segemented path into a regular expression. Inspired by Rails
-        and ZF2.
+        """Converts a segemented path into a regular expression.
+
+        Inspired by both Rails and ZF2.
 
         Args:
             path: the segmented path to convert to regex
@@ -188,21 +262,8 @@ class SegmentRoute(BaseRoute):
             else:
                 _regex.append(
                     '(?P<{0}>{1})'.format(value, requires.get(value, '[^/]+')))
+        _regex.append('$')
         return ''.join(_regex)
 
     def __repr__(self):
-        return '<{0} path:{1}>'.format(get_qualified_name(self), self.regex.pattern)
-
-
-class StaticRoute(BaseRoute):
-    def match(self, request):
-        matched, params = super(StaticRoute, self).match(request)
-        if matched:
-            matched = request.url.path == self['path']
-        return matched, params
-
-    def assemble(self, **kwargs):
-        return self['path']
-
-    def __repr__(self):
-        return '<{0} path:{1}>'.format(get_qualified_name(self), self['path'])
+        return '<{0} name:{1} path:{2} match:{3}>'.format(get_qualified_name(self), self.name, self.path, self.regex.pattern)

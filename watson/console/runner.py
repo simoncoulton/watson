@@ -101,7 +101,7 @@ class Runner(object):
         usage = []
         for arguments in command.arguments:
             if isinstance(arguments, tuple):
-                usage.append(''.join(('[', arguments[0][0], ']')))
+                usage.append(''.join(('[', arguments[0][0], ' VALUE]')))
             else:
                 usage.append(arguments.get('name', arguments.get('dest')))
         return colors.header(' '.join((command.name, ' '.join(usage))))
