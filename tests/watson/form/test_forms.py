@@ -109,7 +109,8 @@ class TestForm(object):
 
     def test_render_entire_form(self):
         form = LoginForm('test')
-        assert str(form) == '<form action="/" enctype="application/x-www-form-urlencoded" method="post" name="test"><div><label for="username">username</label><input id="username" name="username" required="required" type="text" /></div><div><label for="password">password</label><input id="password" name="password" required="required" type="password" /></div><div><label for="first_name">first_name</label><input id="first_name" name="first_name" type="text" /></div><div><label for="last_name">last_name</label><input id="last_name" name="last_name" type="text" /></div><div><label for="email">email</label><input id="email" name="email" type="text" /></div></form>'
+        rendered_form = str(form)
+        assert rendered_form == '<form action="/" enctype="application/x-www-form-urlencoded" method="post" name="test"><div><label for="username">username</label><input id="username" name="username" required="required" type="text" /></div><div><label for="password">password</label><input id="password" name="password" required="required" type="password" /></div><div><label for="first_name">first_name</label><input id="first_name" name="first_name" type="text" /></div><div><label for="last_name">last_name</label><input id="last_name" name="last_name" type="text" /></div><div><label for="email">email</label><input id="email" name="email" type="text" /></div></form>'
 
     def test_custom_method(self):
         form = LoginForm('test', method='PUT')
