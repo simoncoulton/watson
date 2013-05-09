@@ -97,6 +97,7 @@ class BaseApplication(ContainerAware, EventDispatcherAware):
                     once_only = False
                 self.dispatcher.add(event, self.container.get(callback_priority_pair[0]), priority, once_only)
         self.dispatcher.trigger(Event(events.INIT_EVENT, target=self))
+        super(BaseApplication, self).__init__()
 
     def __call__(self, *args, **kwargs):
         return self.run(*args, **kwargs)
@@ -163,7 +164,7 @@ class HttpApplication(BaseApplication):
         self.dispatcher.trigger(render_event)
 
 
-class ConsoleApplication(Runner, BaseApplication):
+class ConsoleApplication(BaseApplication):
     """An application structure suitable for the command line.
 
     For more information regarding creating an application consult the documentation.
@@ -175,17 +176,21 @@ class ConsoleApplication(Runner, BaseApplication):
     runner = None
 
     def __init__(self, config=None, argv=None):
-        config = dict_deep_update({
+        super(ConsoleApplication, self).__init__(config)
+        self.config = dict_deep_update({
             'commands': find_commands_in_module(DefaultConsoleCommands)
-        }, config or {})
-        BaseApplication.__init__(self, config)
-        Runner.__init__(self, argv, commands=config.get('commands'))
+        }, self.config)
+        self.runner = Runner(argv, commands=self.config.get('commands'))
+        self.runner.get_command = self.get_command
 
     def run(self):
-        self()
+        return self.runner()
 
     def get_command(self, command_name):
-        command = self.commands[command_name]
+        # overrides the runners get_command method
+        if command_name not in self.runner.commands:
+            return None
+        command = self.runner.commands[command_name]
         if not isinstance(command, str):
             self.container.add(command_name, get_qualified_name(command))
         return self.container.get(command_name)
