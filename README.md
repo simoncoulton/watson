@@ -10,9 +10,8 @@ You can find a sample hello world application in the `/examples` directory and m
 
 Branch | Status | Coverage
 ------------ | ------------- | ------------- 
-Master | ![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=master) | ![Coverage](https://coveralls.io/repos/simoncoulton/watson/badge.png?branch=master)
-Develop | ![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=develop) | ![Coverage](https://coveralls.io/repos/simoncoulton/watson/badge.png?branch=develop)
-
+Master | [![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=master)](https://github.com/simoncoulton/watson) | [![Coverage Status](https://coveralls.io/repos/simoncoulton/watson/badge.png)](https://coveralls.io/r/simoncoulton/watson)
+Develop | [![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=develop)](https://github.com/simoncoulton/watson) | 
 
 ### Dependencies
 
