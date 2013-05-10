@@ -34,5 +34,7 @@ class SessionMixin(object):
     def session_to_cookie(self):
         session_cookie = self.cookies[COOKIE_KEY]
         if not session_cookie or (session_cookie and self.session.id != session_cookie.value):
+            if self.is_secure():
+                self.session.cookie_params['secure'] = True
             self.cookies.add(COOKIE_KEY, value=self.session.id, **self.session.cookie_params)
             self.cookies[COOKIE_KEY] = self.session.id
