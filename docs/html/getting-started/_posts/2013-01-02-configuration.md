@@ -32,13 +32,14 @@ You can see the default configuration that Watson uses within the `watson.mvc.co
 
 Debug is responsible for determining if the application is running in debug mode, and the relevant profiling settings.
 
+<span class="sub">watson.mvc.config</span>
 {% highlight python %}
 debug = {
     'enabled': False,  # is the debug mode enabled?
     'profiling': {
         'enabled': False,  # is the profiler enabled?
-        'max_results': 20,
-        'sort': 'cumulative',
+        'max_results': 20,  # the number of results to display
+        'sort': 'cumulative',  # the column to sort on
     }
 }
 {% endhighlight %}
@@ -54,6 +55,7 @@ See the dependency injection [key concept](/watson/key-concepts/dependencyinject
 Watson utilizes multiple renderers to output the different views that the user may request. Each renderer is retrieved
 from the dependency injection container (see above), with the name key being the same as the relevant dependency name.
 
+<span class="sub">watson.mvc.config</span>
 {% highlight python %}
 views = {
     'default_format': 'html',
@@ -85,6 +87,7 @@ There are also a set of templates defined, which allows you to override template
 By default Watson will use FileStorage for session storage, which stores the contents of each session in their own file
 within your systems temporary directory (unless otherwise specified in the config).
 
+<span class="sub">watson.mvc.config</span>
 {% highlight python %}
 session = {
     'class': 'watson.http.sessions.FileStorage',
@@ -97,9 +100,9 @@ See the storage methods that are available for sessions in the [Reference Librar
 
 #### Events
 
-Events are the core to the lifecycle of both a request and the initialization of a Watson application. The default configuration
-sets up 5 events which will be executed at different times of the 
+Events are the core to the lifecycle of both a request and the initialization of a Watson application. The default configuration sets up 5 events which will be executed at different times of the lifecycle.
 
+<span class="sub">watson.mvc.config</span>
 {% highlight python %}
 events = {
     events.EXCEPTION_EVENT: [('app_exception_listener',)],
@@ -119,7 +122,7 @@ container. This can easily be achieved by the use of lambda functions.
 
 First create the settings you wish to retrieve in your settings:
 
-<span class="sub">app/config/dev.py</span>
+<span class="sub">app/config/config.py</span>
 {% highlight python %}
 my_class_config = {
 	'a_setting': 'a value'
@@ -128,7 +131,7 @@ my_class_config = {
 
 And then within your dependency definitions you can reference it like this:
 
-<span class="sub">app/config/dev.py</span>
+<span class="sub">app/config/config.py</span>
 {% highlight python %}
 dependencies = {
 	'definitions': {

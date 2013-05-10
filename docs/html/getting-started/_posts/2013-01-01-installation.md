@@ -10,6 +10,18 @@ All stable versions of Watson are available via [pip](https://pypi.python.org/py
 
 Watson is maintained at [Github](https://github.com/simoncoulton/watson), and can be used to get the latest development version of the code if required.
 
+#### Setting up a virtualenv
+We recommend creating a standalone environment for each new project you work on to isolate any dependencies that it may need. To do so enter the following commands in your terminal:
+
+	
+	project_root/
+		virtualenv/
+		source/
+
+	pyvenv /where_you_want_to_store_venv
+	source /where_you_want_to_store_venv/
+
+
 #### Verifying the installation
 To ensure that Watson has been installed correctly, launch `python` from your CLI and then enter the following:
 
