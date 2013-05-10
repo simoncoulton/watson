@@ -3,9 +3,6 @@ from setuptools import setup, find_packages
 import watson
 
 
-with open('README.md') as f:
-    readme = f.read()
-
 with open('LICENSE') as f:
     license = f.read()
 
@@ -13,10 +10,16 @@ setup(
     name='watson3',
     version=watson.__version__,
     description='An easy to use Python 3 framework for creating web applications.',
-    long_description=readme,
+    long_description='''Watson, a Python 3 web framework
+"It's elementary my dear Watson"
+
+Watson is an easy to use framework designed to get out of your way and let you code your application rather than wrangle with the framework.
+
+The latest documentation can be found at http://simoncoulton.github.com/watson
+''',
     author='Simon Coulton',
     author_email='simon.coulton@gmail.com',
-    url='https://github.com/simoncoulton/watson',
+    url='http://simoncoulton.github.com/watson',
     license=license,
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     classifiers=[
@@ -28,5 +31,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'jinja2 == 2.6'
-    ]
+    ],
+    platforms=['Python 3', 'Python 3.3'],
+    keywords=['watson', 'python3', 'web framework', 'framework', 'wsgi']
 )
