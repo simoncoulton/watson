@@ -1,10 +1,17 @@
 # -*- coding: utf-8 -*-
+import os
 from setuptools import setup, find_packages
 import watson
+from watson.common.contextmanagers import ignored
 
 
 with open('LICENSE') as f:
     license = f.read()
+
+try:
+    reqs = open(os.path.join(os.path.dirname(__file__), 'requirements.txt')).read()
+except (IOError, OSError):
+    reqs = ''
 
 setup(
     name='watson3',
@@ -29,9 +36,7 @@ The latest documentation can be found at http://simoncoulton.github.com/watson
     ],
     scripts=['watson/bin/watson-console.py'],
     include_package_data=True,
-    install_requires=[
-        'jinja2 == 2.6'
-    ],
+    install_requires=reqs,
     platforms=['Python 3', 'Python 3.3'],
     keywords=['watson', 'python3', 'web framework', 'framework', 'wsgi']
 )
