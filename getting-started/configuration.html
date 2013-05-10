@@ -5,6 +5,7 @@
 		<link rel="stylesheet" type="text/css" href="/watson/assets/css/main.css" />
 		<link rel="stylesheet" type="text/css" href="/watson/assets/css/pygments.css" />
 		<meta name="viewport" content="initial-scale=1, user-scalable=no, width=device-width" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	</head>
 	<body>
 		<header>
@@ -25,6 +26,10 @@
 		<li>
 			Getting Started
 			<ul>
+			  
+			    
+			  
+			    
 			  
 			    
 			  
@@ -115,6 +120,8 @@
 			    
 			  
 			    
+			  
+			    
 			      <li>
 			        <a href="/watson/getting-started/your-first-application.html">
 			          Your First Application
@@ -128,6 +135,12 @@
 			Key Concepts
 			<ul>
 				
+			    
+			  
+			    
+			  
+			    
+			  
 			    
 			  
 			    
@@ -207,11 +220,17 @@
 			    
 			  
 			    
-			  
-			    
 			      <li>
 			        <a href="/watson/key-concepts/dependencyinjection.html">
 			          Dependency Injection
+			        </a>
+			      </li>
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/key-concepts/mvc.html">
+			          Mvc
 			        </a>
 			      </li>
 			    
@@ -221,8 +240,206 @@
 			</ul>
 		</li>
 		<li>
+			Common Usage
+			<ul>
+				
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/common-usage/controllers.html">
+			          Controllers
+			        </a>
+			      </li>
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			</ul>
+		</li>
+		<li>
+			Advanced Topics
+			<ul>
+				
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/advanced-topics/deployment.html">
+			          Deployment
+			        </a>
+			      </li>
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			</ul>
+		</li>
+		<li>
 			Reference Library
 			<ul>
+				
+				
+				
+				
+				
+				
 				
 				
 				
@@ -460,13 +677,145 @@
 <ul>
 <li><a href="#introduction">Introduction</a></li>
 <li><a href="#application">Application Configuration</a></li>
+<li><a href="#extending">Extending the Configuration</a></li>
 </ul>
 
 <h3><a id="introduction"></a>Introduction</h3>
 
 <p>While Watson is primarily built with conventions in mind, there are still plenty of configuration options that can be modified to override the default behaviour.</p>
 
+<blockquote>
+<p><strong>Note:</strong> To override values within the default configuration, you only need to replace those values within your own configuration file. The application with automatically merge the defaults with your new options.</p>
+</blockquote>
+
 <h3><a id="application"></a>Application Configuration</h3>
+
+<p>Configuration for Watson is just a standard python module (and should be familiar to those who have used Django previously). Available keys for configuration are:</p>
+
+<ul>
+<li>debug</li>
+<li>dependencies</li>
+<li>views</li>
+<li>session</li>
+<li>events</li>
+</ul>
+
+<p>You can see the default configuration that Watson uses within the <code>watson.mvc.config</code> module.</p>
+
+<h4>Debug</h4>
+
+<p>Debug is responsible for determining if the application is running in debug mode, and the relevant profiling settings.</p>
+
+<p><span class="sub">watson.mvc.config</span></p>
+
+<div class="highlight"><pre><code class="python"><span class="n">debug</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;enabled&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>  <span class="c"># is the debug mode enabled?</span>
+    <span class="s">&#39;profiling&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;enabled&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>  <span class="c"># is the profiler enabled?</span>
+        <span class="s">&#39;max_results&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>  <span class="c"># the number of results to display</span>
+        <span class="s">&#39;sort&#39;</span><span class="p">:</span> <span class="s">&#39;cumulative&#39;</span><span class="p">,</span>  <span class="c"># the column to sort on</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4>Dependencies</h4>
+
+<p>The configuration of your application will automatically be added to the container, which can then be retrieved via the key <code>application.config</code>.</p>
+
+<p>See the dependency injection <a href="/watson/key-concepts/dependencyinjection.html">key concept</a> for more information on how to define dependencies and container parameters.</p>
+
+<h4>Views</h4>
+
+<p>Watson utilizes multiple renderers to output the different views that the user may request. Each renderer is retrieved
+from the dependency injection container (see above), with the name key being the same as the relevant dependency name.</p>
+
+<p><span class="sub">watson.mvc.config</span></p>
+
+<div class="highlight"><pre><code class="python"><span class="n">views</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;default_format&#39;</span><span class="p">:</span> <span class="s">&#39;html&#39;</span><span class="p">,</span>
+    <span class="s">&#39;renderers&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;jinja2_renderer&#39;</span><span class="p">,</span>
+            <span class="s">&#39;config&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;extension&#39;</span><span class="p">:</span> <span class="s">&#39;html&#39;</span><span class="p">,</span>
+                <span class="s">&#39;paths&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s">&#39;views&#39;</span><span class="p">)]</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="s">&#39;xml&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;xml_renderer&#39;</span><span class="p">},</span>
+        <span class="s">&#39;json&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;json_renderer&#39;</span><span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s">&#39;templates&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;404&#39;</span><span class="p">:</span> <span class="s">&#39;errors/404&#39;</span><span class="p">,</span>
+        <span class="s">&#39;500&#39;</span><span class="p">:</span> <span class="s">&#39;errors/500&#39;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>The above configuration sets the default renderer to use Jinja2. It also specifies two other renderers, which will output
+XML and JSON respectively.
+There are also a set of templates defined, which allows you to override templates that will be used. The format of these being &#39;existing template path&#39;: &#39;new template path&#39; (relative to the views directory).</p>
+
+<h4>Session</h4>
+
+<p>By default Watson will use FileStorage for session storage, which stores the contents of each session in their own file
+within your systems temporary directory (unless otherwise specified in the config).</p>
+
+<p><span class="sub">watson.mvc.config</span></p>
+
+<div class="highlight"><pre><code class="python"><span class="n">session</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;class&#39;</span><span class="p">:</span> <span class="s">&#39;watson.http.sessions.FileStorage&#39;</span><span class="p">,</span>
+    <span class="s">&#39;options&#39;</span><span class="p">:</span> <span class="p">{}</span>  <span class="c"># a dict of options for the storage class</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>See the storage methods that are available for sessions in the <a href="/watson/reference-library/http/sessions.html">Reference Library</a>.</p>
+
+<h4>Events</h4>
+
+<p>Events are the core to the lifecycle of both a request and the initialization of a Watson application. The default configuration sets up 5 events which will be executed at different times of the lifecycle.</p>
+
+<p><span class="sub">watson.mvc.config</span></p>
+
+<div class="highlight"><pre><code class="python"><span class="n">events</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">events</span><span class="o">.</span><span class="n">EXCEPTION_EVENT</span><span class="p">:</span> <span class="p">[(</span><span class="s">&#39;app_exception_listener&#39;</span><span class="p">,)],</span>
+    <span class="n">events</span><span class="o">.</span><span class="n">INIT_EVENT</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s">&#39;watson.debug.profilers.ApplicationInitListener&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+    <span class="p">],</span>
+    <span class="n">events</span><span class="o">.</span><span class="n">ROUTE_MATCH_EVENT</span><span class="p">:</span> <span class="p">[(</span><span class="s">&#39;watson.mvc.listeners.RouteListener&#39;</span><span class="p">,)],</span>
+    <span class="n">events</span><span class="o">.</span><span class="n">DISPATCH_EXECUTE_EVENT</span><span class="p">:</span> <span class="p">[(</span><span class="s">&#39;app_dispatch_execute_listener&#39;</span><span class="p">,)],</span>
+    <span class="n">events</span><span class="o">.</span><span class="n">RENDER_VIEW_EVENT</span><span class="p">:</span> <span class="p">[(</span><span class="s">&#39;app_render_listener&#39;</span><span class="p">,)],</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3><a id="extending"></a>Extending the Configuration</h3>
+
+<p>There are times when you may want to allow other developers to get access to your configuration from dependencies retrieved from the 
+container. This can easily be achieved by the use of lambda functions.</p>
+
+<p>First create the settings you wish to retrieve in your settings:</p>
+
+<p><span class="sub">app/config/config.py</span></p>
+
+<div class="highlight"><pre><code class="python"><span class="n">my_class_config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;a_setting&#39;</span><span class="p">:</span> <span class="s">&#39;a value&#39;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>And then within your dependency definitions you can reference it like this:</p>
+
+<p><span class="sub">app/config/config.py</span></p>
+
+<div class="highlight"><pre><code class="python"><span class="n">dependencies</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;definitions&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;my_class&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;item&#39;</span><span class="p">:</span> <span class="s">&#39;my.module.Klass&#39;</span><span class="p">,</span>
+            <span class="s">&#39;init&#39;</span><span class="p">:</span> <span class="p">[</span><span class="k">lambda</span> <span class="n">ioc</span><span class="p">:</span> <span class="n">ioc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;application.config&#39;</span><span class="p">)[</span><span class="s">&#39;my_class_config&#39;</span><span class="p">]]</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>When my.module.Klass is initialized, the configuration settings will be passed as the first argument to the <code>__init__</code> method.</p>
 
 <p></section></p>
 
@@ -478,12 +827,19 @@
 		<div class="wrapper clearfix">
 			<ul>
 				<li class="title">Source </li>
-				<li><a href="https://github.com/simoncoulton/watson">GitHub Repository</a></li>
+				<li><a href="https://github.com/simoncoulton/watson">GitHub</a></li>
 				<li><a href="https://pypi.python.org/pypi/watson3/">Pypi</a></li>
 			</ul>
 			<ul>
+				<li class="title">Testing</li>
+				<li><a href="https://coveralls.io/r/simoncoulton/watson">Coverage</a></li>
+				<li><a href="https://travis-ci.org/simoncoulton/watson">Travis CI</a></li>
+			</ul>
+			<ul>
 				<li class="title">Useful Resources</li>
-				<li><a href="http://docs.python.org/3/">Python 3</a></li>
+				<li><a href="http://docs.python.org/3/">Python 3 Documentation</a></li>
+				<li><a href="http://www.reddit.com/r/python">Python Subreddit</a></li>
+
 			</ul>
 		</div>
 	</div>

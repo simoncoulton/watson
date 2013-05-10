@@ -5,6 +5,7 @@
 		<link rel="stylesheet" type="text/css" href="/watson/assets/css/main.css" />
 		<link rel="stylesheet" type="text/css" href="/watson/assets/css/pygments.css" />
 		<meta name="viewport" content="initial-scale=1, user-scalable=no, width=device-width" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	</head>
 	<body>
 		<header>
@@ -25,6 +26,10 @@
 		<li>
 			Getting Started
 			<ul>
+			  
+			    
+			  
+			    
 			  
 			    
 			  
@@ -115,6 +120,8 @@
 			    
 			  
 			    
+			  
+			    
 			      <li>
 			        <a href="/watson/getting-started/your-first-application.html">
 			          Your First Application
@@ -128,6 +135,12 @@
 			Key Concepts
 			<ul>
 				
+			    
+			  
+			    
+			  
+			    
+			  
 			    
 			  
 			    
@@ -207,11 +220,17 @@
 			    
 			  
 			    
-			  
-			    
 			      <li>
 			        <a href="/watson/key-concepts/dependencyinjection.html">
 			          Dependency Injection
+			        </a>
+			      </li>
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/key-concepts/mvc.html">
+			          Mvc
 			        </a>
 			      </li>
 			    
@@ -221,8 +240,206 @@
 			</ul>
 		</li>
 		<li>
+			Common Usage
+			<ul>
+				
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/common-usage/controllers.html">
+			          Controllers
+			        </a>
+			      </li>
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			</ul>
+		</li>
+		<li>
+			Advanced Topics
+			<ul>
+				
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/advanced-topics/deployment.html">
+			          Deployment
+			        </a>
+			      </li>
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			    
+			  
+			</ul>
+		</li>
+		<li>
 			Reference Library
 			<ul>
+				
+				
+				
+				
+				
+				
 				
 				
 				
@@ -461,6 +678,16 @@
 
 <p>Watson is maintained at <a href="https://github.com/simoncoulton/watson">Github</a>, and can be used to get the latest development version of the code if required.</p>
 
+<h4>Setting up a virtualenv</h4>
+
+<p>We recommend creating a standalone environment for each new project you work on to isolate any dependencies that it may need. To do so enter the following commands in your terminal:</p>
+<div class="highlight"><pre><code class="text">project_root/
+    virtualenv/
+    source/
+
+pyvenv /where_you_want_to_store_venv
+source /where_you_want_to_store_venv/
+</code></pre></div>
 <h4>Verifying the installation</h4>
 
 <p>To ensure that Watson has been installed correctly, launch <code>python</code> from your CLI and then enter the following:</p>
@@ -468,15 +695,7 @@
 &gt;&gt;&gt; print(watson.__version__)
 # latest watson version will be printed here
 </code></pre></div>
-<p>Once you&#39;ve got Watson installed, head on over to the <a href="/getting-started/your-first-application.html">Your first application</a> area to learn how to create your first web application.
-</section></p>
-
-<p><section class="standout">
-<span class="label blue">new feature</span> <span class="label red">new feature</span> <span class="label yellow">new feature</span></p>
-
-<h4>Testing</h4>
-
-<p>Lorem ipsum Labore culpa ex qui aliqua fugiat aliqua dolore officia ut Ut do aute culpa dolor.
+<p>Once you&#39;ve got Watson installed, head on over to the <a href="/watson/getting-started/your-first-application.html">Your first application</a> area to learn how to create your first web application.
 </section></p>
 
 				</div>
@@ -487,12 +706,19 @@
 		<div class="wrapper clearfix">
 			<ul>
 				<li class="title">Source </li>
-				<li><a href="https://github.com/simoncoulton/watson">GitHub Repository</a></li>
+				<li><a href="https://github.com/simoncoulton/watson">GitHub</a></li>
 				<li><a href="https://pypi.python.org/pypi/watson3/">Pypi</a></li>
 			</ul>
 			<ul>
+				<li class="title">Testing</li>
+				<li><a href="https://coveralls.io/r/simoncoulton/watson">Coverage</a></li>
+				<li><a href="https://travis-ci.org/simoncoulton/watson">Travis CI</a></li>
+			</ul>
+			<ul>
 				<li class="title">Useful Resources</li>
-				<li><a href="http://docs.python.org/3/">Python 3</a></li>
+				<li><a href="http://docs.python.org/3/">Python 3 Documentation</a></li>
+				<li><a href="http://www.reddit.com/r/python">Python Subreddit</a></li>
+
 			</ul>
 		</div>
 	</div>
