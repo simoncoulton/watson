@@ -36,7 +36,7 @@ class DispatchExecute(Base):
             event.params['container'].add(controller_class, controller_class, 'prototype')
             controller = event.params['container'].get(controller_class)
         except Exception as exc:
-            raise InternalServerError('Controller not found for route: {0}'.format(route_match.name)) from exc
+            raise InternalServerError('Controller not found for route: {0}'.format(route_match.route.name)) from exc
         event.params['controller_class'] = controller
         controller.event = event
         controller.request = event.params['request']
