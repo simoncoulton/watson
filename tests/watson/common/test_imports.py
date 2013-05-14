@@ -13,3 +13,7 @@ class TestImports(object):
 
     def test_load_invalid_definition(self):
         assert None == load_definition_from_string('invalid.module.Class')
+
+
+class TestResolver(object):
+    pass
