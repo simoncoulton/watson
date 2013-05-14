@@ -12,6 +12,10 @@ class TestRoute(object):
         assert route.name == 'home'
         assert repr(route) == '<watson.mvc.routing.Route name:home path:/ match:\/$>'
 
+    def test_create_route_regex(self):
+        route = Route(name='home', path='/', regex='.*')
+        assert route.regex
+
     def test_static_match(self):
         route = Route(name='home', path='/')
         invalid_request = create_request_from_environ(sample_environ(PATH_INFO='/test'))
@@ -131,3 +135,25 @@ class TestRouter(object):
     def test_assemble_invalid_route(self):
         router = Router()
         router.assemble('test')
+
+    def test_sort_routes(self):
+        router = Router({
+            'home': {
+                'path': '/'
+            },
+            'test': {
+                'path': '/'
+            },
+            'highest': {
+                'path': '/',
+                'priority': 1000
+            },
+            'lowest': {
+                'path': '/',
+                'priority': -1
+            }
+        })
+        request = create_request_from_environ(sample_environ(PATH_INFO='/'))
+        matches = router.matches(request)
+        assert matches[0].route.name == 'highest'
+        assert matches[3].route.name == 'lowest'

@@ -51,7 +51,7 @@ class Router(object):
         Raises:
             KeyError if the route does not exist on the router.
         """
-        if route_name in self.routes:
+        if route_name in self:
             return self.routes[route_name].assemble(**kwargs)
         else:
             raise KeyError('No route named {0} can be found.'.format(route_name))
@@ -64,7 +64,15 @@ class Router(object):
         """
         self.routes[route.name] = route
 
+    def sort(self):
+        self.routes = collections.OrderedDict(
+            reversed(sorted(self.routes.items(),
+                     key=lambda route: route[1]['priority'])))
+
     # Internals
+
+    def __contains__(self, route_name):
+        return route_name in self.routes
 
     def _from_list(self, routes):
         # Creates a router from a list of route objects or definitions.
@@ -79,6 +87,7 @@ class Router(object):
             if not isinstance(route, Route):
                 route = Route(name=name, **route)
             self.add_route(route)
+        self.sort()
 
     def __len__(self):
         return len(self.routes)
@@ -134,6 +143,8 @@ class Route(dict):
             'path': path
         })
         super(Route, self).__init__(*args, **kwargs)
+        if 'priority' not in kwargs:
+            self['priority'] = 1
         if 'regex' in kwargs:
             self.regex = re.compile(kwargs['regex'])
         if not self.regex:
