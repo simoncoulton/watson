@@ -7,6 +7,10 @@ def sample_dependency(container):
     return 'test'
 
 
+def sample_dependency_with_args(container, arg):
+    return arg
+
+
 class SampleDependency(object):
     pass
 
