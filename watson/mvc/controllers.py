@@ -120,7 +120,7 @@ class HttpMixin(object):
         router = self.container.get('router')
         return router.assemble(route_name, **params)
 
-    def redirect(self, path, params=None, status_code=302, is_url=False, clear=False):
+    def redirect(self, path, params=None, status_code=302, clear=False):
         """Redirect to a different route.
 
         Redirecting will bypass the rendering of the view, and the body of the
@@ -134,7 +134,6 @@ class HttpMixin(object):
             string path: The URL or route name to redirect to
             dict params: The params to send to the route
             int status_code: The status code to use for the redirect
-            bool is_url: Whether or not the path is a url or route
             bool clear: Whether or not the session data should be cleared
 
         Returns:
@@ -146,7 +145,10 @@ class HttpMixin(object):
             self.request.session['post_redirect_get'] = dict(self.request.post)
         if clear:
             self.clear_redirect_vars()
-        url = path if is_url else self.url(path, params)
+        try:
+            url = self.url(path, params)
+        except KeyError:
+            url = path
         self.response.headers.add('location', url, replace=True)
         return self.response
 

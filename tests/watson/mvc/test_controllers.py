@@ -68,7 +68,7 @@ class TestBaseHttpController(object):
         base.request = create_request_from_environ(sample_environ())
         base.container = Mock()
         base.container.get.return_value = router
-        response = base.redirect('/test', is_url=True)
+        response = base.redirect('/test')
         assert response.headers['location'] == '/test'
         response = base.redirect('segment')
         assert response.headers['location'] == '/segment/test'
@@ -85,6 +85,10 @@ class TestBaseHttpController(object):
         response = base.redirect('test')
         assert response.status_code == 303
         assert base.redirect_vars == base.request.session['post_redirect_get']
+        base.clear_redirect_vars()
+        assert not base.redirect_vars
+        base.redirect('test', clear=True)
+        assert not base.redirect_vars
 
     def test_flash_message(self):
         controller = SampleActionController()
