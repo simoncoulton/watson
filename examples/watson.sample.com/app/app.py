@@ -8,11 +8,11 @@ try:
     import watson
 except:
     sys.path.append(os.path.abspath('../../..'))
-from watson.mvc.applications import HttpApplication
+from watson.mvc import applications
 from watson.util.server import make_dev_server
 from config import local
 
-application = HttpApplication(local)
+application = applications.Http(local)
 
 if __name__ == '__main__':
     make_dev_server(application, do_reload=True)

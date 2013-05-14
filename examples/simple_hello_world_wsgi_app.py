@@ -7,17 +7,16 @@ import os
 import sys
 
 sys.path.append(os.path.abspath('..'))
-from watson.mvc.applications import HttpApplication
-from watson.mvc.controllers import RestController, ActionController
+from watson.mvc import applications, controllers
 from watson.util.server import make_dev_server
 
 
-class MyRestController(RestController):
+class MyRestController(controllers.Rest):
     def GET(self):
         return '<h1>Welcome to Watson!</h1><a href="/hello">Hello</a> <a href="/world">World!</a>'
 
 
-class MyActionController(ActionController):
+class MyActionController(controllers.Action):
     def hello_action(self):
         return '<a href="/world">Hello</a>'
 
@@ -27,7 +26,7 @@ class MyActionController(ActionController):
     def json_world_action(self):
         return {'hello': 'world'}
 
-application = HttpApplication({
+application = applications.Http({
     'routes': {
         'home': {
             'path': '/',

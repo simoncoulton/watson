@@ -15,7 +15,7 @@ from watson.mvc import events
 from watson.support.console import commands as DefaultConsoleCommands
 
 
-class BaseApplication(ContainerAware, EventDispatcherAware):
+class Base(ContainerAware, EventDispatcherAware):
     """The core application structure for a Watson application.
 
     It makes heavy use of the IocContainer and EventDispatcher classes to handle
@@ -35,7 +35,7 @@ class BaseApplication(ContainerAware, EventDispatcherAware):
         """Sets the configuration for the application.
 
         Usage:
-            app = BaseApplication()
+            app = Base()
             app.config = {'some': 'settings'}
 
         Args:
@@ -75,13 +75,13 @@ class BaseApplication(ContainerAware, EventDispatcherAware):
         Registers any events that are within the application configuration.
 
         Usage:
-            app = BaseApplication()
+            app = Base()
 
         Events:
             Dispatches the INIT_EVENT.
 
         Args:
-            mixed config: See the BaseApplication.config properties.
+            mixed config: See the Base.config properties.
         """
         self.config = config or {}
         self.dispatcher = self.container.get('shared_event_dispatcher')
@@ -97,7 +97,7 @@ class BaseApplication(ContainerAware, EventDispatcherAware):
                     once_only = False
                 self.dispatcher.add(event, self.container.get(callback_priority_pair[0]), priority, once_only)
         self.dispatcher.trigger(Event(events.INIT_EVENT, target=self))
-        super(BaseApplication, self).__init__()
+        super(Base, self).__init__()
 
     def __call__(self, *args, **kwargs):
         return self.run(*args, **kwargs)
@@ -106,13 +106,13 @@ class BaseApplication(ContainerAware, EventDispatcherAware):
         raise NotImplementedError('You must implement __call__')
 
 
-class HttpApplication(BaseApplication):
+class Http(Base):
     """An application structure suitable for use with the WSGI protocol.
 
     For more information regarding creating an application consult the documentation.
 
     Usage:
-        application = HttpApplication({..})
+        application = applications.Http({..})
         application(environ, start_response)
     """
     def run(self, environ, start_response):
@@ -164,19 +164,19 @@ class HttpApplication(BaseApplication):
         self.dispatcher.trigger(render_event)
 
 
-class ConsoleApplication(BaseApplication):
+class Console(Base):
     """An application structure suitable for the command line.
 
     For more information regarding creating an application consult the documentation.
 
     Usage:
-        application = ConsoleApplication({...})
+        application = applications.Console({...})
         application()
     """
     runner = None
 
     def __init__(self, config=None, argv=None):
-        super(ConsoleApplication, self).__init__(config)
+        super(Console, self).__init__(config)
         self.config = dict_deep_update({
             'commands': find_commands_in_module(DefaultConsoleCommands)
         }, self.config)
