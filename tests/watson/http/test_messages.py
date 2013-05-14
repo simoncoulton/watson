@@ -4,7 +4,7 @@ from io import BytesIO, BufferedReader
 from nose.tools import raises
 from watson.http.messages import Response, Request, create_request_from_environ
 from watson.http.cookies import CookieDict
-from watson.http.sessions import MemoryStorage
+from watson.http import sessions
 from watson.common.datastructures import ImmutableMultiDict, MultiDict
 from tests.watson.http.support import sample_environ
 
@@ -65,9 +65,9 @@ class TestRequest(object):
 
     def test_session(self):
         environ = sample_environ(HTTP_COOKIE='watson.session=123456;')
-        request = create_request_from_environ(environ, 'watson.http.sessions.MemoryStorage')
+        request = create_request_from_environ(environ, 'watson.http.sessions.Memory')
         assert request.session.id == '123456'
-        assert isinstance(request.session, MemoryStorage)
+        assert isinstance(request.session, sessions.Memory)
 
     @raises(TypeError)
     def test_create_invalid(self):

@@ -6,13 +6,13 @@ with ignored(ImportError):
     import memcache
 
 
-class MemcacheStorage(StorageMixin):
+class Storage(StorageMixin):
     """A memcache based storage adapter for session data.
     """
     client = None
 
     def __init__(self, id=None, timeout=None, autosave=True, config=None):
-        super(MemcacheStorage, self).__init__(id, timeout, autosave)
+        super(Storage, self).__init__(id, timeout, autosave)
         settings = {'servers': ['127.0.0.1:11211']}
         self.config = collections.ChainMap(config or {}, settings)
 

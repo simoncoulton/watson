@@ -10,7 +10,7 @@ class TestStorageMixin(object):
         assert session.timeout == 30
         assert session.autosave is False
         assert session.id == 123
-        assert repr(session) == '<watson.http.sessions.StorageMixin id:123>'
+        assert repr(session) == '<watson.http.sessions.base.StorageMixin id:123>'
         assert session['test'] == 'blah'
         assert session.get('test') == 'blah'
 

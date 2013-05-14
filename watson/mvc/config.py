@@ -79,7 +79,7 @@ views = {
 
 # Session settings
 session = {
-    'class': 'watson.http.sessions.FileStorage',
+    'class': 'watson.http.sessions.File',
     'options': {
         'timeout': 3600
     }

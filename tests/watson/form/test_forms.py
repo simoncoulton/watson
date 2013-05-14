@@ -132,7 +132,7 @@ class TestFormProcessingCsrfRequest(object):
     def setup(self):
         environ = sample_environ(HTTP_COOKIE='watson.session=123456;', REQUEST_METHOD='POST')
         environ['wsgi.input'] = BufferedReader(BytesIO(b'form_csrf_token=123456&test=blah'))
-        self.request = create_request_from_environ(environ, 'watson.http.sessions.MemoryStorage')
+        self.request = create_request_from_environ(environ, 'watson.http.sessions.Memory')
 
     def teardown(self):
         self.request.session.destroy()

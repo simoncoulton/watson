@@ -79,7 +79,7 @@ class TestBaseHttpController(object):
         router = Router({'test': {'path': '/test'}})
         environ = sample_environ(PATH_INFO='/', REQUEST_METHOD='POST')
         environ['wsgi.input'] = BufferedReader(BytesIO(b'post_var_one=test&post_var_two=blah'))
-        base.request = create_request_from_environ(environ, 'watson.http.sessions.MemoryStorage')
+        base.request = create_request_from_environ(environ, 'watson.http.sessions.Memory')
         base.container = Mock()
         base.container.get.return_value = router
         response = base.redirect('test')

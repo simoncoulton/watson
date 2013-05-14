@@ -2,18 +2,18 @@
 # TODO: MemcachedStorage, DbStorageMixin, MySqlStorage, MongoStorage, RedisStorage
 from watson.common.imports import load_definition_from_string
 from watson.http.sessions.base import StorageMixin, COOKIE_KEY
-from watson.http.sessions.file import FileStorage
-from watson.http.sessions.memory import MemoryStorage
-from watson.http.sessions.memcache import MemcacheStorage
+from watson.http.sessions.file import Storage as File
+from watson.http.sessions.memory import Storage as Memory
+from watson.http.sessions.memcache import Storage as Memcache
 
 
-__all__ = ['StorageMixin', 'FileStorage', 'MemoryStorage', 'MemcacheStorage', 'SessionMixin']
+__all__ = ['StorageMixin', 'File', 'Memory', 'Memcache', 'SessionMixin']
 
 
 class SessionMixin(object):
     """Provides a mixin for Request objects to utilize sessions.
     """
-    _session_class = 'watson.http.sessions.FileStorage'
+    _session_class = 'watson.http.sessions.File'
     _session_options = None
     _session = None
 

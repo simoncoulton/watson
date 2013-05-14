@@ -2,7 +2,7 @@
 from watson.http.sessions.base import StorageMixin
 
 
-class MemoryStorage(StorageMixin):
+class Storage(StorageMixin):
     """A ram based storage adapter for session data.
     """
     storage = {}

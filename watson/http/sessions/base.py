@@ -3,6 +3,7 @@ import datetime
 from hashlib import sha1
 from random import random
 from watson.common.contextmanagers import ignored
+from watson.common.imports import get_qualified_name
 
 
 COOKIE_KEY = 'watson.session'
@@ -181,7 +182,7 @@ class StorageMixin(dict):
             yield (key, value)
 
     def __repr__(self):
-        return '<watson.http.sessions.{0} id:{1}>'.format(self.__class__.__name__, self.id)
+        return '<{0} id:{1}>'.format(get_qualified_name(self), self.id)
 
     def _load(self):
         raise Exception('_load must be implemented')

@@ -11,7 +11,7 @@ class TestHasCsrf(object):
         self.protected_form = has_csrf(UnprotectedForm)
         environ = sample_environ(REQUEST_METHOD='POST')
         environ['wsgi.input'] = BufferedReader(BytesIO(b'test=blah'))
-        self.request = create_request_from_environ(environ, 'watson.http.sessions.MemoryStorage')
+        self.request = create_request_from_environ(environ, 'watson.http.sessions.Memory')
 
     def test_add_csrf_field_to_form(self):
         assert not hasattr(UnprotectedForm, 'csrf_token')
