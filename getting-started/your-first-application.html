@@ -764,26 +764,26 @@ If you have retrieved the application from a VCS then you would make a copy of <
 <p><span class="sub">app/controllers/index.py</span></p>
 
 <div class="highlight"><pre><code class="python"><span class="kn">from</span> <span class="nn">watson</span> <span class="kn">import</span> <span class="n">__version__</span>
-<span class="kn">from</span> <span class="nn">watson.mvc.controllers</span> <span class="kn">import</span> <span class="n">RestController</span>
+<span class="kn">from</span> <span class="nn">watson.mvc</span> <span class="kn">import</span> <span class="n">controllers</span>
 
-<span class="k">class</span> <span class="nc">Index</span><span class="p">(</span><span class="n">RestController</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Index</span><span class="p">(</span><span class="n">controllers</span><span class="o">.</span><span class="n">Rest</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">GET</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s">&#39;Welcome to Watson v{0}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">__version__</span><span class="p">)</span>
 </code></pre></div>
 
-<p>Being a RestController any request will be routed to the instance method matching the HTTP_REQUEST_METHOD environ variable from the associated request. One of the benefits of using a RestController is that you no longer need to check the request method to determine how you should respond.</p>
+<p>Being a Rest controller any request will be routed to the instance method matching the HTTP_REQUEST_METHOD environ variable from the associated request. One of the benefits of using a Rest controller is that you no longer need to check the request method to determine how you should respond.</p>
 
-<p>An alternative would be to use an ActionController instead. This would be represented in the following way:</p>
+<p>An alternative would be to use an Action controller instead. This would be represented in the following way:</p>
 
 <div class="highlight"><pre><code class="python"><span class="kn">from</span> <span class="nn">watson</span> <span class="kn">import</span> <span class="n">__version__</span>
-<span class="kn">from</span> <span class="nn">watson.mvc.controllers</span> <span class="kn">import</span> <span class="n">ActionController</span>
+<span class="kn">from</span> <span class="nn">watson.mvc</span> <span class="kn">import</span> <span class="n">controllers</span>
 
-<span class="k">class</span> <span class="nc">Index</span><span class="p">(</span><span class="n">ActionController</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Index</span><span class="p">(</span><span class="n">controllers</span><span class="o">.</span><span class="n">Action</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">index_action</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s">&#39;Welcome to Watson v{0}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">__version__</span><span class="p">)</span>
 </code></pre></div>
 
-<p>All ActionController methods are suffixed with _action. For a more indepth look at what functions a controller can perform, check out the <a href="/watson/common-usage/controllers.html">Common Usage area</a> for controllers. For a general overview of how controllers are used within Watson, check out the <a href="/watson/key-concepts/mvc.html#controllers">Mvc Key Concept</a> area.</p>
+<p>All Action controller methods are suffixed with _action. For a more indepth look at what functions a controller can perform, check out the <a href="/watson/common-usage/controllers.html">Common Usage area</a> for controllers. For a general overview of how controllers are used within Watson, check out the <a href="/watson/key-concepts/mvc.html#controllers">Mvc Key Concept</a> area.</p>
 
 <p>The presentation layer (or view) is matched based on lowercased versions of the the class name and action of the controller. For the above request the following view is rendered:</p>
 

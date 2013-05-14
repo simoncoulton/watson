@@ -757,13 +757,13 @@ There are also a set of templates defined, which allows you to override template
 
 <h4>Session</h4>
 
-<p>By default Watson will use FileStorage for session storage, which stores the contents of each session in their own file
+<p>By default Watson will use File for session storage, which stores the contents of each session in their own file
 within your systems temporary directory (unless otherwise specified in the config).</p>
 
 <p><span class="sub">watson.mvc.config</span></p>
 
 <div class="highlight"><pre><code class="python"><span class="n">session</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">&#39;class&#39;</span><span class="p">:</span> <span class="s">&#39;watson.http.sessions.FileStorage&#39;</span><span class="p">,</span>
+    <span class="s">&#39;class&#39;</span><span class="p">:</span> <span class="s">&#39;watson.http.sessions.File&#39;</span><span class="p">,</span>
     <span class="s">&#39;options&#39;</span><span class="p">:</span> <span class="p">{}</span>  <span class="c"># a dict of options for the storage class</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -777,19 +777,19 @@ within your systems temporary directory (unless otherwise specified in the confi
 <p><span class="sub">watson.mvc.config</span></p>
 
 <div class="highlight"><pre><code class="python"><span class="n">events</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="n">events</span><span class="o">.</span><span class="n">EXCEPTION_EVENT</span><span class="p">:</span> <span class="p">[(</span><span class="s">&#39;app_exception_listener&#39;</span><span class="p">,)],</span>
-    <span class="n">events</span><span class="o">.</span><span class="n">INIT_EVENT</span><span class="p">:</span> <span class="p">[</span>
+    <span class="n">events</span><span class="o">.</span><span class="n">EXCEPTION</span><span class="p">:</span> <span class="p">[(</span><span class="s">&#39;app_exception_listener&#39;</span><span class="p">,)],</span>
+    <span class="n">events</span><span class="o">.</span><span class="n">INIT</span><span class="p">:</span> <span class="p">[</span>
         <span class="p">(</span><span class="s">&#39;watson.debug.profilers.ApplicationInitListener&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
     <span class="p">],</span>
-    <span class="n">events</span><span class="o">.</span><span class="n">ROUTE_MATCH_EVENT</span><span class="p">:</span> <span class="p">[(</span><span class="s">&#39;watson.mvc.listeners.RouteListener&#39;</span><span class="p">,)],</span>
-    <span class="n">events</span><span class="o">.</span><span class="n">DISPATCH_EXECUTE_EVENT</span><span class="p">:</span> <span class="p">[(</span><span class="s">&#39;app_dispatch_execute_listener&#39;</span><span class="p">,)],</span>
-    <span class="n">events</span><span class="o">.</span><span class="n">RENDER_VIEW_EVENT</span><span class="p">:</span> <span class="p">[(</span><span class="s">&#39;app_render_listener&#39;</span><span class="p">,)],</span>
+    <span class="n">events</span><span class="o">.</span><span class="n">ROUTE_MATCH</span><span class="p">:</span> <span class="p">[(</span><span class="s">&#39;watson.mvc.listeners.RouteListener&#39;</span><span class="p">,)],</span>
+    <span class="n">events</span><span class="o">.</span><span class="n">DISPATCH_EXECUTE</span><span class="p">:</span> <span class="p">[(</span><span class="s">&#39;app_dispatch_execute_listener&#39;</span><span class="p">,)],</span>
+    <span class="n">events</span><span class="o">.</span><span class="n">RENDER_VIEW</span><span class="p">:</span> <span class="p">[(</span><span class="s">&#39;app_render_listener&#39;</span><span class="p">,)],</span>
 <span class="p">}</span>
 </code></pre></div>
 
 <h3><a id="extending"></a>Extending the Configuration</h3>
 
-<p>There are times when you may want to allow other developers to get access to your configuration from dependencies retrieved from the 
+<p>There are times when you may want to allow other developers to get access to your configuration from dependencies retrieved from the
 container. This can easily be achieved by the use of lambda functions.</p>
 
 <p>First create the settings you wish to retrieve in your settings:</p>
