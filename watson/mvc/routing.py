@@ -134,6 +134,8 @@ class Route(dict):
             'path': path
         })
         super(Route, self).__init__(*args, **kwargs)
+        if 'regex' in kwargs:
+            self.regex = re.compile(kwargs['regex'])
         if not self.regex:
             self.regex, self.segments = self.__create_regex_from_segment_path(self['path'], self.get('requires', {}))
         if 'format' in self.get('requires', ()):
