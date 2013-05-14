@@ -327,7 +327,7 @@ class Form(TagMixin):
             len(self))
 
 
-class MultipartForm(Form):
+class Multipart(Form):
     """Convenience class for forms that should be multipart/form-data.
 
     By default, the Form class will automatically detect whether or not
@@ -335,4 +335,4 @@ class MultipartForm(Form):
     """
     def __init__(self, name, method='post', action=None, **kwargs):
         kwargs['enctype'] = 'multipart/form-data'
-        super(MultipartForm, self).__init__(name, method, action, **kwargs)
+        super(Multipart, self).__init__(name, method, action, **kwargs)

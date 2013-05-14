@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
-from watson.form.forms import Form, MultipartForm
+from watson.form.forms import Form, Multipart
 
-__all__ = ['Form', 'MultipartForm']
+__all__ = ['Form', 'Multipart']
