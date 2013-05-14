@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Support functions, classes
 from wsgiref import util
-from watson.console.command import BaseCommand
+from watson.console import command
 from watson.mvc import controllers
 from watson.mvc.views import Model
 
@@ -45,11 +45,11 @@ class TestController(controllers.Rest):
         return 'Posted Hello World!'
 
 
-class SampleNonStringCommand(BaseCommand):
+class SampleNonStringCommand(command.Base):
     name = 'nonstring'
 
 
-class SampleStringCommand(BaseCommand):
+class SampleStringCommand(command.Base):
     name = 'string'
 
     def execute(self):

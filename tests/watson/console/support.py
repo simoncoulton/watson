@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from watson.console import ConsoleError
-from watson.console.command import BaseCommand
+from watson.console import command
 
 
-class SampleNonStringCommand(BaseCommand):
+class SampleNonStringCommand(command.Base):
     name = 'nonstring'
     help = 'Some help for SampleNonStringCommand'
 
@@ -11,7 +11,7 @@ class SampleNonStringCommand(BaseCommand):
         return True
 
 
-class SampleStringCommand(BaseCommand):
+class SampleStringCommand(command.Base):
     name = 'string'
     help = 'Some help for SampleStringCommand'
 
@@ -19,11 +19,11 @@ class SampleStringCommand(BaseCommand):
         raise ConsoleError('Something went wrong')
 
 
-class SampleNoHelpNoExecuteCommand(BaseCommand):
+class SampleNoHelpNoExecuteCommand(command.Base):
     name = 'nohelpnoexecute'
 
 
-class SampleOptionsCommand(BaseCommand):
+class SampleOptionsCommand(command.Base):
     name = 'runoptions'
     help = 'Options command!'
     arguments = [
@@ -36,7 +36,7 @@ class SampleOptionsCommand(BaseCommand):
         return None
 
 
-class SampleArgumentsCommand(BaseCommand):
+class SampleArgumentsCommand(command.Base):
     name = 'runargs'
     help = 'Arguments command!'
     arguments = [
@@ -50,7 +50,7 @@ class SampleArgumentsCommand(BaseCommand):
         return False
 
 
-class SampleArgumentsWithOptionsCommand(BaseCommand):
+class SampleArgumentsWithOptionsCommand(command.Base):
     name = 'runargsoptions'
     help = 'Arguments/Options command!'
     arguments = [
