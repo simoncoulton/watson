@@ -6,7 +6,7 @@ from watson.common.contextmanagers import ignored
 from watson.http.sessions.base import StorageMixin
 
 
-class FileStorage(StorageMixin):
+class Storage(StorageMixin):
     """A file based storage adapter for session data.
 
     By default it will store data in the systems temp directory, however this
@@ -17,12 +17,12 @@ class FileStorage(StorageMixin):
 
     def __init__(self, id=None, timeout=None, autosave=True, storage=None):
         """
-        Initialize the FileStorage object.
+        Initialize the File Storage object.
 
         Args:
             storage: where the files should be stored
         """
-        super(FileStorage, self).__init__(id, timeout, autosave)
+        super(Storage, self).__init__(id, timeout, autosave)
         if storage and os.path.exists(storage):
             self.storage = storage
         else:

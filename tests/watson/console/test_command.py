@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 from nose.tools import raises
-from watson.console.command import BaseCommand, find_commands_in_module
+from watson.console.command import Base, find_commands_in_module
 from tests.watson.console import support
 
 
 class TestBaseCommand(object):
     def test_init(self):
-        command = BaseCommand()
+        command = Base()
         assert not command.arguments
 
     @raises(NotImplementedError)
     def test_execute(self):
-        command = BaseCommand()
+        command = Base()
         command()
 
 

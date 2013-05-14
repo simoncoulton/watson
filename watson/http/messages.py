@@ -244,6 +244,8 @@ class Request(MessageMixin, SessionMixin):
         Returns:
             Boolean
         """
+        if 'Https' in self.headers:
+            return self.headers['Https'].lower() == 'https'
         return self.url.scheme.lower() == 'https'
 
     def is_method(self, method):

@@ -6,8 +6,9 @@ title: A Python 3 Web Framework
 
 > It's elementary my dear Watson
 
-Watson is an easy to use framework designed to get out of your way and let you code your application rather than spend time wrangling with the framework. It follows the convention over configuration ideal, although the convention can be overriden if required. Out of the box it comes with a standard set of defaults to allow you to get coding straight away!
+[![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=master)](https://github.com/simoncoulton/watson) [![Coverage Status](https://coveralls.io/repos/simoncoulton/watson/badge.png)](https://coveralls.io/r/simoncoulton/watson)
 
+Watson is an easy to use framework designed to get out of your way and let you code your application rather than spend time wrangling with the framework. It follows the convention over configuration ideal, although the convention can be overriden if required. Out of the box it comes with a standard set of defaults to allow you to get coding straight away!
 
 ### Requirements
 Watson is designed for Python 3.3 and up.
@@ -22,10 +23,14 @@ These will be installed automatically if you have installed Watson via pip.
 ### Optional Dependencies
 Some packages within Watson require third party packages to run correctly, these include:
 
-* Memcached <span class="sub">pip package: python3-memcached</span>
-* Redis <span class="sub">pip package: redis</span>
+* [Memcached](http://pypi.python.org/pypi/python3-memcached/) <span class="sub">pip package: python3-memcached</span>
+* [Redis](https://github.com/andymccurdy/redis-py) <span class="sub">pip package: redis</span>
 
-Notes about these dependencies can be found within the relevant documentation in the [Reference Library](/reference-library).
+Notes about these dependencies can be found within the relevant documentation in the [Reference Library]({{ site.baseurl }}/reference-library).
+
+### Testing
+
+Watson can be tested with both py.test and nose. 
 
 ### Contributing
 If you would like to contribute to Watson, please feel free to issue a pull request via Github with the associated tests for your code.

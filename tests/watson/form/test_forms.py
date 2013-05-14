@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from io import BytesIO, BufferedReader
 from nose.tools import raises
-from watson.form import Form, MultipartForm
+from watson.form import Form, Multipart
 from watson.http.messages import create_request_from_environ
 from tests.watson.form.support import LoginForm, UploadForm, User, form_user_mapping, Contact, Other, sample_environ, ProtectedForm
 
@@ -120,11 +120,11 @@ class TestForm(object):
 
 class TestMultiPartForm(object):
     def test_multi_part(self):
-        form = MultipartForm('test')
+        form = Multipart('test')
         assert form.enctype == 'multipart/form-data'
 
     def test_form_start_tag(self):
-        form = MultipartForm('test')
+        form = Multipart('test')
         assert form.open() == '<form action="/" enctype="multipart/form-data" method="post" name="test">'
 
 
@@ -132,7 +132,7 @@ class TestFormProcessingCsrfRequest(object):
     def setup(self):
         environ = sample_environ(HTTP_COOKIE='watson.session=123456;', REQUEST_METHOD='POST')
         environ['wsgi.input'] = BufferedReader(BytesIO(b'form_csrf_token=123456&test=blah'))
-        self.request = create_request_from_environ(environ, 'watson.http.sessions.MemoryStorage')
+        self.request = create_request_from_environ(environ, 'watson.http.sessions.Memory')
 
     def teardown(self):
         self.request.session.destroy()

@@ -2,7 +2,7 @@
 from watson.common.contextmanagers import ignored
 
 
-class BaseCommand(object):
+class Base(object):
     """The base command that outlines the required structure for a console
     command.
 
@@ -75,6 +75,6 @@ def find_commands_in_module(module):
     for key in dir(module):
         item = getattr(module, key)
         with ignored(Exception):
-            if issubclass(item, BaseCommand) and item != BaseCommand:
+            if issubclass(item, Base) and item != Base:
                 commands.append(item)
     return commands

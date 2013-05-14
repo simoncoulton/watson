@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from watson.common.imports import get_qualified_name
-from watson.events.collections import ListenerCollection, ResultCollection
-from watson.events.types import Event
+from watson.events import collections, types
 
 
 class EventDispatcher(object):
@@ -53,14 +52,14 @@ class EventDispatcher(object):
         """
         event = str(event)
         if event not in self.events:
-            self.events[event] = ListenerCollection()
+            self.events[event] = collections.Listener()
         self.events[event].add(callback, int(priority), bool(only_once))
         return self.events[event]
 
     def remove(self, event, callback=None):
         """Remove an event listener from the dispatcher.
 
-        Removes an event listener from the relevant ListenerCollection.
+        Removes an event listener from the relevant Listener.
         If no callback is specified, all event listeners for that event are
         removed.
 
@@ -69,11 +68,11 @@ class EventDispatcher(object):
             callable callback: A callable function to be triggered
 
         Returns:
-            ListenerCollection: A list of listeners attached to the event
+            Listener: A list of listeners attached to the event
         """
         event = str(event)
         if event not in self or not callback:
-            self.events[event] = ListenerCollection()
+            self.events[event] = collections.Listener()
         if callback:
             self.events[event].remove(callback)
         return self.events[event]
@@ -93,18 +92,18 @@ class EventDispatcher(object):
 
         Dispatches an event to all associated listeners and returns a
         list of results. If the event is stopped (Event.stopped) then the
-        ResultCollection returned will only contain the response from the
+        Result returned will only contain the response from the
         first listener in the stack.
 
         Args:
             watson.events.types.Event event: The event to trigger
 
         Returns:
-            ResultCollection: A list of all the responses
+            Result: A list of all the responses
         """
-        if not isinstance(event, Event):
+        if not isinstance(event, types.Event):
             raise TypeError('event must be of type watson.events.type.Event')
-        results = ResultCollection()
+        results = collections.Result()
         event.params['dispatcher'] = self
         if event.name in self.events:
             collection = self.events[event.name]

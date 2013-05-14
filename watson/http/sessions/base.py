@@ -3,6 +3,7 @@ import datetime
 from hashlib import sha1
 from random import random
 from watson.common.contextmanagers import ignored
+from watson.common.imports import get_qualified_name
 
 
 COOKIE_KEY = 'watson.session'
@@ -55,23 +56,23 @@ class StorageMixin(dict):
         """
         The cookie params used when saving the session id as a cookie.
         """
-        return self._cookie_params or {
-            'expires': 0,
-            'path': '/',
-            'domain': None,
-            'secure': False,
-            'httponly': True,
-            'comment': 'Watson session id'
-        }
+        if not self._cookie_params:
+            self._cookie_params = {
+                'expires': 0,
+                'path': '/',
+                'domain': None,
+                'secure': False,
+                'httponly': True,
+                'comment': 'Watson session id'
+            }
+        return self._cookie_params
 
     @cookie_params.setter
     def cookie_params(self, value):
         """
         Set a dict of cookie params to be used when saving the session id
         """
-        if not self._cookie_params:
-            self._cookie_params = self.cookie_params
-        self._cookie_params.update(value)
+        self.cookie_params.update(value)
 
     def __init__(self, id=None, timeout=None, autosave=True):
         """
@@ -181,7 +182,7 @@ class StorageMixin(dict):
             yield (key, value)
 
     def __repr__(self):
-        return '<watson.http.sessions.{0} id:{1}>'.format(self.__class__.__name__, self.id)
+        return '<{0} id:{1}>'.format(get_qualified_name(self), self.id)
 
     def _load(self):
         raise Exception('_load must be implemented')

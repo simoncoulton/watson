@@ -5,13 +5,13 @@ from watson.events.types import Event
 from watson.http.messages import create_request_from_environ
 from watson.mvc.routing import Router, RouteMatch
 from watson.mvc.exceptions import NotFoundError
-from watson.mvc.listeners import BaseListener, DispatchExecuteListener, ExceptionListener, RouteListener, RenderListener
+from watson.mvc import listeners
 
 
 class TestBaseListener(object):
     @raises(NotImplementedError)
     def test_missing_call(self):
-        listener = BaseListener()
+        listener = listeners.Base()
         listener('test')
 
 
@@ -25,13 +25,13 @@ class TestRouteListener(object):
         return event
 
     def test_response(self):
-        listener = RouteListener()
+        listener = listeners.Route()
         result = listener(self.create_event())
         assert isinstance(result, RouteMatch)
 
     @raises(NotFoundError)
     def test_not_found(self):
-        listener = RouteListener()
+        listener = listeners.Route()
         listener(self.create_event(PATH_INFO='/test'))
 
 

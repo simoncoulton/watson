@@ -2,7 +2,7 @@
 import datetime
 from unittest.mock import Mock
 from nose.tools import raises
-from watson.http.sessions import MemcacheStorage
+from watson.http import sessions
 
 
 class TestMemcacheStorage(object):
@@ -10,18 +10,18 @@ class TestMemcacheStorage(object):
         self.mock_memcache = Mock()
 
     def test_create(self):
-        session = MemcacheStorage(id=123, timeout=30, autosave=False)
+        session = sessions.Memcache(id=123, timeout=30, autosave=False)
         assert session.autosave is False
         assert session.timeout == 30
         assert session.id == 123
 
     @raises(ImportError)
     def test_open_connection(self):
-        session = MemcacheStorage()
+        session = sessions.Memcache()
         session.open()
 
     def test_cookie_params(self):
-        session = MemcacheStorage()
+        session = sessions.Memcache()
         params = {
             'expires': 0,
             'path': '/',
@@ -34,18 +34,18 @@ class TestMemcacheStorage(object):
         assert session.cookie_params == params
 
     def test_data(self):
-        session = MemcacheStorage()
+        session = sessions.Memcache()
         assert session.data is None
 
     def test_load(self):
-        session = MemcacheStorage()
+        session = sessions.Memcache()
         session.client = self.mock_memcache
         session.client.get.return_value = {}
         session.load()
         assert not session.data
 
     def test_load_existing_data(self):
-        session = MemcacheStorage(timeout=-1)
+        session = sessions.Memcache(timeout=-1)
         session.client = self.mock_memcache
         session.client.get.return_value = None
         session['blah'] = 'test'
@@ -53,18 +53,18 @@ class TestMemcacheStorage(object):
         assert session['blah'] is None
 
     def test_exists(self):
-        session = MemcacheStorage()
+        session = sessions.Memcache()
         session.client = self.mock_memcache
         session.client.get.return_value = None
         assert not session.exists()
 
     def test_close(self):
-        session = MemcacheStorage()
+        session = sessions.Memcache()
         session.client = self.mock_memcache
         assert session.close()
 
     def test_destroy(self):
-        session = MemcacheStorage()
+        session = sessions.Memcache()
         session.client = self.mock_memcache
         session['test'] = 'blah'
         session.client.get.return_value = 'blah'

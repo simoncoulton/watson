@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from nose.tools import raises
 from watson.di.container import IocContainer
-from watson.mvc.applications import HttpApplication, ConsoleApplication, BaseApplication
-from watson.mvc import config
+from watson.mvc import applications, config
 from watson.common.datastructures import module_to_dict
 from tests.watson.mvc.support import sample_environ, start_response, SampleNonStringCommand
 from tests.watson.mvc import sample_config
@@ -11,20 +10,20 @@ from tests.watson.mvc import sample_config
 class TestBaseApplication(object):
     @raises(NotImplementedError)
     def test_call(self):
-        base = BaseApplication()
+        base = applications.Base()
         base()
 
 
 class TestHttpApplication(object):
     def test_create(self):
-        application = HttpApplication()
+        application = applications.Http()
         assert isinstance(application.container, IocContainer)
         assert application.config == module_to_dict(config, '__')
-        application_module = HttpApplication(sample_config)
+        application_module = applications.Http(sample_config)
         assert application_module.config['debug']['enabled']
 
     def test_call(self):
-        application = HttpApplication({
+        application = applications.Http({
             'routes': {
                 'home': {
                     'path': '/',
@@ -43,12 +42,12 @@ class TestHttpApplication(object):
         assert response == [b'{"content": "Posted Hello World!"}']
 
     def test_raise_exception_event_not_found(self):
-        application = HttpApplication()
+        application = applications.Http()
         response = application(sample_environ(PATH_INFO='/'), start_response)
         assert '<h1>Not Found</h1>' in response[0].decode('utf-8')
 
     def test_raise_exception_event_server_error(self):
-        application = HttpApplication({
+        application = applications.Http({
             'routes': {
                 'home': {
                     'path': '/',
@@ -62,7 +61,7 @@ class TestHttpApplication(object):
         assert '<h1>Internal Server Error</h1>' in response[0].decode('utf-8')
 
     def test_application_logic_error(self):
-        application = HttpApplication({
+        application = applications.Http({
             'routes': {
                 'home': {
                     'path': '/',
@@ -84,18 +83,18 @@ class TestHttpApplication(object):
 
 class TestConsoleApplication(object):
     def test_create(self):
-        application = ConsoleApplication()
+        application = applications.Console()
         assert isinstance(application.container, IocContainer)
 
     def test_register_commands(self):
-        application = ConsoleApplication({
+        application = applications.Console({
             'commands': ['tests.watson.mvc.support.SampleStringCommand',
                          SampleNonStringCommand]
         })
         assert len(application.config['commands']) == 2
 
     def test_execute_command(self):
-        application = ConsoleApplication({
+        application = applications.Console({
             'commands': ['tests.watson.mvc.support.SampleStringCommand',
                          SampleNonStringCommand]
         }, ['py.test', 'string'])

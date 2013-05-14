@@ -4,7 +4,7 @@ from io import BytesIO, BufferedReader
 from nose.tools import raises
 from watson.http.messages import Response, Request, create_request_from_environ
 from watson.http.cookies import CookieDict
-from watson.http.sessions import MemoryStorage
+from watson.http import sessions
 from watson.common.datastructures import ImmutableMultiDict, MultiDict
 from tests.watson.http.support import sample_environ
 
@@ -42,10 +42,10 @@ class TestRequest(object):
         assert request.is_xml_http_request()
 
     def test_is_secure(self):
-        environ = sample_environ(HTTPS=True)
+        environ = sample_environ(HTTPS='HTTPS')
         environ['wsgi.url_scheme'] = 'https'
         request = create_request_from_environ(environ)
-        assert str(request) == 'GET https://127.0.0.1:80/ HTTP/1.1\r\nHost: 127.0.0.1\r\n\r\n'
+        assert str(request) == 'GET https://127.0.0.1:80/ HTTP/1.1\r\nHost: 127.0.0.1\r\nHttps: HTTPS\r\n\r\n'
         assert request.is_secure()
 
     def test_host(self):
@@ -65,9 +65,9 @@ class TestRequest(object):
 
     def test_session(self):
         environ = sample_environ(HTTP_COOKIE='watson.session=123456;')
-        request = create_request_from_environ(environ, 'watson.http.sessions.MemoryStorage')
+        request = create_request_from_environ(environ, 'watson.http.sessions.Memory')
         assert request.session.id == '123456'
-        assert isinstance(request.session, MemoryStorage)
+        assert isinstance(request.session, sessions.Memory)
 
     @raises(TypeError)
     def test_create_invalid(self):
@@ -96,8 +96,8 @@ class TestResponse(object):
     def test_output(self):
         response = Response(200, body='Something here')
         response.headers.add('Content-Type', 'text/html')
-        string_output = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: 14\r\n\r\nSomething here"
-        raw_output = b'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: 14\r\n\r\nSomething here'
+        string_output = "HTTP/1.1 200 OK\r\nContent-Length: 14\r\nContent-Type: text/html\r\n\r\nSomething here"
+        raw_output = b'HTTP/1.1 200 OK\r\nContent-Length: 14\r\nContent-Type: text/html\r\n\r\nSomething here'
         assert str(response) == string_output
         assert response.raw() == raw_output
 

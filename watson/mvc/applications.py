@@ -15,7 +15,7 @@ from watson.mvc import events
 from watson.support.console import commands as DefaultConsoleCommands
 
 
-class BaseApplication(ContainerAware, EventDispatcherAware):
+class Base(ContainerAware, EventDispatcherAware):
     """The core application structure for a Watson application.
 
     It makes heavy use of the IocContainer and EventDispatcher classes to handle
@@ -35,7 +35,7 @@ class BaseApplication(ContainerAware, EventDispatcherAware):
         """Sets the configuration for the application.
 
         Usage:
-            app = BaseApplication()
+            app = Base()
             app.config = {'some': 'settings'}
 
         Args:
@@ -75,13 +75,13 @@ class BaseApplication(ContainerAware, EventDispatcherAware):
         Registers any events that are within the application configuration.
 
         Usage:
-            app = BaseApplication()
+            app = Base()
 
         Events:
-            Dispatches the INIT_EVENT.
+            Dispatches the INIT.
 
         Args:
-            mixed config: See the BaseApplication.config properties.
+            mixed config: See the Base.config properties.
         """
         self.config = config or {}
         self.dispatcher = self.container.get('shared_event_dispatcher')
@@ -96,8 +96,8 @@ class BaseApplication(ContainerAware, EventDispatcherAware):
                 except:
                     once_only = False
                 self.dispatcher.add(event, self.container.get(callback_priority_pair[0]), priority, once_only)
-        self.dispatcher.trigger(Event(events.INIT_EVENT, target=self))
-        super(BaseApplication, self).__init__()
+        self.dispatcher.trigger(Event(events.INIT, target=self))
+        super(Base, self).__init__()
 
     def __call__(self, *args, **kwargs):
         return self.run(*args, **kwargs)
@@ -106,13 +106,13 @@ class BaseApplication(ContainerAware, EventDispatcherAware):
         raise NotImplementedError('You must implement __call__')
 
 
-class HttpApplication(BaseApplication):
+class Http(Base):
     """An application structure suitable for use with the WSGI protocol.
 
     For more information regarding creating an application consult the documentation.
 
     Usage:
-        application = HttpApplication({..})
+        application = applications.Http({..})
         application(environ, start_response)
     """
     def run(self, environ, start_response):
@@ -120,7 +120,7 @@ class HttpApplication(BaseApplication):
                                               self.config['session']['class'],
                                               self.config['session'].get('options'))
         try:
-            route_result = self.dispatcher.trigger(Event(events.ROUTE_MATCH_EVENT, target=self, params={
+            route_result = self.dispatcher.trigger(Event(events.ROUTE_MATCH, target=self, params={
                 'request': request,
                 'router': self.container.get('router')
             }))
@@ -130,7 +130,7 @@ class HttpApplication(BaseApplication):
             response, view_model = self.__raise_exception_event(exception=exc, request=request)
         if route_match:
             try:
-                dispatch_event = Event(events.DISPATCH_EXECUTE_EVENT, target=self, params={
+                dispatch_event = Event(events.DISPATCH_EXECUTE, target=self, params={
                     'route_match': route_match,
                     'request': request,
                     'container': self.container
@@ -153,30 +153,30 @@ class HttpApplication(BaseApplication):
         return self.run(*args, **kwargs)
 
     def __raise_exception_event(self, **kwargs):
-        exception_event = Event(events.EXCEPTION_EVENT, target=self, params=kwargs)
+        exception_event = Event(events.EXCEPTION, target=self, params=kwargs)
         exception_result = self.dispatcher.trigger(exception_event)
         return Response(kwargs['exception'].status_code), exception_result.first()
 
     def __render(self, **kwargs):
         kwargs['container'] = self.container
-        render_event = Event(events.RENDER_VIEW_EVENT, target=self, params=kwargs)
+        render_event = Event(events.RENDER_VIEW, target=self, params=kwargs)
         self.container.add('render_event_params', kwargs)
         self.dispatcher.trigger(render_event)
 
 
-class ConsoleApplication(BaseApplication):
+class Console(Base):
     """An application structure suitable for the command line.
 
     For more information regarding creating an application consult the documentation.
 
     Usage:
-        application = ConsoleApplication({...})
+        application = applications.Console({...})
         application()
     """
     runner = None
 
     def __init__(self, config=None, argv=None):
-        super(ConsoleApplication, self).__init__(config)
+        super(Console, self).__init__(config)
         self.config = dict_deep_update({
             'commands': find_commands_in_module(DefaultConsoleCommands)
         }, self.config)

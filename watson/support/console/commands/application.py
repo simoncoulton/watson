@@ -7,13 +7,13 @@ from string import Template
 from watson.common.contextmanagers import ignored
 from watson.common.imports import load_definition_from_string
 from watson.console import ConsoleError, colors
-from watson.console.command import BaseCommand
+from watson.console import command
 from watson.di import ContainerAware
 from watson.http.messages import create_request_from_environ
 from watson.util.server import make_dev_server
 
 
-class CreateApplication(BaseCommand, ContainerAware):
+class CreateApplication(command.Base, ContainerAware):
     name = 'newproject'
     help = 'Creates a new project, defaults to the current working directory.'
     arguments = [
@@ -88,7 +88,7 @@ class CreateApplication(BaseCommand, ContainerAware):
         os.chmod(files[-1][0], st.st_mode | stat.S_IEXEC)
 
 
-class RunDevelopmentServer(BaseCommand, ContainerAware):
+class RunDevelopmentServer(command.Base, ContainerAware):
     name = 'rundev'
     help = 'Runs the development server for the current application.'
 
@@ -99,7 +99,7 @@ class RunDevelopmentServer(BaseCommand, ContainerAware):
         make_dev_server(app, do_reload=True, script_dir=SCRIPT_DIR, public_dir=PUBLIC_DIR)
 
 
-class RunTests(BaseCommand, ContainerAware):
+class RunTests(command.Base, ContainerAware):
     name = 'runtests'
     help = 'Runs the unit tests for the project.'
 
@@ -126,7 +126,7 @@ class RunTests(BaseCommand, ContainerAware):
             _no_application_error()
 
 
-class Routes(BaseCommand, ContainerAware):
+class Routes(command.Base, ContainerAware):
     name = 'routes'
     help = 'Aids in the debugging of routes associated.'
     arguments = [
@@ -176,10 +176,10 @@ BLANK_PY_TEMPLATE = """# -*- coding: utf-8 -*-
 """
 
 APP_PY_TEMPLATE = """# -*- coding: utf-8 -*-
-from watson.mvc.applications import HttpApplication
+from watson.mvc import applications
 from ${app_name}.config import config
 
-application = HttpApplication(config)
+application = applications.Http(config)
 """
 
 ROUTES_PY_TEMPLATE = """# -*- coding: utf-8 -*-
@@ -225,10 +225,10 @@ __all__ = ['Index']
 
 SAMPLE_CONTROLLER_TEMPLATE = """# -*- coding: utf-8 -*-
 from watson import __version__
-from watson.mvc.controllers import RestController
+from watson.mvc import controllers
 
 
-class Index(RestController):
+class Index(controllers.Rest):
     def GET(self):
         return 'Welcome to Watson v{0}!'.format(__version__)
 """
@@ -263,7 +263,7 @@ import sys
 
 SCRIPT_DIR, SCRIPT_FILE = os.path.split(os.path.abspath(__file__))
 APP_MODULE = '${app_name}'
-APP_DIR = os.path.join(SCRIPT_DIR, '${app_name}')
+APP_DIR = os.path.join(SCRIPT_DIR, APP_MODULE)
 PUBLIC_DIR = os.path.join(SCRIPT_DIR, 'public')
 try:
     import watson
@@ -271,10 +271,10 @@ except:
     sys.stdout.write('You must have Watson installed, please run `pip install watson3`\\n')
     sys.exit(1)
 
-from watson.mvc.applications import ConsoleApplication
+from watson.mvc import applications
 from ${app_name}.config import config
 
 if __name__ == '__main__':
-    application = ConsoleApplication(config)
+    application = applications.Console(config)
     application()
 """

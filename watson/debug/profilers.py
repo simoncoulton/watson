@@ -7,7 +7,7 @@ from watson.di import ContainerAware
 
 class ApplicationInitListener(ContainerAware):
     """
-    A listener that will be triggered on watson.mvc.events.INIT_EVENT.
+    A listener that will be triggered on watson.mvc.events.INIT.
     Retrieves an instance of the Profiler from the container and overrides
     the 'run' method.
     """

@@ -2,10 +2,10 @@
 from collections import namedtuple
 from watson.common.imports import get_qualified_name
 
-Listener = namedtuple('Listener', 'callback priority only_once')
+ListenerDefinition = namedtuple('Listener', 'callback priority only_once')
 
 
-class ListenerCollection(list):
+class Listener(list):
     """A list of listeners to be used in an EventDispatcher.
 
     A Listener Collection is a list of callbacks that are to be triggered
@@ -29,7 +29,7 @@ class ListenerCollection(list):
         if not hasattr(callback, '__call__'):
             name = get_qualified_name(callback)
             raise TypeError('Callback {0} must be callable.'.format(name))
-        self.append(Listener(callback, int(priority), bool(only_once)))
+        self.append(ListenerDefinition(callback, int(priority), bool(only_once)))
         self.require_sort = True
         return self
 
@@ -41,7 +41,7 @@ class ListenerCollection(list):
         """
         for listener in list(self):
             if listener.callback == callback:
-                super(ListenerCollection, self).remove(listener)
+                super(Listener, self).remove(listener)
 
     def sort_priority(self):
         """Sort the collection based on the priority of the callbacks.
@@ -57,7 +57,7 @@ class ListenerCollection(list):
         return '<{0} callbacks:{1}>'.format(get_qualified_name(self), len(self))
 
 
-class ResultCollection(list):
+class Result(list):
     """A list of responses from a EventDispatcher.trigger call.
 
     A result collection contains all the resulting output from an event that has

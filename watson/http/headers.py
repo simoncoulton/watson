@@ -75,7 +75,7 @@ class HeaderDict(MultiDict):
             A list of tuple pairs
         """
         tuple_pairs = []
-        for field, value in self.items():
+        for field, value in sorted(self.items()):
             if (isinstance(value, list)):
                 for multi_val in value:
                     tuple_pairs.append((field, multi_val))
@@ -90,7 +90,7 @@ class HeaderDict(MultiDict):
 def is_header(field):
     """Determine if a field is an acceptable http header.
     """
-    return field[:5] == 'HTTP_' or field in ('CONTENT_TYPE', 'CONTENT_LENGTH')
+    return field[:5] == 'HTTP_' or field in ('CONTENT_TYPE', 'CONTENT_LENGTH', 'HTTPS')
 
 
 def http_header(field):

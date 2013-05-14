@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from nose.tools import raises
 from watson.events.dispatcher import EventDispatcher, EventDispatcherAware
-from watson.events.collections import ListenerCollection
+from watson.events import collections
 from watson.events.types import Event
 from tests.watson.events.support import SampleDispatcherAware
 
@@ -17,7 +17,7 @@ class TestEventDispatcher(object):
         collection = dispatcher.add('SampleEvent', func)
         assert len(dispatcher.events) == 1
         assert len(dispatcher.events['SampleEvent']) == 1
-        assert isinstance(collection, ListenerCollection)
+        assert isinstance(collection, collections.Listener)
 
     def test_remove_individual_listener(self):
         dispatcher = EventDispatcher()
