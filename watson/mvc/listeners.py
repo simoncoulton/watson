@@ -2,21 +2,20 @@
 # TODO: Refactor these into single functions rather than classes where appropriate
 import os
 import sys
+from watson.common.imports import get_qualified_name
 from watson.di import ContainerAware
 from watson.http import MIME_TYPES
 from watson.http.messages import Response
-from watson.mvc.exceptions import NotFoundError, InternalServerError
+from watson.mvc.exceptions import NotFoundError, InternalServerError, ExceptionHandler
 from watson.mvc.views import Model
-from watson.mvc.exceptions import ExceptionHandler
-from watson.common.imports import get_qualified_name
 
 
-class BaseListener(object):
+class Base(object):
     def __call__(self, event):
         raise NotImplementedError('You must implement __call__')
 
 
-class RouteListener(BaseListener):
+class Route(Base):
     def __call__(self, event):
         router, request = event.params['router'], event.params['request']
         matches = router.matches(request)
@@ -26,7 +25,7 @@ class RouteListener(BaseListener):
         return matches[0]
 
 
-class DispatchExecuteListener(BaseListener):
+class DispatchExecute(Base):
     def __init__(self, templates):
         self.templates = templates
 
@@ -63,7 +62,7 @@ class DispatchExecuteListener(BaseListener):
         return response
 
 
-class ExceptionListener(BaseListener):
+class Exception_(Base):
     def __init__(self, handler, templates):
         self.handler = handler
         self.templates = templates
@@ -76,7 +75,7 @@ class ExceptionListener(BaseListener):
                      data=self.handler(sys.exc_info(), event.params))
 
 
-class RenderListener(BaseListener):
+class Render(Base):
     def __init__(self, view_config):
         self.view_config = view_config
 

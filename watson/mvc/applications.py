@@ -78,7 +78,7 @@ class Base(ContainerAware, EventDispatcherAware):
             app = Base()
 
         Events:
-            Dispatches the INIT_EVENT.
+            Dispatches the INIT.
 
         Args:
             mixed config: See the Base.config properties.
@@ -96,7 +96,7 @@ class Base(ContainerAware, EventDispatcherAware):
                 except:
                     once_only = False
                 self.dispatcher.add(event, self.container.get(callback_priority_pair[0]), priority, once_only)
-        self.dispatcher.trigger(Event(events.INIT_EVENT, target=self))
+        self.dispatcher.trigger(Event(events.INIT, target=self))
         super(Base, self).__init__()
 
     def __call__(self, *args, **kwargs):
@@ -120,7 +120,7 @@ class Http(Base):
                                               self.config['session']['class'],
                                               self.config['session'].get('options'))
         try:
-            route_result = self.dispatcher.trigger(Event(events.ROUTE_MATCH_EVENT, target=self, params={
+            route_result = self.dispatcher.trigger(Event(events.ROUTE_MATCH, target=self, params={
                 'request': request,
                 'router': self.container.get('router')
             }))
@@ -130,7 +130,7 @@ class Http(Base):
             response, view_model = self.__raise_exception_event(exception=exc, request=request)
         if route_match:
             try:
-                dispatch_event = Event(events.DISPATCH_EXECUTE_EVENT, target=self, params={
+                dispatch_event = Event(events.DISPATCH_EXECUTE, target=self, params={
                     'route_match': route_match,
                     'request': request,
                     'container': self.container
@@ -153,13 +153,13 @@ class Http(Base):
         return self.run(*args, **kwargs)
 
     def __raise_exception_event(self, **kwargs):
-        exception_event = Event(events.EXCEPTION_EVENT, target=self, params=kwargs)
+        exception_event = Event(events.EXCEPTION, target=self, params=kwargs)
         exception_result = self.dispatcher.trigger(exception_event)
         return Response(kwargs['exception'].status_code), exception_result.first()
 
     def __render(self, **kwargs):
         kwargs['container'] = self.container
-        render_event = Event(events.RENDER_VIEW_EVENT, target=self, params=kwargs)
+        render_event = Event(events.RENDER_VIEW, target=self, params=kwargs)
         self.container.add('render_event_params', kwargs)
         self.dispatcher.trigger(render_event)
 
