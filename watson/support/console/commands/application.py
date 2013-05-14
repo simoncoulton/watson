@@ -225,10 +225,10 @@ __all__ = ['Index']
 
 SAMPLE_CONTROLLER_TEMPLATE = """# -*- coding: utf-8 -*-
 from watson import __version__
-from watson.mvc.controllers import RestController
+from watson.mvc import controllers
 
 
-class Index(RestController):
+class Index(controllers.Rest):
     def GET(self):
         return 'Welcome to Watson v{0}!'.format(__version__)
 """
