@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import re
-from watson.filters.base import BaseFilter
+from watson.filters import base
 from watson.html.entities import encode
 
 
-class Trim(BaseFilter):
+class Trim(base.Filter):
     """Strips whitespace from value.
     """
     def __call__(self, value):
@@ -18,7 +18,7 @@ class Trim(BaseFilter):
         return str(value).strip()
 
 
-class Upper(BaseFilter):
+class Upper(base.Filter):
     """Converts all characters to uppercase.
 
     Usage:
@@ -29,7 +29,7 @@ class Upper(BaseFilter):
         return str(value).upper()
 
 
-class Lower(BaseFilter):
+class Lower(base.Filter):
     """Converts all characters to uppercase.
 
     Usage:
@@ -40,7 +40,7 @@ class Lower(BaseFilter):
         return str(value).lower()
 
 
-class RegEx(BaseFilter):
+class RegEx(base.Filter):
     """Uses regular expressions to replace values.
 
     Usage:
@@ -93,7 +93,7 @@ class StripTags(RegEx):
         super(StripTags, self).__init__(regex, '', flags)
 
 
-class HtmlEntities(BaseFilter):
+class HtmlEntities(base.Filter):
     """Encodes all html entities.
 
     Usage:
