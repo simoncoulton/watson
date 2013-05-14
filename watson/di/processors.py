@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from types import FunctionType
-from watson.di import ContainerAware
 from watson.common.imports import get_qualified_name, load_definition_from_string
+from watson import di
 
 
-class BaseProcessor(ContainerAware):
+class Base(di.ContainerAware):
     """The base processor that all other processors should extend.
 
     When a processor is called from the container the following parameters are
@@ -20,7 +20,7 @@ class BaseProcessor(ContainerAware):
             'The processor <{}> must implement __call__'.format(get_qualified_name(self)))
 
 
-class ConstructorInjectionProcessor(BaseProcessor):
+class ConstructorInjection(Base):
     """Responsible for initializing the dependency.
 
     Responsible for initializing the dependency and injecting any required
@@ -59,7 +59,7 @@ class ConstructorInjectionProcessor(BaseProcessor):
         return initialized
 
 
-class SetterInjectionProcessor(BaseProcessor):
+class SetterInjection(Base):
     """Responsible for injecting required values into setter methods.
 
     Args:
@@ -84,7 +84,7 @@ class SetterInjectionProcessor(BaseProcessor):
         return item
 
 
-class AttributeInjectionProcessor(BaseProcessor):
+class AttributeInjection(Base):
     """Responsibile for injecting required values into attributes.
 
     Args:
@@ -100,7 +100,7 @@ class AttributeInjectionProcessor(BaseProcessor):
         return item
 
 
-class ContainerAwareProcessor(BaseProcessor):
+class ContainerAware(Base):
     """Injects the container into a dependency.
 
     Responsible for injecting the container in any class that extends
@@ -114,7 +114,7 @@ class ContainerAwareProcessor(BaseProcessor):
     """
     def __call__(self, event):
         item = event.target
-        if isinstance(item, ContainerAware):
+        if isinstance(item, di.ContainerAware):
             item.container = self.container
         return item
 

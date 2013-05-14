@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from nose.tools import raises
 from watson.di.container import IocContainer
-from tests.watson.di.support import SampleDependency
+from tests.watson.di.support import SampleDependency, sample_dependency, SampleDependencyAware
 
 
 class TestIoc(object):

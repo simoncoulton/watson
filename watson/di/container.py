@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from types import FunctionType
-from watson.di.processors import BaseProcessor
+from watson.di import processors
 from watson.events.dispatcher import EventDispatcherAware
 from watson.events.types import Event
 from watson.common.datastructures import dict_deep_update
@@ -14,12 +14,12 @@ DEFAULTS = {
     'definitions': {},
     'processors': {
         PRE_EVENT: [
-            'watson.di.processors.ConstructorInjectionProcessor',
+            'watson.di.processors.ConstructorInjection',
         ],
         POST_EVENT: [
-            'watson.di.processors.SetterInjectionProcessor',
-            'watson.di.processors.AttributeInjectionProcessor',
-            'watson.di.processors.ContainerAwareProcessor'
+            'watson.di.processors.SetterInjection',
+            'watson.di.processors.AttributeInjection',
+            'watson.di.processors.ContainerAware'
         ]
     }
 }
@@ -174,8 +174,8 @@ class IocContainer(EventDispatcherAware):
             string event: The name of the event (watson.di.container.POST_EVENT or PRE_EVENT)
             watson.di.processors.BaseProcessor processor: The processor to attach.
         """
-        if not isinstance(processor, BaseProcessor):
-            raise TypeError('Processor must be of type {0}'.format(BaseProcessor))
+        if not isinstance(processor, processors.Base):
+            raise TypeError('Processor must be of type {0}'.format(processors.Base))
         processor.container = self
         self.dispatcher.add(event, processor)
 
