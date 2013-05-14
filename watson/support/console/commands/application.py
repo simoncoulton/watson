@@ -263,7 +263,7 @@ import sys
 
 SCRIPT_DIR, SCRIPT_FILE = os.path.split(os.path.abspath(__file__))
 APP_MODULE = '${app_name}'
-APP_DIR = os.path.join(SCRIPT_DIR, '${app_name}')
+APP_DIR = os.path.join(SCRIPT_DIR, APP_MODULE)
 PUBLIC_DIR = os.path.join(SCRIPT_DIR, 'public')
 try:
     import watson
