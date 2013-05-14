@@ -7,7 +7,7 @@ from watson.http.messages import Response, Request
 from watson.common.imports import get_qualified_name
 
 
-class BaseController(ContainerAware):
+class Base(ContainerAware):
     """The interface for controller classes.
     """
     def execute(self, **kwargs):
@@ -20,7 +20,7 @@ class BaseController(ContainerAware):
         return '<{0}>'.format(get_qualified_name(self))
 
 
-class HttpControllerMixin(object):
+class HttpMixin(object):
     """A mixin for controllers that can contain http request and response objects.
 
     Attributes:
@@ -257,11 +257,11 @@ class FlashMessagesContainer(object):
         return '<{0} messages: {1}>'.format(get_qualified_name(self), len(self))
 
 
-class ActionController(BaseController, HttpControllerMixin):
+class Action(Base, HttpMixin):
     """A controller thats methods can be accessed with an _action suffix.
 
     Usage:
-        class MyController(ActionController):
+        class MyController(controllers.Action):
             def my_func_action(self):
                 return 'something'
     """
@@ -278,11 +278,11 @@ class ActionController(BaseController, HttpControllerMixin):
                 re.sub('.-', '_', kwargs.get('action', 'index').lower())]
 
 
-class RestController(BaseController, HttpControllerMixin):
+class Rest(Base, HttpMixin):
     """A controller thats methods can be accessed by the request method name.
 
     Usage:
-        class MyController(RestController):
+        class MyController(controllers.Rest):
             def GET(self):
                 return 'something'
     """
