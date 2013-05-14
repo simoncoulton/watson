@@ -2,7 +2,7 @@
 # Support functions, classes
 from wsgiref import util
 from watson.console.command import BaseCommand
-from watson.mvc.controllers import ActionController, RestController
+from watson.mvc import controllers
 from watson.mvc.views import Model
 
 
@@ -17,7 +17,7 @@ def sample_environ(**kwargs):
     return environ
 
 
-class SampleActionController(ActionController):
+class SampleActionController(controllers.Action):
     def something_action(self, **kwargs):
         return 'something_action'
 
@@ -28,7 +28,7 @@ class SampleActionController(ActionController):
         a = b
 
 
-class SampleRestController(RestController):
+class SampleRestController(controllers.Rest):
     def GET(self):
         return 'GET'
 
@@ -37,7 +37,7 @@ def sample_view_model():
     return Model(format='html', template=None, data={"test": {"nodes": {"node": ["Testing", "Another node"]}}})
 
 
-class TestController(RestController):
+class TestController(controllers.Rest):
     def GET(self):
         return 'Hello World!'
 
