@@ -271,7 +271,7 @@ except:
     sys.stdout.write('You must have Watson installed, please run `pip install watson3`\\n')
     sys.exit(1)
 
-from watson.mvc import applications Console
+from watson.mvc import applications
 from ${app_name}.config import config
 
 if __name__ == '__main__':
