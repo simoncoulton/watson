@@ -84,13 +84,13 @@ There are also a set of templates defined, which allows you to override template
 
 #### Session
 
-By default Watson will use FileStorage for session storage, which stores the contents of each session in their own file
+By default Watson will use File for session storage, which stores the contents of each session in their own file
 within your systems temporary directory (unless otherwise specified in the config).
 
 <span class="sub">watson.mvc.config</span>
 {% highlight python %}
 session = {
-    'class': 'watson.http.sessions.FileStorage',
+    'class': 'watson.http.sessions.File',
     'options': {}  # a dict of options for the storage class
 }
 {% endhighlight %}
@@ -105,19 +105,19 @@ Events are the core to the lifecycle of both a request and the initialization of
 <span class="sub">watson.mvc.config</span>
 {% highlight python %}
 events = {
-    events.EXCEPTION_EVENT: [('app_exception_listener',)],
-    events.INIT_EVENT: [
+    events.EXCEPTION: [('app_exception_listener',)],
+    events.INIT: [
         ('watson.debug.profilers.ApplicationInitListener', 1, True)
     ],
-    events.ROUTE_MATCH_EVENT: [('watson.mvc.listeners.RouteListener',)],
-    events.DISPATCH_EXECUTE_EVENT: [('app_dispatch_execute_listener',)],
-    events.RENDER_VIEW_EVENT: [('app_render_listener',)],
+    events.ROUTE_MATCH: [('watson.mvc.listeners.RouteListener',)],
+    events.DISPATCH_EXECUTE: [('app_dispatch_execute_listener',)],
+    events.RENDER_VIEW: [('app_render_listener',)],
 }
 {% endhighlight %}
 
 ### <a id="extending"></a>Extending the Configuration
 
-There are times when you may want to allow other developers to get access to your configuration from dependencies retrieved from the 
+There are times when you may want to allow other developers to get access to your configuration from dependencies retrieved from the
 container. This can easily be achieved by the use of lambda functions.
 
 First create the settings you wish to retrieve in your settings:

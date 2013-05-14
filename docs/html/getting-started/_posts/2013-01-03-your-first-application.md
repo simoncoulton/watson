@@ -93,27 +93,27 @@ A initial controller is created for you in *app_name/controllers/index.py* which
 <span class="sub">app/controllers/index.py</span>
 {% highlight python %}
 from watson import __version__
-from watson.mvc.controllers import RestController
+from watson.mvc import controllers
 
-class Index(RestController):
+class Index(controllers.Rest):
     def GET(self):
         return 'Welcome to Watson v{0}!'.format(__version__)
 {% endhighlight %}
 
-Being a RestController any request will be routed to the instance method matching the HTTP\_REQUEST\_METHOD environ variable from the associated request. One of the benefits of using a RestController is that you no longer need to check the request method to determine how you should respond.
+Being a Rest controller any request will be routed to the instance method matching the HTTP\_REQUEST\_METHOD environ variable from the associated request. One of the benefits of using a Rest controller is that you no longer need to check the request method to determine how you should respond.
 
-An alternative would be to use an ActionController instead. This would be represented in the following way:
+An alternative would be to use an Action controller instead. This would be represented in the following way:
 
 {% highlight python %}
 from watson import __version__
-from watson.mvc.controllers import ActionController
+from watson.mvc import controllers
 
-class Index(ActionController):
+class Index(controllers.Action):
     def index_action(self):
         return 'Welcome to Watson v{0}!'.format(__version__)
 {% endhighlight %}
 
-All ActionController methods are suffixed with _action. For a more indepth look at what functions a controller can perform, check out the [Common Usage area]({{ site.baseurl }}/common-usage/controllers.html) for controllers. For a general overview of how controllers are used within Watson, check out the [Mvc Key Concept]({{ site.baseurl }}/key-concepts/mvc.html#controllers) area.
+All Action controller methods are suffixed with _action. For a more indepth look at what functions a controller can perform, check out the [Common Usage area]({{ site.baseurl }}/common-usage/controllers.html) for controllers. For a general overview of how controllers are used within Watson, check out the [Mvc Key Concept]({{ site.baseurl }}/key-concepts/mvc.html#controllers) area.
 
 The presentation layer (or view) is matched based on lowercased versions of the the class name and action of the controller. For the above request the following view is rendered:
 
