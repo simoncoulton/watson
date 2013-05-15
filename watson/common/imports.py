@@ -110,19 +110,23 @@ class Resolver(abc.Finder, abc.Loader):
                 # first pass attempts to load an existing module, need to drop
                 # this loader so that we don't get any recursion.
                 self.deregister()
-                module = import_module(fullname)
-                sys.modules[fullname] = module
-                self.register()
+                import_module(fullname)
             except:
                 # second pass attempts to load the 'fake' module.
                 module_name = fullname.split('.')
-                prefix = module_name.pop(0)
-                module_name.insert(0, '{}{}'.format(prefix, '_'))
-                actual_name = ''.join(module_name)
+                if len(module_name) > 2:
+                    actual_name = module_name[2:]
+                    actual_name.insert(0, '_'.join(module_name[:2]))
+                else:
+                    actual_name = ['_'.join(module_name)]
+                actual_name = '.'.join(actual_name)
+                print(actual_name, fullname)
                 import_module(actual_name)
                 sys.modules[fullname] = sys.modules[actual_name]
                 sys.modules[fullname].__original_name__ = fullname
                 del sys.modules[actual_name]
+            finally:
+                self.register()
         return sys.modules[fullname]
 
     def module_repr(self, module):
@@ -131,14 +135,19 @@ class Resolver(abc.Finder, abc.Loader):
         Args:
             string module: The name of the module
         """
-        return "<module '{}' from '{}' aliased by '{}'>'".format(module.__name__,
-                                                                 module.__file__,
-                                                                 module.__original_name__)
+        if hasattr(module, '__original_name__'):
+            return "<module '{}' from '{}' aliased by '{}'>'".format(module.__name__,
+                                                                     module.__file__,
+                                                                     module.__original_name__)
+        else:
+            return "<module '{}' from '{}'>'".format(module.__name__,
+                                                     module.__file__)
 
     def register(self):
         """Register the resolver.
         """
-        sys.meta_path.append(self)
+        if self not in sys.meta_path:
+            sys.meta_path.append(self)
 
     def deregister(self):
         """Deregisters the resolver.
