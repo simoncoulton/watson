@@ -57,6 +57,13 @@ class TestConstructorInjection(object):
         processor = SampleProcessor()
         processor('fake event')
 
+    @raises(NameError)
+    def test_initialized_invalid_dependency(self):
+        processor = processors.ConstructorInjection()
+        processor.container = IocContainer()
+        event = sample_event('tests.watson.di.support.DoesNotExist')
+        processor(event)
+
 
 class TestSetterInjection(object):
     def test_set_from_dict(self):
