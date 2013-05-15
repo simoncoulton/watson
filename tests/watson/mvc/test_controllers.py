@@ -9,15 +9,9 @@ from tests.watson.mvc.support import SampleActionController, SampleRestControlle
 
 
 class TestNotImplementedController(object):
-    @raises(NotImplementedError)
+    @raises(TypeError)
     def test_execute_invalid(self):
         base = controllers.Base()
-        base.execute()
-
-    @raises(NotImplementedError)
-    def test_method_template_invalid(self):
-        base = controllers.Base()
-        base.get_execute_method_path()
 
 
 class TestBaseHttpController(object):

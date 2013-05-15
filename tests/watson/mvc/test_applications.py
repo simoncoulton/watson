@@ -8,10 +8,9 @@ from tests.watson.mvc import sample_config
 
 
 class TestBaseApplication(object):
-    @raises(NotImplementedError)
+    @raises(TypeError)
     def test_call(self):
-        base = applications.Base()
-        base()
+        applications.Base()
 
 
 class TestHttpApplication(object):

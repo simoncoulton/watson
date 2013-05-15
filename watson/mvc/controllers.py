@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import abc
 import collections
 import re
 from watson.di import ContainerAware
@@ -7,14 +8,16 @@ from watson.http.messages import Response, Request
 from watson.common.imports import get_qualified_name
 
 
-class Base(ContainerAware):
+class Base(ContainerAware, metaclass=abc.ABCMeta):
     """The interface for controller classes.
     """
+    @abc.abstractmethod
     def execute(self, **kwargs):
-        raise NotImplementedError('You must implement execute')
+        raise NotImplementedError('You must implement execute')  # pragma: no cover
 
+    @abc.abstractmethod
     def get_execute_method_path(self, **kwargs):
-        raise NotImplementedError('You must implement get_execute_method_path')
+        raise NotImplementedError('You must implement get_execute_method_path')  # pragma: no cover
 
     def __repr__(self):
         return '<{0}>'.format(get_qualified_name(self))

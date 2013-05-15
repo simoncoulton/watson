@@ -52,7 +52,7 @@ class TestConstructorInjection(object):
         instance = processor(event)
         assert instance.first_arg == 'blah2'
 
-    @raises(NotImplementedError)
+    @raises(TypeError)
     def test_invalid_processor(self):
         processor = SampleProcessor()
         processor('fake event')

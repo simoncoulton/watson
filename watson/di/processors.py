@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+import abc
 from types import FunctionType
 from watson.common.imports import get_qualified_name, load_definition_from_string
 from watson import di
 
 
-class Base(di.ContainerAware):
+class Base(di.ContainerAware, metaclass=abc.ABCMeta):
     """The base processor that all other processors should extend.
 
     When a processor is called from the container the following parameters are
@@ -15,6 +16,7 @@ class Base(di.ContainerAware):
         - watson.di.container.PRE_EVENT: The dict definition of the dependency
         - watson.di.container.POST_EVENT: The initialized dependency
     """
+    @abc.abstractmethod
     def __call__(self, event):
         raise NotImplementedError(
             'The processor <{}> must implement __call__'.format(get_qualified_name(self)))

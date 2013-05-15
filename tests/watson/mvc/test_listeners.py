@@ -9,10 +9,9 @@ from watson.mvc import listeners
 
 
 class TestBaseListener(object):
-    @raises(NotImplementedError)
+    @raises(TypeError)
     def test_missing_call(self):
-        listener = listeners.Base()
-        listener('test')
+        listeners.Base()
 
 
 class TestRouteListener(object):
