@@ -137,7 +137,7 @@ class FieldMixin(TagMixin):
     def render_with_label(self):
         """Render the field with the label attached.
         """
-        raise NotImplementedError('The render method has not been implemented')
+        raise NotImplementedError('The render method has not been implemented')  # pragma: no cover
 
     def __str__(self):
         return self.render()

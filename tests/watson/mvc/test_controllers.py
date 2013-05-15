@@ -2,6 +2,7 @@
 from io import BytesIO, BufferedReader
 from nose.tools import raises
 from unittest.mock import Mock
+from watson.events import types
 from watson.http.messages import Request, Response, create_request_from_environ
 from watson.mvc import controllers
 from watson.mvc.routing import Router
@@ -11,7 +12,7 @@ from tests.watson.mvc.support import SampleActionController, SampleRestControlle
 class TestNotImplementedController(object):
     @raises(TypeError)
     def test_execute_invalid(self):
-        base = controllers.Base()
+        controllers.Base()
 
 
 class TestBaseHttpController(object):
@@ -20,6 +21,16 @@ class TestBaseHttpController(object):
         base.request = Request('GET')
         assert isinstance(base.request, Request)
         assert isinstance(base.response, Response)
+
+    def test_get_event(self):
+        base = controllers.HttpMixin()
+        base.event = types.Event('test')
+        assert isinstance(base.event, types.Event)
+
+    @raises(TypeError)
+    def test_set_event(self):
+        base = controllers.HttpMixin()
+        base.event = 'test'
 
     @raises(TypeError)
     def test_invalid_request(self):
@@ -96,6 +107,10 @@ class TestBaseHttpController(object):
 
 
 class TestActionController(object):
+    def test_repr(self):
+        controller = SampleActionController()
+        assert repr(controller) == '<tests.watson.mvc.support.SampleActionController>'
+
     def test_execute_result(self):
         controller = SampleActionController()
         assert controller.execute(action='something') == 'something_action'
@@ -117,3 +132,25 @@ class TestRestController(object):
         controller = SampleRestController()
         controller.request = Request('GET')
         assert controller.get_execute_method_path() == ['samplerestcontroller', 'get']
+
+
+class TestFlashMessageContainer(object):
+    def test_create(self):
+        session_data = {}
+        container = controllers.FlashMessagesContainer(session_data)
+        assert len(container) == 0
+        assert repr(container) == '<watson.mvc.controllers.FlashMessagesContainer messages: 0>'
+
+    def test_add_messages(self):
+        session_data = {}
+        container = controllers.FlashMessagesContainer(session_data)
+        container.add_messages(['testing'])
+        assert len(container) == 1
+
+    def test_set_existing_container(self):
+        existing_container = controllers.FlashMessagesContainer({})
+        existing_container.add('Test')
+        session_data = {'flash_messages': existing_container}
+        new_container = controllers.FlashMessagesContainer(session_data)
+        assert len(new_container) == 1
+

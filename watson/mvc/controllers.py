@@ -6,6 +6,7 @@ from watson.di import ContainerAware
 from watson.events.types import Event
 from watson.http.messages import Response, Request
 from watson.common.imports import get_qualified_name
+from watson.common.contextmanagers import ignored
 
 
 class Base(ContainerAware, metaclass=abc.ABCMeta):
@@ -240,7 +241,8 @@ class FlashMessagesContainer(object):
         This is called automatically after the flash messages have been
         iterated over.
         """
-        del self.session[self.session_key]
+        with ignored(KeyError):
+            del self.session[self.session_key]
         self.messages = collections.OrderedDict()
 
     # Internals

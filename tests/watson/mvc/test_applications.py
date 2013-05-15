@@ -98,3 +98,4 @@ class TestConsoleApplication(object):
                          SampleNonStringCommand]
         }, ['py.test', 'string'])
         assert application() == 'Executed!'
+        assert not application.get_command('test')

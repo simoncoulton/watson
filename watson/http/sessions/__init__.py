@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # TODO: MemcachedStorage, DbStorageMixin, MySqlStorage, MongoStorage, RedisStorage
 from watson.common.imports import load_definition_from_string
-from watson.http.sessions.base import StorageMixin, COOKIE_KEY
+from watson.http.sessions.abc import StorageMixin, COOKIE_KEY
 from watson.http.sessions.file import Storage as File
 from watson.http.sessions.memory import Storage as Memory
 from watson.http.sessions.memcache import Storage as Memcache

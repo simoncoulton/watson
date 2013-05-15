@@ -21,6 +21,23 @@ class TestImmutableDict(object):
         d = ImmutableDict()
         d['something'] = 'test'
 
+    def test_deep_copy(self):
+        d = ImmutableDict({'test': 'blah', 'something': '2'})
+        d2 = deepcopy(d)
+        d3 = d.copy()
+        assert d == d2
+        assert d == d3
+
+    @raises(TypeError)
+    def test_delete(self):
+        d = ImmutableDict({'test': 'blah', 'something': '2'})
+        del d['test']
+
+    @raises(TypeError)
+    def test_clear(self):
+        d = ImmutableDict({'test': 'blah', 'something': '2'})
+        d.clear()
+
 
 class TestImmutableMultiDict(object):
     def test_create(self):
@@ -42,7 +59,9 @@ class TestImmutableMultiDict(object):
     def test_copy(self):
         d = ImmutableMultiDict({'test': 'blah', 'something': '2'})
         d2 = copy(d)
+        d3 = d.copy()
         assert d == d2
+        assert d == d3
 
     def test_deep_copy(self):
         d = ImmutableMultiDict({'test': 'blah', 'something': '2'})

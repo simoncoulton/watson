@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import abc
 import datetime
 from hashlib import sha1
 from random import random
@@ -9,7 +10,7 @@ from watson.common.imports import get_qualified_name
 COOKIE_KEY = 'watson.session'
 
 
-class StorageMixin(dict):
+class StorageMixin(dict, metaclass=abc.ABCMeta):
     """The base mixin for all session storage adapters.
 
     By default, if no id is specified when the session is created a new
@@ -123,8 +124,8 @@ class StorageMixin(dict):
             timeout = int(self.timeout)
             expires = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
             self._save(expires)
-        except Exception:
-            raise Exception('Unable to save the contents of the session')
+        except:
+            raise NotImplementedError('Unable to save the contents of the session')
 
     def destroy(self):
         """
@@ -184,14 +185,18 @@ class StorageMixin(dict):
     def __repr__(self):
         return '<{0} id:{1}>'.format(get_qualified_name(self), self.id)
 
+    @abc.abstractmethod
     def _load(self):
-        raise Exception('_load must be implemented')
+        raise NotImplementedError('_load must be implemented')
 
+    @abc.abstractmethod
     def _save(self):
-        raise Exception('_save must be implemented')
+        raise NotImplementedError('_save must be implemented')
 
+    @abc.abstractmethod
     def _destroy(self):
-        raise Exception('_destroy must be implemented')
+        raise NotImplementedError('_destroy must be implemented')
 
+    @abc.abstractmethod
     def _exists(self):
-        raise Exception('_exists must be implemented')
+        raise NotImplementedError('_exists must be implemented')

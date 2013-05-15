@@ -2,7 +2,7 @@
 from io import BytesIO, BufferedReader
 from nose.tools import raises
 from watson.form import Form, Multipart
-from watson.http.messages import create_request_from_environ
+from watson.http.messages import create_request_from_environ, Request
 from tests.watson.form.support import LoginForm, UploadForm, User, form_user_mapping, Contact, Other, sample_environ, ProtectedForm
 
 
@@ -28,6 +28,9 @@ class TestForm(object):
         post_data = {'username': 'simon', 'password': 'test', 'first_name': None, 'last_name': None, 'email': None}
         form.data = post_data
         assert form.data == post_data
+        request = Request('GET', post={'first_name': 'data'}, files={'file': 'something'})
+        form.data = request
+        assert form.data['first_name'] == 'data'
 
     def test_bind_object_to_form_with_mapping(self):
         form = LoginForm('test')

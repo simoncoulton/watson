@@ -24,6 +24,7 @@ class TestRunner:
         assert len(runner.commands) == 0
         runner.add_commands([SampleNonStringCommand, 'tests.watson.console.support.SampleStringCommand'])
         assert len(runner.commands) == 2
+        assert not runner.get_command('test')
 
     @raises(TypeError)
     def test_no_execute(self):

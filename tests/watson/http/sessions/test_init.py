@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from nose.tools import raises
 from watson.http.messages import create_request_from_environ
 from watson.http import sessions
 from tests.watson.http.support import sample_environ
@@ -19,3 +20,14 @@ class TestSessionMixin(object):
         cookie = request.cookies[sessions.COOKIE_KEY]
         assert cookie['httponly']
         assert cookie['secure']
+
+    @raises(Exception)
+    def test_session_cant_save(self):
+        mixin = sessions.StorageMixin()
+        mixin.save()
+
+    @raises(NotImplementedError)
+    def test_session_load_iter(self):
+        mixin = sessions.StorageMixin()
+        for key, value in mixin:
+            assert True
