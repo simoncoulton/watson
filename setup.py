@@ -8,13 +8,12 @@ from watson.common.contextmanagers import ignored
 with open('LICENSE') as f:
     license = f.read()
 
-try:
+reqs = ''
+with ignored(IOError, OSError):
     reqs = open(os.path.join(os.path.dirname(__file__), 'requirements.txt')).read()
-except (IOError, OSError):
-    reqs = ''
 
 setup(
-    name='watson3',
+    name='watson-framework',
     version=watson.__version__,
     description='An easy to use Python 3 framework for creating web applications.',
     long_description='''Watson, a Python 3 web framework

@@ -268,7 +268,7 @@ PUBLIC_DIR = os.path.join(SCRIPT_DIR, 'public')
 try:
     import watson
 except:
-    sys.stdout.write('You must have Watson installed, please run `pip install watson3`\\n')
+    sys.stdout.write('You must have Watson installed, please run `pip install watson-framework`\\n')
     sys.exit(1)
 
 from watson.mvc import applications
