@@ -6,7 +6,7 @@ area: Getting Started
 ---
 <section>
 
-All stable versions of Watson are available via [pip](https://pypi.python.org/pypi/pip) and can be installed using the following command `pip install watson3` via your CLI of choice.
+All stable versions of Watson are available via [pip](https://pypi.python.org/pypi/pip) and can be installed using the following command `pip install watson-framework` via your CLI of choice.
 
 Watson is maintained at [Github](https://github.com/simoncoulton/watson), and can be used to get the latest development version of the code if required.
 
