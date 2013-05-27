@@ -6,7 +6,7 @@ title: A Python 3 Web Framework
 
 > It's elementary my dear Watson
 
-[![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=master)](https://github.com/simoncoulton/watson) [![Coverage Status](https://coveralls.io/repos/simoncoulton/watson/badge.png)](https://coveralls.io/r/simoncoulton/watson)
+[![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=master)](https://travis-ci.org/simoncoulton/watson) [![Coverage Status](https://coveralls.io/repos/simoncoulton/watson/badge.png)](https://coveralls.io/r/simoncoulton/watson)
 
 Watson is an easy to use framework designed to get out of your way and let you code your application rather than spend time wrangling with the framework. It follows the convention over configuration ideal, although the convention can be overriden if required. Out of the box it comes with a standard set of defaults to allow you to get coding straight away!
 
@@ -30,7 +30,7 @@ Notes about these dependencies can be found within the relevant documentation in
 
 ### Testing
 
-Watson can be tested with both py.test and nose. 
+Watson can be tested with both py.test and nose.
 
 ### Contributing
 If you would like to contribute to Watson, please feel free to issue a pull request via Github with the associated tests for your code.
