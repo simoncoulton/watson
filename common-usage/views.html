@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 	<head>
-		<title>Views -  Reference Library -  Watson Documentation</title>
+		<title>Views -  Key Concepts -  Watson Documentation</title>
 		<link rel="stylesheet" type="text/css" href="/watson/assets/css/main.css" />
 		<link rel="stylesheet" type="text/css" href="/watson/assets/css/pygments.css" />
 		<meta name="viewport" content="initial-scale=1, user-scalable=no, width=device-width" />
@@ -17,7 +17,7 @@
 		<a href="/watson/getting-started">Getting Started</a>
 	</nav>
 	<div class="pagetitle">
-		<div class="wrapper">Documentation: Reference Library</div>
+		<div class="wrapper">Documentation: Key Concepts</div>
 	</div>
 </header>
 		<div>
@@ -325,7 +325,7 @@
 			    
 			  
 			    
-			      <li>
+			      <li class="active">
 			        <a href="/watson/common-usage/views.html">
 			          Views
 			        </a>
@@ -613,7 +613,7 @@
 				
 				
 				
-				<li class="active">
+				<li>
 					<a href="/watson/reference-library/mvc">watson.mvc</a>
 				</li>
 				
@@ -689,164 +689,64 @@
 </nav>
 			    <div class="content">
 			    	<h2 class="section-title">Views</h2>
-					<section class="standout">
-	<dl>
-		<dt>Package</dt>
-		<dd>watson.mvc</dd>
-	</dl>
-</section>
-<section>
-<p>Views documentation</p>
+					<section>
+<p>Views within Watson are considered &#39;dumb&#39; in that they do not contain any business or application logic within them. The only valid &#39;logic&#39; that should be contained within a view would be simple for loops, if statements, and similar constructs.</p>
+
+<p>The templating engine prefered by Watson is <a href="http://jinja.pocoo.org/docs/">Jinja2</a>, however this can easily be switched to another engine if required.</p>
+
+<div class="highlight"><pre><code class="python"><span class="n">views</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;renderers&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;my_new_renderer&#39;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><code>my_new_renderer</code> needs to be configured within the IocContainer to instantiate the new renderer.</p>
+
+<h3>Specifying different response formats</h3>
+
+<p>To output the response in different formats is quite a simple task and only involves modifying the route itself (it can be modified without changing the route, however this is not really encouraged).</p>
+
+<div class="highlight"><pre><code class="python"><span class="n">routes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;home&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;path&#39;</span><span class="p">:</span> <span class="s">&#39;/&#39;</span><span class="p">,</span>
+        <span class="s">&#39;defaults&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;format&#39;</span><span class="p">:</span> <span class="s">&#39;json&#39;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>and the subsequent controller...</p>
+
+<div class="highlight"><pre><code class="python"><span class="kn">from</span> <span class="nn">watson.mvc</span> <span class="kn">import</span> <span class="n">controllers</span>
+
+<span class="k">class</span> <span class="nc">Public</span><span class="p">(</span><span class="n">controllers</span><span class="o">.</span><span class="n">Rest</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">GET</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;hello&#39;</span><span class="p">:</span> <span class="s">&#39;world&#39;</span><span class="p">}</span>
+</code></pre></div>
+
+<p>The user can also be made responsible for determining the response format by correctly defining the route to support this. This is particularly useful if you&#39;re creating an API and need to support multiple formats such as XML and JSON.</p>
+
+<div class="highlight"><pre><code class="python"><span class="n">routes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;home&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;path&#39;</span><span class="p">:</span> <span class="s">&#39;/something.:format&#39;</span><span class="p">,</span>
+        <span class="s">&#39;requires&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;format&#39;</span><span class="p">:</span> <span class="s">&#39;json|xml&#39;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>In the above route, any request being sent to /something.xml or /something.json will output the data in the requested format.</p>
 
 </section>
 
 <section>
 	
-	
-	
-		
-		
-			
-		
-	
-		
-		
-			
-		
-	
-		
-		
-			
-		
-	
-		
-		
-			
-		
-	
-		
-			
-		
-		
-	
-		
-		
-			
-		
-	
-		
-		
-			
-		
-	
-		
-		
-			
-		
-	
-		
-		
-			
-		
-	
-		
-		
-			
-		
-	
-		
-		
-			
-		
-	
 
-	
-	<h4>See also:</h4>
-	
-	
-	<a class="label blue" href="/watson/reference-library/mvc/config.html">watson.mvc.config</a>
-	
-	
-	
-	
-	<a class="label blue" href="/watson/reference-library/mvc/listeners.html">watson.mvc.listeners</a>
-	
-	
-	
-	
-	<a class="label blue" href="/watson/reference-library/mvc/applications.html">watson.mvc.applications</a>
-	
-	
-	
-	
-	<a class="label blue" href="/watson/reference-library/mvc/events.html">watson.mvc.events</a>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<a class="label blue" href="/watson/reference-library/mvc/routing.html">watson.mvc.routing</a>
-	
-	
-	
-	
-	<a class="label blue" href="/watson/reference-library/mvc/exceptions.html">watson.mvc.exceptions</a>
-	
-	
-	
-	
-	<a class="label blue" href="/watson/reference-library/events/dispatcher.html">watson.events.dispatcher</a>
-	
-	
-	
-	
-	<a class="label blue" href="/watson/reference-library/events/types.html">watson.events.types</a>
-	
-	
-	
-	
-	<a class="label blue" href="/watson/reference-library/mvc/controllers.html">watson.mvc.controllers</a>
-	
-	
-	
-	
-	<a class="label blue" href="/watson/reference-library/events/collections.html">watson.events.collections</a>
-	
-	
-	
-	
-
-	
-	<h4 class="key-concepts">Key Concepts:</h4>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<a class="label yellow" href="/watson/key-concepts/mvc.html">Mvc</a>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 </section>
 				</div>

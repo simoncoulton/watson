@@ -8,7 +8,8 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	</head>
 	<body>
-		<header>
+		<a href="https://github.com/simoncoulton/watson"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+<header>
 	<nav class="wrapper primary">
 		<a href="/watson/">Watson<span>It's elementary my dear Watson</span></a>
 		<a href="/watson/reference-library">Reference Library</a>
@@ -110,6 +111,8 @@
 			    
 			  
 			    
+			  
+			    
 			      <li>
 			        <a href="/watson/getting-started/configuration.html">
 			          Configuration
@@ -172,13 +175,15 @@
 			    
 			  
 			    
-			  
-			    
 			      <li>
 			        <a href="/watson/key-concepts/events.html">
 			          Events
 			        </a>
 			      </li>
+			    
+			  
+			    
+			  
 			    
 			  
 			    
@@ -320,6 +325,14 @@
 			    
 			  
 			    
+			      <li>
+			        <a href="/watson/common-usage/views.html">
+			          Views
+			        </a>
+			      </li>
+			    
+			  
+			    
 			  
 			    
 			  
@@ -429,11 +442,15 @@
 			  
 			    
 			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Reference Library
 			<ul>
+				
+				
 				
 				
 				
@@ -673,10 +690,252 @@
 			    <div class="content">
 			    	<h2 class="section-title">Dependency Injection</h2>
 					<section>
-<p><section></p>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#example">Example Usage</a></li>
+<li><a href="#configuring">Configuring the container</a></li>
+</ul>
 
-<p>Dependency Injection
-</section></p>
+<h3><a id="introduction"></a>Introduction</h3>
+
+<p>Dependency injection is a design pattern that allows us to remove hardcoded dependencies from our code, making it easier to maintain and expand upon as an application grows in size.</p>
+
+<p><span class="sub">A hardcoded dependency</span></p>
+
+<div class="highlight"><pre><code class="python"><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">some_dependency</span> <span class="o">=</span> <span class="n">SomeDependency</span><span class="p">()</span>
+
+<span class="n">my_class</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+</code></pre></div>
+
+<p><span class="sub">Utilizing dependency injection</span></p>
+
+<div class="highlight"><pre><code class="python"><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">some_dependency</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">some_dependency</span> <span class="o">=</span> <span class="n">some_dependency</span>
+
+<span class="n">my_class</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">(</span><span class="n">SomeDependency</span><span class="p">())</span>
+</code></pre></div>
+
+<p>As you can see above, the latter removes the dependency from the class itself, creating a looser coupling between components of the application.</p>
+
+<h4>The lifecycle of a dependency</h4>
+
+<p>Dependencies within Watson go through two events prior to being retrieved from the container.</p>
+
+<ul>
+<li>watson.di.container.PRE_EVENT
+<span class="sub">Triggered prior to instantiating the dependency</span></li>
+<li>watson.di.container.POST_EVENT
+<span class="sub">Triggered after instantiating the dependency, by prior to being returned</span></li>
+</ul>
+
+<p>These events are only triggered once per dependency, unless the dependency is defined as a &#39;prototype&#39;, in which case a new instance of the dependency is retrieved on each request.</p>
+
+<h3><a id="example"></a>Example Usage</h3>
+
+<p>Watson provides an easy to use IoC (Inversion of Control) container which allows these sorts of dependencies to be managed easily. Lets take a look at how we might instantiate a database connection without dependency injection.</p>
+
+<p><span class="sub">app_name/db.py</span></p>
+
+<div class="highlight"><pre><code class="python"><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">create_engine</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">sessionmaker</span>
+
+<span class="n">some_engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s">&#39;postgresql://scott:tiger@localhost/&#39;</span><span class="p">)</span>
+<span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">some_engine</span><span class="p">)</span>
+<span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
+</code></pre></div>
+
+<p><span class="sub">app_name/controllers/user.py</span></p>
+
+<div class="highlight"><pre><code class="python"><span class="kn">from</span> <span class="nn">watson.mvc</span> <span class="kn">import</span> <span class="n">controllers</span>
+<span class="kn">from</span> <span class="nn">app_name</span> <span class="kn">import</span> <span class="n">db</span>
+
+<span class="k">class</span> <span class="nc">Profile</span><span class="p">(</span><span class="n">controllers</span><span class="o">.</span><span class="n">Rest</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">GET</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s">&#39;users&#39;</span><span class="p">:</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">POST</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;user1&#39;</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</code></pre></div>
+
+<p>One thing to note here is that the configuration for the collection is stored within the code itself. While we could abstract this out to another module, there would still be some sort of dependency on retrieving the configuration from that module. We also introduce a hardcoded dependency by requiring the db module.
+By using the IocContainer, we can abstract both of these issues out keeping our codebase clean.</p>
+
+<h4>Using the IocContainer</h4>
+
+<p>First we&#39;ll create code required to connect to the database, removing any hardcoded configuration details (note this is purely an example).</p>
+
+<p><span class="sub">app_name/db.py</span></p>
+
+<div class="highlight"><pre><code class="python"><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">create_engine</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">sessionmaker</span>
+
+<span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">create_session</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">connection_string</span><span class="p">):</span>
+    <span class="n">some_engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="n">connection_string</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Session</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">some_engine</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Next we have to configure the dependency within the applications configuration settings. <a href="#configuring">Learn more</a> about the ways to configure your depedencies.</p>
+
+<p><span class="sub">app_name/config/config.py</span></p>
+
+<div class="highlight"><pre><code class="python"><span class="n">dependencies</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;definitions&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;db_read&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;item&#39;</span><span class="p">:</span> <span class="s">&#39;app_name.db.create_session&#39;</span><span class="p">,</span>
+            <span class="s">&#39;init&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;connection_string&#39;</span><span class="p">:</span> <span class="s">&#39;postgresql://read:access@localhost/&#39;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="s">&#39;db_write&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;item&#39;</span><span class="p">:</span> <span class="s">&#39;app_name.db.create_session&#39;</span><span class="p">,</span>
+            <span class="s">&#39;init&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;connection_string&#39;</span><span class="p">:</span> <span class="s">&#39;postgresql://write:access@localhost/&#39;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>We now have two dependencies defined in the applications configuration settings. One of the additional benefits of using the IoC container is that subsequent requests for a dependency will return an already instantiated instance of the dependency (unless otherwise specified).</p>
+
+<p>Now all that&#39;s left is to retrieve the dependency from the container. We can do this by calling container.get(dependency_name). As controllers are retrieved from the container and extend ContainerAware, our container is automatically injected into them.</p>
+
+<p><span class="sub">app_name/controllers/user.py</span></p>
+
+<div class="highlight"><pre><code class="python"><span class="kn">from</span> <span class="nn">watson.mvc</span> <span class="kn">import</span> <span class="n">controllers</span>
+
+<span class="k">class</span> <span class="nc">Profile</span><span class="p">(</span><span class="n">controllers</span><span class="o">.</span><span class="n">Rest</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">GET</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># we only want to read from a slave for some reason</span>
+        <span class="n">db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;db_read&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s">&#39;users&#39;</span><span class="p">:</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">POST</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># we only want writes to go to a specific database</span>
+        <span class="n">db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;db_write&#39;</span><span class="p">)</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;user1&#39;</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</code></pre></div>
+
+<p>We can also take this a step further and remove the container itself as being a hardcoded dependency. We do this by adding the controller itself to the dependency definitions, and injecting the dependency either as a property, setter, or through the constructor. We can get access to the container itself (for retrieving dependencies or configurtion) via lambdas.</p>
+
+<p><span class="sub">app_name/config/config.py</span></p>
+
+<div class="highlight"><pre><code class="python"><span class="n">dependencies</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;definitions&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;db_read&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;item&#39;</span><span class="p">:</span> <span class="s">&#39;app_name.db.create_session&#39;</span><span class="p">,</span>
+            <span class="s">&#39;init&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;connection_string&#39;</span><span class="p">:</span> <span class="s">&#39;postgresql://read:access@localhost/&#39;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="s">&#39;db_write&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;item&#39;</span><span class="p">:</span> <span class="s">&#39;app_name.db.create_session&#39;</span><span class="p">,</span>
+            <span class="s">&#39;init&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;connection_string&#39;</span><span class="p">:</span> <span class="s">&#39;postgresql://write:access@localhost/&#39;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="s">&#39;app_name.controllers.user.Profile&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;item&#39;</span><span class="p">:</span> <span class="s">&#39;app_name.controllers.user.Profile&#39;</span><span class="p">,</span>
+            <span class="s">&#39;property&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;db_read&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">container</span><span class="p">:</span> <span class="n">container</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;db_read&#39;</span><span class="p">),</span>
+                <span class="s">&#39;db_write&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">container</span><span class="p">:</span> <span class="n">container</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;db_write&#39;</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Now we simply modify our controller to suit the new definitions...</p>
+
+<p><span class="sub">app_name/controllers/user.py</span></p>
+
+<div class="highlight"><pre><code class="python"><span class="kn">from</span> <span class="nn">watson.mvc</span> <span class="kn">import</span> <span class="n">controllers</span>
+
+<span class="k">class</span> <span class="nc">Profile</span><span class="p">(</span><span class="n">controllers</span><span class="o">.</span><span class="n">Rest</span><span class="p">):</span>
+    <span class="n">db_read</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">db_write</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">GET</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s">&#39;users&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_read</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">POST</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;user1&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db_write</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db_write</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</code></pre></div>
+
+<h3><a id="configuring"></a>Configuring the container</h3>
+
+<p>The container is defined within your applications configuration under the key &#39;dependencies&#39; as seen below.</p>
+
+<div class="highlight"><pre><code class="python"><span class="n">dependencies</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;param_name&#39;</span><span class="p">:</span> <span class="s">&#39;value&#39;</span>
+    <span class="p">},</span>
+    <span class="s">&#39;definitions&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;item&#39;</span><span class="p">:</span> <span class="s">&#39;package.module.object&#39;</span><span class="p">,</span>
+            <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;singleton&#39;</span><span class="p">,</span>
+            <span class="s">&#39;init&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;keyword&#39;</span><span class="p">:</span> <span class="s">&#39;arg&#39;</span>
+            <span class="p">},</span>
+            <span class="s">&#39;property&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;attribute&#39;</span><span class="p">:</span> <span class="s">&#39;value&#39;</span>
+            <span class="p">},</span>
+            <span class="s">&#39;setter&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;method_name&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s">&#39;keyword&#39;</span><span class="p">:</span> <span class="s">&#39;arg&#39;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Lets break this down into it&#39;s different components:</p>
+
+<p><span class="sub">params</span></p>
+
+<div class="highlight"><pre><code class="python"><span class="s">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&#39;param_name&#39;</span><span class="p">:</span> <span class="s">&#39;value&#39;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Params are arguments that can be inserted into dependencies via init, property or setter processors. Any argument that is being used in one of the above processor definitions will be evaluated against the params and replaced with it&#39;s value. If a param value has the same name as a dependency, then that dependency itself will be injected.</p>
+
+<p><span class="sub">An example dependency using params</span></p>
+
+<div class="highlight"><pre><code class="python"><span class="n">dependencies</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;host&#39;</span><span class="p">:</span> <span class="s">&#39;127.0.0.1&#39;</span>
+    <span class="p">},</span>
+    <span class="s">&#39;definitions&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;db&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;item&#39;</span><span class="p">:</span> <span class="s">&#39;app.db&#39;</span><span class="p">,</span>
+            <span class="s">&#39;init&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;hostname&#39;</span><span class="p">:</span> <span class="s">&#39;host&#39;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>When the above dependency is retrieved, the &#39;host&#39; param will be injected into the objects constructor.</p>
 
 </section>
 
@@ -695,12 +954,12 @@
 	<h4>See also:</h4>
 	
 	
-	<a class="label blue" href="/watson/reference-library/di/processors.html">watson.di.processors</a>
-	
-	
-	
-	
 	<a class="label blue" href="/watson/reference-library/di/container.html">watson.di.container</a>
+	
+	
+	
+	
+	<a class="label blue" href="/watson/reference-library/di/processors.html">watson.di.processors</a>
 	
 	
 	
@@ -715,7 +974,7 @@
 			<ul>
 				<li class="title">Source </li>
 				<li><a href="https://github.com/simoncoulton/watson">GitHub</a></li>
-				<li><a href="https://pypi.python.org/pypi/watson3/">Pypi</a></li>
+				<li><a href="https://pypi.python.org/pypi/watson-framework/">Pypi</a></li>
 			</ul>
 			<ul>
 				<li class="title">Testing</li>
@@ -746,6 +1005,7 @@
 	pageTracker._trackPageview();
 	} catch(err) {}
 </script>
+
 
 	</body>
 </html>
