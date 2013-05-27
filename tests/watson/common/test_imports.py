@@ -37,7 +37,7 @@ class TestResolver(object):
         repr_str = resolver.module_repr(tests.watson.common)
         assert repr_str.startswith("<module 'tests.watson.common'")
 
-    def test_load_module(self):
+    def test_load_package(self):
         resolver = Resolver('testing')
         module = imp.new_module('testing_something')
         module.__file__ = 'testing_something.py'
@@ -45,9 +45,21 @@ class TestResolver(object):
         loaded = resolver.load_module('testing.something')
         assert module == loaded
         assert resolver.module_repr(loaded).endswith("aliased by 'testing.something'>'")
+
+    def test_load_nested_packages(self):
+        resolver = Resolver('testing')
         module = imp.new_module('nested_testing.something.else')
         module.__file__ = 'nested_testing/something/else.py'
         sys.modules['nested_testing.something.else'] = module
         loaded = resolver.load_module('nested.testing.something.else')
         assert module == loaded
         assert resolver.module_repr(loaded).endswith("aliased by 'nested.testing.something.else'>'")
+
+    def test_load_module(self):
+        resolver = Resolver('testing')
+        module = imp.new_module('testing')
+        module.__file__ = 'testing.py'
+        sys.modules['testing'] = module
+        loaded = resolver.load_module('testing')
+        assert module == loaded
+        assert resolver.module_repr(loaded) == "<module 'testing' from 'testing.py'>'"

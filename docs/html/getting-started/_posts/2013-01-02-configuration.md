@@ -48,7 +48,7 @@ debug = {
 
 The configuration of your application will automatically be added to the container, which can then be retrieved via the key `application.config`.
 
-See the dependency injection [key concept](/watson/key-concepts/dependencyinjection.html) for more information on how to define dependencies and container parameters.
+See the dependency injection [key concept](/watson/key-concepts/dependencyinjection.html#configuring) for more information on how to define dependencies and container parameters.
 
 #### Views
 
