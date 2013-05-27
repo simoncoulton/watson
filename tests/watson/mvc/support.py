@@ -2,6 +2,7 @@
 # Support functions, classes
 from wsgiref import util
 from watson.console import command
+from watson.http.messages import Response
 from watson.mvc import controllers
 from watson.mvc.views import Model
 
@@ -26,6 +27,11 @@ class SampleActionController(controllers.Action):
 
     def blah_syntax_error_action(self):
         a = b
+
+
+class ShortCircuitedController(controllers.Rest):
+    def GET(self):
+        return Response(body='testing')
 
 
 class SampleRestController(controllers.Rest):

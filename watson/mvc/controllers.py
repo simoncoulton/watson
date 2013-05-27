@@ -1,20 +1,24 @@
 # -*- coding: utf-8 -*-
+import abc
 import collections
 import re
 from watson.di import ContainerAware
 from watson.events.types import Event
 from watson.http.messages import Response, Request
 from watson.common.imports import get_qualified_name
+from watson.common.contextmanagers import ignored
 
 
-class Base(ContainerAware):
+class Base(ContainerAware, metaclass=abc.ABCMeta):
     """The interface for controller classes.
     """
+    @abc.abstractmethod
     def execute(self, **kwargs):
-        raise NotImplementedError('You must implement execute')
+        raise NotImplementedError('You must implement execute')  # pragma: no cover
 
+    @abc.abstractmethod
     def get_execute_method_path(self, **kwargs):
-        raise NotImplementedError('You must implement get_execute_method_path')
+        raise NotImplementedError('You must implement get_execute_method_path')  # pragma: no cover
 
     def __repr__(self):
         return '<{0}>'.format(get_qualified_name(self))
@@ -237,7 +241,8 @@ class FlashMessagesContainer(object):
         This is called automatically after the flash messages have been
         iterated over.
         """
-        del self.session[self.session_key]
+        with ignored(KeyError):
+            del self.session[self.session_key]
         self.messages = collections.OrderedDict()
 
     # Internals

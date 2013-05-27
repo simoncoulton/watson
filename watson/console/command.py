@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+import abc
 from watson.common.contextmanagers import ignored
 
 
-class Base(object):
+class Base(metaclass=abc.ABCMeta):
     """The base command that outlines the required structure for a console
     command.
 
@@ -58,8 +59,9 @@ class Base(object):
         """
         self._parsed_args = args
 
+    @abc.abstractmethod
     def execute(self):
-        raise NotImplementedError('execute() must be implemented.')
+        raise NotImplementedError('execute() must be implemented.')  # pragma: no cover
 
     def __call__(self):
         return self.execute()

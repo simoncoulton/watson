@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import abc
 from types import ModuleType
 from watson.console import Runner
 from watson.console.command import find_commands_in_module
@@ -15,7 +16,7 @@ from watson.mvc import events
 from watson.support.console import commands as DefaultConsoleCommands
 
 
-class Base(ContainerAware, EventDispatcherAware):
+class Base(ContainerAware, EventDispatcherAware, metaclass=abc.ABCMeta):
     """The core application structure for a Watson application.
 
     It makes heavy use of the IocContainer and EventDispatcher classes to handle
@@ -102,8 +103,9 @@ class Base(ContainerAware, EventDispatcherAware):
     def __call__(self, *args, **kwargs):
         return self.run(*args, **kwargs)
 
+    @abc.abstractmethod
     def run(self):
-        raise NotImplementedError('You must implement __call__')
+        raise NotImplementedError('You must implement __call__')  # pragma: no cover
 
 
 class Http(Base):

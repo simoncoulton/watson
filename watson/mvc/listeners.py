@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # TODO: Refactor these into single functions rather than classes where appropriate
+import abc
 import os
 import sys
 from watson.common.imports import get_qualified_name
@@ -10,9 +11,10 @@ from watson.mvc.exceptions import NotFoundError, InternalServerError, ExceptionH
 from watson.mvc.views import Model
 
 
-class Base(object):
+class Base(metaclass=abc.ABCMeta):
+    @abc.abstractmethod
     def __call__(self, event):
-        raise NotImplementedError('You must implement __call__')
+        raise NotImplementedError('You must implement __call__')  # pragma: no cover
 
 
 class Route(Base):

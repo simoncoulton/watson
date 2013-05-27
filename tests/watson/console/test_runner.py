@@ -24,8 +24,9 @@ class TestRunner:
         assert len(runner.commands) == 0
         runner.add_commands([SampleNonStringCommand, 'tests.watson.console.support.SampleStringCommand'])
         assert len(runner.commands) == 2
+        assert not runner.get_command('test')
 
-    @raises(NotImplementedError)
+    @raises(TypeError)
     def test_no_execute(self):
         runner = Runner(['test.py', 'nohelpnoexecute'], commands=[
             'tests.watson.console.support.SampleNoHelpNoExecuteCommand'

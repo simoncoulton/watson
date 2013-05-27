@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from watson.http.sessions.base import StorageMixin
+from watson.http.sessions.abc import StorageMixin
 
 
 class Storage(StorageMixin):

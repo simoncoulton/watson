@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from watson.validators import base
+from watson.validators import abc
 
 
-class Range(base.Validator):
+class Range(abc.Validator):
     """Validates the length of a string.
 
     Usage:

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from nose.tools import raises
-from watson.filters import base
+from watson.filters import abc
 
 
 class TestFilterBase(object):
-    @raises(NotImplementedError)
+    @raises(TypeError)
     def test_call_error(self):
-        base.Filter()('value')
+        abc.Filter()

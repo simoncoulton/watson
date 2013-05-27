@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import re
-from watson.validators import base
+from watson.validators import abc
 
 
-class Length(base.Validator):
+class Length(abc.Validator):
     """Validates the length of a string.
 
     Usage:
@@ -39,7 +39,7 @@ class Length(base.Validator):
         return valid
 
 
-class Required(base.Validator):
+class Required(abc.Validator):
     """Validates whether or not a value exists.
 
     Usage:
@@ -56,7 +56,7 @@ class Required(base.Validator):
         return True
 
 
-class RegEx(base.Validator):
+class RegEx(abc.Validator):
     """Validates a value based on a regular expression.
 
     Usage:
@@ -75,7 +75,7 @@ class RegEx(base.Validator):
             raise ValueError(self.message.format(value=value, pattern=self.regex.pattern))
 
 
-class Csrf(base.Validator):
+class Csrf(abc.Validator):
     """Validates a csrf token.
 
     Usage:

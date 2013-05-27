@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+import abc
 from types import FunctionType
 from watson.common.imports import get_qualified_name, load_definition_from_string
+from watson.common.contextmanagers import ignored
 from watson import di
 
 
-class Base(di.ContainerAware):
+class Base(di.ContainerAware, metaclass=abc.ABCMeta):
     """The base processor that all other processors should extend.
 
     When a processor is called from the container the following parameters are
@@ -15,9 +17,10 @@ class Base(di.ContainerAware):
         - watson.di.container.PRE_EVENT: The dict definition of the dependency
         - watson.di.container.POST_EVENT: The initialized dependency
     """
+    @abc.abstractmethod
     def __call__(self, event):
         raise NotImplementedError(
-            'The processor <{}> must implement __call__'.format(get_qualified_name(self)))
+            'The processor <{}> must implement __call__'.format(get_qualified_name(self)))  # pragma: no cover
 
 
 class ConstructorInjection(Base):
@@ -35,13 +38,15 @@ class ConstructorInjection(Base):
     def __call__(self, event):
         item = event.target['item']
         instantiated = False
+        raw = None
         if isinstance(item, FunctionType):
             raw = item
         elif not isinstance(item, str):
             initialized = item
             instantiated = True
         else:
-            raw = load_definition_from_string(item)
+            with ignored(ImportError, AttributeError):
+                raw = load_definition_from_string(item)
         if not instantiated:
             if not raw:
                 raise NameError('Cannot initialize dependency {0}, the module may not exist.'.format(item))

@@ -3,7 +3,7 @@ import os
 import pickle
 from tempfile import gettempdir
 from watson.common.contextmanagers import ignored
-from watson.http.sessions.base import StorageMixin
+from watson.http.sessions.abc import StorageMixin
 
 
 class Storage(StorageMixin):

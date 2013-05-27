@@ -6,17 +6,12 @@ area: Getting Started
 ---
 <section>
 
-All stable versions of Watson are available via [pip](https://pypi.python.org/pypi/pip) and can be installed using the following command `pip install watson3` via your CLI of choice.
+All stable versions of Watson are available via [pip](https://pypi.python.org/pypi/pip) and can be installed using the following command `pip install watson-framework` via your CLI of choice.
 
 Watson is maintained at [Github](https://github.com/simoncoulton/watson), and can be used to get the latest development version of the code if required.
 
 #### Setting up a virtualenv
 We recommend creating a standalone environment for each new project you work on to isolate any dependencies that it may need. To do so enter the following commands in your terminal:
-
-
-	project_root/
-		virtualenv/
-		...
 
 	pyvenv /where_you_want_to_store_venv
 	source /where_you_want_to_store_venv/bin/activate

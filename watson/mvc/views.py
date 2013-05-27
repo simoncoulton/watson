@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import abc
 from collections import namedtuple
 from json import JSONEncoder
 from jinja2 import FileSystemLoader, DictLoader, ChoiceLoader, Environment
@@ -7,7 +8,7 @@ from watson.util import xml
 Model = namedtuple('Model', 'format template data')
 
 
-class BaseRenderer(object):
+class BaseRenderer(metaclass=abc.ABCMeta):
     @property
     def config(self):
         return self._config
@@ -19,8 +20,9 @@ class BaseRenderer(object):
     def __init__(self, config=None):
         self.config = config or {}
 
+    @abc.abstractmethod
     def __call__(self, view_model):
-        raise NotImplementedError('You must implement __call__')
+        raise NotImplementedError('You must implement __call__')  # pragma: no cover
 
 
 class Jinja2Renderer(BaseRenderer):

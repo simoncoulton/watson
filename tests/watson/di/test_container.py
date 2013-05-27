@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from nose.tools import raises
 from watson.di.container import IocContainer
-from tests.watson.di.support import SampleDependency, sample_dependency, SampleDependencyAware
+from tests.watson.di.support import SampleDependency
 
 
 class TestIoc(object):
@@ -21,6 +21,13 @@ class TestIoc(object):
                 'test2': {
                     'item': 'tests.watson.di.support.sample_dependency',
                     'type': 'singleton',
+                },
+                'test3': {
+                    'item': 'tests.watson.di.support.sample_dependency_with_args',
+                    'type': 'singleton',
+                    'init': {
+                        'arg': 'some arg'
+                    }
                 }
             }
         })
@@ -29,6 +36,7 @@ class TestIoc(object):
         assert container.get('test2') == 'test'
         assert container.get('def') == 'something'
         assert container.get('def') == 'something'
+        assert container.get('test3') == 'some arg'
 
     def test_add_item(self):
         container = IocContainer()

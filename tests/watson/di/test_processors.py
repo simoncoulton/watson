@@ -52,10 +52,17 @@ class TestConstructorInjection(object):
         instance = processor(event)
         assert instance.first_arg == 'blah2'
 
-    @raises(NotImplementedError)
+    @raises(TypeError)
     def test_invalid_processor(self):
         processor = SampleProcessor()
         processor('fake event')
+
+    @raises(NameError)
+    def test_initialized_invalid_dependency(self):
+        processor = processors.ConstructorInjection()
+        processor.container = IocContainer()
+        event = sample_event('tests.watson.di.support.DoesNotExist')
+        processor(event)
 
 
 class TestSetterInjection(object):

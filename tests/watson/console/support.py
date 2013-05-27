@@ -3,6 +3,10 @@ from watson.console import ConsoleError
 from watson.console import command
 
 
+class NoCallCommand(command.Base):
+    pass
+
+
 class SampleNonStringCommand(command.Base):
     name = 'nonstring'
     help = 'Some help for SampleNonStringCommand'

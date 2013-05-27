@@ -8,10 +8,9 @@ from tests.watson.mvc import sample_config
 
 
 class TestBaseApplication(object):
-    @raises(NotImplementedError)
+    @raises(TypeError)
     def test_call(self):
-        base = applications.Base()
-        base()
+        applications.Base()
 
 
 class TestHttpApplication(object):
@@ -99,3 +98,4 @@ class TestConsoleApplication(object):
                          SampleNonStringCommand]
         }, ['py.test', 'string'])
         assert application() == 'Executed!'
+        assert not application.get_command('test')
