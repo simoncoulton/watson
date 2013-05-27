@@ -13,11 +13,6 @@ Watson is maintained at [Github](https://github.com/simoncoulton/watson), and ca
 #### Setting up a virtualenv
 We recommend creating a standalone environment for each new project you work on to isolate any dependencies that it may need. To do so enter the following commands in your terminal:
 
-
-	project_root/
-		virtualenv/
-		...
-
 	pyvenv /where_you_want_to_store_venv
 	source /where_you_want_to_store_venv/bin/activate
 
