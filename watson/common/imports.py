@@ -120,7 +120,6 @@ class Resolver(abc.Finder, abc.Loader):
                 else:
                     actual_name = ['_'.join(module_name)]
                 actual_name = '.'.join(actual_name)
-                print(actual_name, fullname)
                 import_module(actual_name)
                 sys.modules[fullname] = sys.modules[actual_name]
                 sys.modules[fullname].__original_name__ = fullname
