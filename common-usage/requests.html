@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 	<head>
-		<title>Dependency Injection -   Watson Documentation</title>
+		<title>Requests -  Common Usage -  Watson Documentation</title>
 		<link rel="stylesheet" type="text/css" href="/watson/assets/css/main.css" />
 		<link rel="stylesheet" type="text/css" href="/watson/assets/css/pygments.css" />
 		<meta name="viewport" content="initial-scale=1, user-scalable=no, width=device-width" />
@@ -17,7 +17,7 @@
 		<a href="/watson/getting-started">Getting Started</a>
 	</nav>
 	<div class="pagetitle">
-		<div class="wrapper">Documentation</div>
+		<div class="wrapper">Documentation: Common Usage</div>
 	</div>
 </header>
 		<div>
@@ -317,7 +317,7 @@
 			    
 			  
 			    
-			      <li>
+			      <li class="active">
 			        <a href="/watson/common-usage/requests.html">
 			          Requests
 			        </a>
@@ -520,7 +520,7 @@
 				
 				
 				
-				<li class="active">
+				<li>
 					<a href="/watson/reference-library/di">watson.di</a>
 				</li>
 				
@@ -704,207 +704,92 @@
 	</ul>
 </nav>
 			    <div class="content">
-			    	<h2 class="section-title">Dependency Injection</h2>
-					<section>
-	
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-		
-		
-	
-		
-		
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
-		
-	
+			    	<h2 class="section-title">Requests</h2>
+					<p><section></p>
 
-	
-	<ul>
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-			<li><a href="/watson/reference-library/di/container.html">watson.di.container</a></li>
-			
-		
-			
-			<li><a href="/watson/reference-library/di/processors.html">watson.di.processors</a></li>
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-			
-		
-	</ul>
-	
+<p>For the following we&#39;re assuming that all requests come through the route:</p>
 
-</section>
+<div class="highlight"><pre><code class="python"><span class="n">routes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;example&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;path&#39;</span><span class="p">:</span> <span class="s">&#39;/path&#39;</span><span class="p">,</span>
+        <span class="s">&#39;defaults&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s">&#39;controller&#39;</span><span class="p">:</span> <span class="s">&#39;Public&#39;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 
-<p><section></p>
+<h3>Accessing request variables</h3>
 
-<p>DI Index
-</section></p>
+<h4>Accessing GET variables</h4>
+
+<p>Assuming the following http request:</p>
+<div class="highlight"><pre><code class="text">/path/?query=string&amp;value=something
+</code></pre></div>
+<div class="highlight"><pre><code class="python"><span class="k">class</span> <span class="nc">Public</span><span class="p">(</span><span class="n">controllers</span><span class="o">.</span><span class="n">Rest</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">GET</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">[</span><span class="s">&#39;query&#39;</span><span class="p">]</span>  <span class="c"># string</span>
+</code></pre></div>
+
+<h4>Accessing POST variables</h4>
+
+<p>Assuming the following http request:</p>
+<div class="highlight"><pre><code class="text">/path
+</code></pre></div>
+<p>With the following key/value pairs of data being posted:
+    data: something</p>
+
+<div class="highlight"><pre><code class="python"><span class="k">class</span> <span class="nc">Public</span><span class="p">(</span><span class="n">controllers</span><span class="o">.</span><span class="n">Rest</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">GET</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">post</span><span class="p">[</span><span class="s">&#39;data&#39;</span><span class="p">]</span>  <span class="c"># something</span>
+</code></pre></div>
+
+<h4>Accessing FILE variables</h4>
+
+<p>Assuming the following http request:</p>
+<div class="highlight"><pre><code class="text">/path
+</code></pre></div>
+<p>With 
+<div class="highlight"><pre><code class="html"><span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;file&quot;</span> <span class="na">name=</span><span class="s">&quot;a_file&quot;</span> <span class="nt">/&gt;</span> 
+</code></pre></div>
+ being posted.</p>
+
+<div class="highlight"><pre><code class="python"><span class="k">class</span> <span class="nc">Public</span><span class="p">(</span><span class="n">controllers</span><span class="o">.</span><span class="n">Rest</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">GET</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s">&#39;a_file&#39;</span><span class="p">]</span>  <span class="c"># cgi.FieldStorage</span>
+</code></pre></div>
+
+<h4>Accessing cookies</h4>
+
+<p>Assuming the following http request:</p>
+<div class="highlight"><pre><code class="text">/path
+</code></pre></div>
+<div class="highlight"><pre><code class="python"><span class="k">class</span> <span class="nc">Public</span><span class="p">(</span><span class="n">controllers</span><span class="o">.</span><span class="n">Rest</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">GET</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cookies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">cookies</span>  <span class="c"># CookieDict</span>
+</code></pre></div>
+
+<h4>Accessing session data</h4>
+
+<p>Assuming the following http request:</p>
+<div class="highlight"><pre><code class="text">/path
+</code></pre></div>
+<p>With the following data being stored in the session:
+    data: value</p>
+
+<div class="highlight"><pre><code class="python"><span class="k">class</span> <span class="nc">Public</span><span class="p">(</span><span class="n">controllers</span><span class="o">.</span><span class="n">Rest</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">GET</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">session</span>
+        <span class="n">session_data</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="s">&#39;data&#39;</span><span class="p">]</span>  <span class="c"># value</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">id</span>  <span class="c"># id of the session</span>
+</code></pre></div>
+
+<h4>Accessing SERVER variables (environ variables)</h4>
+
+<div class="highlight"><pre><code class="python"><span class="k">class</span> <span class="nc">Public</span><span class="p">(</span><span class="n">controllers</span><span class="o">.</span><span class="n">Rest</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">GET</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">server</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">server</span><span class="p">[</span><span class="s">&#39;PATH_INFO&#39;</span><span class="p">]</span>  <span class="c"># /path</span>
+</code></pre></div>
+
+<p></section></p>
 
 				</div>
 			</div>
