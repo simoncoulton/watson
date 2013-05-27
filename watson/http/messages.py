@@ -43,6 +43,7 @@ class MessageMixin(object):
             self.headers = headers
         self.body = body or ''
 
+
 def create_request_from_environ(environ, session_class=None, session_options=None):
     """Create a new Request object.
 
