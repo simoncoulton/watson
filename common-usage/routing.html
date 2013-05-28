@@ -802,10 +802,24 @@
 <span class="p">}</span>
 </code></pre></div>
 
-<p>Url                | Method | Matched
--------            | ------ | -
-/resource          | GET    | Yes
-/resource          | PUT    | No</p>
+<table><thead>
+<tr>
+<th>Url</th>
+<th>Verb</th>
+<th>Matched</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>/resource</td>
+<td>GET</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>/resource</td>
+<td>PUT</td>
+<td>No</td>
+</tr>
+</tbody></table>
 
 <h4 id="toc_4">Subdomains</h4>
 
@@ -819,10 +833,24 @@
 <span class="p">}</span>
 </code></pre></div>
 
-<p>Url                | Host              | Matched
--------            | ---------         | -
-/resource          | <a href="http://www.site.com">www.site.com</a>      | No
-/resource          | clients.site.com  | Yes</p>
+<table><thead>
+<tr>
+<th>Url</th>
+<th>Host</th>
+<th>Matched</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>/resource</td>
+<td><a href="http://www.site.com">www.site.com</a></td>
+<td>No</td>
+</tr>
+<tr>
+<td>/resource/123</td>
+<td>clients.site.com</td>
+<td>Yes</td>
+</tr>
+</tbody></table>
 
 <h4 id="toc_5">Creating segment driven routes</h4>
 
