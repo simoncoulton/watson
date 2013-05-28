@@ -13,7 +13,7 @@
 			<div class="wrapper main clearfix">
 				{% include menu.html %}
 			    <div class="content">
-			    	<h2 class="section-title">{{ page.title }}</h2>
+			    	<h2 class="section-title">{% if page.module %}{{ page.module }}{% else %}{{ page.title }}{% endif %}</h2>
 					{{ content }}
 				</div>
 			</div>
