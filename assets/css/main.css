@@ -817,7 +817,7 @@ table th {
 }
 
 table th, table td {
-    padding: 4px;
+    padding: 4px 8px;
 }
 
 table tr:nth-of-type(2n) td {

@@ -736,15 +736,313 @@
 	</ul>
 </nav>
 			    <div class="content">
-			    	<h2 class="section-title">Storage</h2>
+			    	<h2 class="section-title">watson.cache.storage</h2>
 					<section class="standout">
 	<dl>
 		<dt>Package</dt>
 		<dd>watson.cache</dd>
 	</dl>
 </section>
-<section>
-<p>Storage documentation</p>
+<section class="code">
+<h3 id="toc_0">BaseStorage</h3>
+
+<blockquote>
+<p>Base class for all cache storage classes.</p>
+</blockquote>
+
+<p>Cache storage classes are designed to act similar to a dict, however get and set methods can be used when a timeout is required on a set, or when a default
+value is to be specified on a get.</p>
+
+<h4 id="toc_1">Attributes</h4>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>dict</td>
+<td>config</td>
+<td>The relevant configuration settings for the storage.</td>
+</tr>
+</tbody></table>
+
+<h4 id="toc_2">Methods</h4>
+
+<h5 id="toc_3">__init__</h5>
+
+<h6 id="toc_4">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>dict</td>
+<td>config</td>
+<td>The relevant configuration settings for the storage.</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_5">__delitem__</h5>
+
+<p>Delete a key from the cache.</p>
+
+<h6 id="toc_6">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>key</td>
+<td>The key to delete</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_7">Usage</h6>
+
+<div class="highlight"><pre><code class="python"><span class="k">del</span> <span class="n">cache</span><span class="p">[</span><span class="s">&#39;key&#39;</span><span class="p">]</span> <span class="c"># deletes &#39;key&#39; from the cache</span>
+</code></pre></div>
+
+<h5 id="toc_8">__contains__</h5>
+
+<p>Determine whether or not a key exists in the cache.</p>
+
+<h6 id="toc_9">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>key</td>
+<td>The key to find</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_10">Returns</h6>
+
+<p>True/False depending on if the key exists.</p>
+
+<h6 id="toc_11">Usage</h6>
+
+<div class="highlight"><pre><code class="python"><span class="k">if</span> <span class="s">&#39;key&#39;</span> <span class="ow">in</span> <span class="n">cache</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;exists!&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<h5 id="toc_12">flush</h5>
+
+<p>Clears all items from the cache.</p>
+
+<h6 id="toc_13">Returns</h6>
+
+<p>True if successful.</p>
+
+<h6 id="toc_14">Usage</h6>
+
+<div class="highlight"><pre><code class="python"><span class="n">cache</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</code></pre></div>
+
+<h5 id="toc_15">expired</h5>
+
+<p>Determine if a key has expired or not.</p>
+
+<h6 id="toc_16">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>key</td>
+<td>The key to find</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_17">Returns</h6>
+
+<p>True/False depending on expiration</p>
+
+<h6 id="toc_18">Usage</h6>
+
+<div class="highlight"><pre><code class="python"><span class="k">if</span> <span class="n">cache</span><span class="o">.</span><span class="n">expired</span><span class="p">(</span><span class="s">&#39;key&#39;</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;Expired!&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<h5 id="toc_19">set</h5>
+
+<p>Sets a key in the cache.</p>
+
+<h6 id="toc_20">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>key</td>
+<td>The key to be used as a reference</td>
+</tr>
+<tr>
+<td>mixed</td>
+<td>value</td>
+<td>The value to store in the key</td>
+</tr>
+<tr>
+<td>int</td>
+<td>timeout</td>
+<td>The amount of time in seconds a key is valid for.</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_21">Usage</h6>
+
+<div class="highlight"><pre><code class="python"><span class="n">cache</span><span class="p">[</span><span class="s">&#39;key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;value&#39;</span>
+</code></pre></div>
+
+<h5 id="toc_22">get</h5>
+
+<p>Gets a key from the cache, returns the default if not set.</p>
+
+<h6 id="toc_23">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>key</td>
+<td>The key to be used as a reference</td>
+</tr>
+<tr>
+<td>mixed</td>
+<td>default</td>
+<td>The value to return if not in cache</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_24">Returns</h6>
+
+<p>The value stored within the cache</p>
+
+<h6 id="toc_25">Usage</h6>
+
+<div class="highlight"><pre><code class="python"><span class="n">value</span> <span class="o">=</span> <span class="n">cache</span><span class="p">[</span><span class="s">&#39;key&#39;</span><span class="p">]</span>
+</code></pre></div>
+
+<hr>
+
+<h3 id="toc_26">Memory</h3>
+
+<blockquote>
+<p>A cache storage mechanism for storing items in memory.</p>
+</blockquote>
+
+<p>Memory cache storage will maintain the cache while the application is being run. This is usually best used in instances when you don&#39;t want to keep the cached items after the application has finished running.</p>
+
+<hr>
+
+<h3 id="toc_27">File</h3>
+
+<blockquote>
+<p>A cache storage mechanism for storing items on the local filesystem.</p>
+</blockquote>
+
+<p>File cache storage will persist the data to the filesystem in whichever directory has been specified in the configuration options. If no directory is specified then the system temporary folder will be used.</p>
+
+<h4 id="toc_28">Methods</h4>
+
+<h5 id="toc_29">__init__</h5>
+
+<p>Initializes the cache.</p>
+
+<h6 id="toc_30">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>dict</td>
+<td>config</td>
+<td>The config for the cache</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_31">Usage</h6>
+
+<div class="highlight"><pre><code class="python"><span class="n">cache</span> <span class="o">=</span> <span class="n">File</span><span class="p">({</span><span class="s">&#39;dir&#39;</span><span class="p">:</span> <span class="s">&#39;/tmp&#39;</span><span class="p">,</span> <span class="s">&#39;prefix&#39;</span><span class="p">:</span> <span class="s">&#39;my-cache&#39;</span><span class="p">})</span>
+<span class="c"># all cached items will be saved to /tmp</span>
+<span class="c"># and will be prefixed with my-cache</span>
+<span class="n">cache</span><span class="p">[</span><span class="s">&#39;key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;value&#39;</span> <span class="c"># /tmp/my-cache-key contains a serialized &#39;value&#39;</span>
+</code></pre></div>
+
+<hr>
+
+<h3 id="toc_32">Memcached</h3>
+
+<blockquote>
+<p>A cache storage mechanism for storing items in memcached.</p>
+</blockquote>
+
+<p>Memcached cache storage will utilize python3-memcached to maintain the cache across multiple servers.
+python3-memcached documentation can be found at <a href="http://pypi.python.org/pypi/python3-memcached/">http://pypi.python.org/pypi/python3-memcached/</a></p>
+
+<h4 id="toc_33">Methods</h4>
+
+<h5 id="toc_34">__init__</h5>
+
+<p>Initializes the cache.</p>
+
+<h6 id="toc_35">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>dict</td>
+<td>config</td>
+<td>The config for the cache</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_36">Usage</h6>
+
+<div class="highlight"><pre><code class="python"><span class="n">cache</span> <span class="o">=</span> <span class="n">Memcached</span><span class="p">({</span><span class="s">&#39;servers&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;127.0.0.1:11211&#39;</span><span class="p">,</span> <span class="s">&#39;192.168.100.1:11211&#39;</span><span class="p">]})</span>
+</code></pre></div>
 
 </section>
 
@@ -775,6 +1073,7 @@
 	
 	
 </section>
+
 				</div>
 			</div>
 		</div>

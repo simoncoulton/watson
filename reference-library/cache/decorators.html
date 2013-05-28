@@ -736,15 +736,64 @@
 	</ul>
 </nav>
 			    <div class="content">
-			    	<h2 class="section-title">Decorators</h2>
+			    	<h2 class="section-title">watson.cache.decorators</h2>
 					<section class="standout">
 	<dl>
 		<dt>Package</dt>
 		<dd>watson.cache</dd>
 	</dl>
 </section>
-<section>
-<p>Decorator documentation</p>
+<section class="code">
+<h3 id="toc_0">cache</h3>
+
+<blockquote>
+<p>Retrieve a value from the cache</p>
+</blockquote>
+
+<p>Attempts to retrieve a value from the cache. If the wrapped function
+does not have an attribute of container, from which to retrieve the cache type then it will default to cache.storage.Memory.</p>
+
+<h4 id="toc_1">Arguments</h4>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>callable</td>
+<td>func</td>
+<td>the function that is being wrapped</td>
+</tr>
+<tr>
+<td>int</td>
+<td>timeout</td>
+<td>the number of seconds the item should exist in the cache</td>
+</tr>
+<tr>
+<td>string</td>
+<td>key</td>
+<td>the key to store the data against in the cache, defaults to the qualified name of the decorated function.</td>
+</tr>
+</tbody></table>
+
+<h4 id="toc_2">Returns</h4>
+
+<p>The contents of the cache key.</p>
+
+<h4 id="toc_3">Usage</h4>
+
+<div class="highlight"><pre><code class="python"><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">ContainerAware</span><span class="p">):</span>
+    <span class="nd">@cache</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">3600</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">expensive_func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;something&#39;</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+<span class="n">c</span><span class="o">.</span><span class="n">expensive_func</span><span class="p">()</span> <span class="c"># something</span>
+<span class="n">c</span><span class="o">.</span><span class="n">expensive_func</span><span class="p">()</span> <span class="c"># something - returned from cache</span>
+</code></pre></div>
 
 </section>
 
@@ -775,6 +824,7 @@
 	
 	
 </section>
+
 				</div>
 			</div>
 		</div>
