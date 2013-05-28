@@ -30,7 +30,7 @@ routes = {
 from watson.mvc import controllers
 
 class Public(controllers.Action):
-    def indexAction(self):
+    def index_action(self):
         pass
 {% endhighlight %}
 
