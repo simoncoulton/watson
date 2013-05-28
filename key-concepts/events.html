@@ -113,15 +113,13 @@
 			    
 			  
 			    
-			  
-			    
-			  
-			    
 			      <li>
 			        <a href="/watson/getting-started/configuration.html">
 			          Configuration
 			        </a>
 			      </li>
+			    
+			  
 			    
 			  
 			    
@@ -136,12 +134,18 @@
 			      </li>
 			    
 			  
+			    
+			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Key Concepts
 			<ul>
 				
+			    
+			  
 			    
 			  
 			    
@@ -227,17 +231,13 @@
 			    
 			  
 			    
-			  
-			    
-			  
-			    
-			  
-			    
 			      <li>
 			        <a href="/watson/key-concepts/dependencyinjection.html">
 			          Dependency Injection
 			        </a>
 			      </li>
+			    
+			  
 			    
 			  
 			    
@@ -250,14 +250,16 @@
 			  
 			    
 			  
+			    
+			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Common Usage
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -321,19 +323,7 @@
 			    
 			  
 			    
-			      <li>
-			        <a href="/watson/common-usage/requests.html">
-			          Requests
-			        </a>
-			      </li>
-			    
 			  
-			    
-			      <li>
-			        <a href="/watson/common-usage/routing.html">
-			          Routing
-			        </a>
-			      </li>
 			    
 			  
 			    
@@ -365,9 +355,31 @@
 			    
 			  
 			    
+			      <li>
+			        <a href="/watson/common-usage/routing.html">
+			          Routing
+			        </a>
+			      </li>
+			    
 			  
 			    
 			  
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/common-usage/requests.html">
+			          Requests
+			        </a>
+			      </li>
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/common-usage/forms.html">
+			          Forms
+			        </a>
+			      </li>
 			    
 			  
 			</ul>
@@ -472,11 +484,15 @@
 			  
 			    
 			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Reference Library
 			<ul>
+				
+				
 				
 				
 				
@@ -732,7 +748,7 @@
 <p>Create dispatcher &gt; Add listeners &gt; Trigger event &gt; Return results from triggered listeners</p>
 </blockquote>
 
-<h3>The anatomy of an Event</h3>
+<h3 id="toc_0">The anatomy of an Event</h3>
 
 <p>An event is used to pass around data within an application without introducing a tight coupling between objects. A basic event contains the following:</p>
 
@@ -744,7 +760,7 @@
 
 <p>When an event is triggered from an event dispatcher, all listeners that are listening for a particular event name will be triggered and their responses returned.</p>
 
-<h3>Inbuilt events</h3>
+<h3 id="toc_1">Inbuilt events</h3>
 
 <p>The lifecycle of a Watson application is maintained by 5 different events (defined in <em>watson.mvc.events</em>:</p>
 
@@ -758,7 +774,7 @@
 
 <p>These events are triggered by the shared_event_dispatcher which is instantiated from the applications IocContainer.</p>
 
-<h3>Creating and registering your own event listeners</h3>
+<h3 id="toc_2">Creating and registering your own event listeners</h3>
 
 <p>By default several listeners are defined within the <em>watson.mvc.config</em> module, however additional listeners can be added to these events, and even prevent the default listeners from being triggered.</p>
 
@@ -823,17 +839,17 @@
 	<h4>See also:</h4>
 	
 	
-	<a class="label blue" href="/watson/reference-library/events/types.html">watson.events.types</a>
-	
-	
-	
-	
 	<a class="label blue" href="/watson/reference-library/events/collections.html">watson.events.collections</a>
 	
 	
 	
 	
 	<a class="label blue" href="/watson/reference-library/events/dispatcher.html">watson.events.dispatcher</a>
+	
+	
+	
+	
+	<a class="label blue" href="/watson/reference-library/events/types.html">watson.events.types</a>
 	
 	
 	

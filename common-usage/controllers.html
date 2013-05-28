@@ -113,15 +113,13 @@
 			    
 			  
 			    
-			  
-			    
-			  
-			    
 			      <li>
 			        <a href="/watson/getting-started/configuration.html">
 			          Configuration
 			        </a>
 			      </li>
+			    
+			  
 			    
 			  
 			    
@@ -136,12 +134,18 @@
 			      </li>
 			    
 			  
+			    
+			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Key Concepts
 			<ul>
 				
+			    
+			  
 			    
 			  
 			    
@@ -227,17 +231,13 @@
 			    
 			  
 			    
-			  
-			    
-			  
-			    
-			  
-			    
 			      <li>
 			        <a href="/watson/key-concepts/dependencyinjection.html">
 			          Dependency Injection
 			        </a>
 			      </li>
+			    
+			  
 			    
 			  
 			    
@@ -250,14 +250,16 @@
 			  
 			    
 			  
+			    
+			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Common Usage
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -321,19 +323,7 @@
 			    
 			  
 			    
-			      <li>
-			        <a href="/watson/common-usage/requests.html">
-			          Requests
-			        </a>
-			      </li>
-			    
 			  
-			    
-			      <li>
-			        <a href="/watson/common-usage/routing.html">
-			          Routing
-			        </a>
-			      </li>
 			    
 			  
 			    
@@ -365,9 +355,31 @@
 			    
 			  
 			    
+			      <li>
+			        <a href="/watson/common-usage/routing.html">
+			          Routing
+			        </a>
+			      </li>
+			    
 			  
 			    
 			  
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/common-usage/requests.html">
+			          Requests
+			        </a>
+			      </li>
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/common-usage/forms.html">
+			          Forms
+			        </a>
+			      </li>
 			    
 			  
 			</ul>
@@ -472,11 +484,15 @@
 			  
 			    
 			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Reference Library
 			<ul>
+				
+				
 				
 				
 				
@@ -725,9 +741,9 @@
 
 <p>Watson provides two different types of controllers which are called Action and Rest respectively. Each one has its own uses and there is no one size fits all solution.</p>
 
-<h3>Creating controllers</h3>
+<h3 id="toc_0">Creating controllers</h3>
 
-<h4><a id="action"></a>Action controllers</h4>
+<h4 id="toc_1"><a id="action"></a>Action controllers</h4>
 
 <p>Action controller methods are defined explicitly within the applications route configuration. In the following example, when a request is made to <code>/</code> then the <code>app_name.controllers.Public</code> controller is initialized, and the <code>indexAction</code> method is invoked.</p>
 
@@ -741,7 +757,7 @@
 <span class="p">}</span>
 </code></pre></div>
 
-<p><span class="sub">app<em>name/controllers/</em><em>init</em>_.py</span></p>
+<p><span class="sub">app_name/controllers/__init__.py</span></p>
 
 <div class="highlight"><pre><code class="python"><span class="kn">from</span> <span class="nn">watson.mvc</span> <span class="kn">import</span> <span class="n">controllers</span>
 
@@ -750,7 +766,7 @@
         <span class="k">pass</span>
 </code></pre></div>
 
-<h4><a id="rest"></a>RESTful controllers</h4>
+<h4 id="toc_2"><a id="rest"></a>RESTful controllers</h4>
 
 <p>RESTful controller methods are based upon the HTTP request method that was made by the user. In the following example, when a request is made to <code>/</code> the <code>app_name.controllers.User</code> controller is initialized, and the relevant HTTP request method is invoked.</p>
 
@@ -764,7 +780,7 @@
 <span class="p">}</span>
 </code></pre></div>
 
-<p><span class="sub">app<em>name/controllers/</em><em>init</em>_.py</span></p>
+<p><span class="sub">app_name/controllers/__init__.py</span></p>
 
 <div class="highlight"><pre><code class="python"><span class="kn">from</span> <span class="nn">watson.mvc</span> <span class="kn">import</span> <span class="n">controllers</span>
 
@@ -782,9 +798,9 @@
         <span class="k">pass</span>
 </code></pre></div>
 
-<h3>Common tasks</h3>
+<h3 id="toc_3">Common tasks</h3>
 
-<h4>Accessing Request and Response objects</h4>
+<h4 id="toc_4">Accessing Request and Response objects</h4>
 
 <p>No changes should be made to the request object, and they should be treated as immutable. However any modifications can be made to the response object, as it will be used when the application renders the response to the user.</p>
 
@@ -798,7 +814,7 @@
 
 <p>For more information on request and response objects see the <a href="/watson/reference-library/http/messages.html">reference library</a>.</p>
 
-<h4>Redirecting a request to another route or url</h4>
+<h4 id="toc_5">Redirecting a request to another route or url</h4>
 
 <div class="highlight"><pre><code class="python"><span class="kn">from</span> <span class="nn">watson.mvc</span> <span class="kn">import</span> <span class="n">controllers</span>
 
@@ -814,7 +830,7 @@
 
 <p>When a user is redirected, any POST or PUT variables will be saved within the users session to solve the PRG (<a href="http://en.wikipedia.org/wiki/Post/Redirect/Get">Post Redirect Get</a>) issue. These variables may then be accessed to populate a form for example and are stored within the <code>redirect_vars</code> attribute of the controller. They can subsequently be cleared via the <code>clear_redirect_vars()</code> method on the controller.</p>
 
-<h4>Flash messaging</h4>
+<h4 id="toc_6">Flash messaging</h4>
 
 <p>Flash messaging is a way to send messages between requests. For example, a user may submit some form data to be saved, at which point the application would</p>
 
@@ -855,7 +871,7 @@
 
 <p>Once flash messages have been iterated over, they are automatically cleared from the flash message container.</p>
 
-<h4>404 and other http errors</h4>
+<h4 id="toc_7">404 and other http errors</h4>
 
 <p>Raising 404 Not Found errors and other HTTP error codes are simple to do directly from the controller.</p>
 
@@ -876,6 +892,7 @@
 </code></pre></div>
 
 <p></section></p>
+
 
 				</div>
 			</div>

@@ -113,15 +113,13 @@
 			    
 			  
 			    
-			  
-			    
-			  
-			    
 			      <li>
 			        <a href="/watson/getting-started/configuration.html">
 			          Configuration
 			        </a>
 			      </li>
+			    
+			  
 			    
 			  
 			    
@@ -136,12 +134,18 @@
 			      </li>
 			    
 			  
+			    
+			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Key Concepts
 			<ul>
 				
+			    
+			  
 			    
 			  
 			    
@@ -227,17 +231,13 @@
 			    
 			  
 			    
-			  
-			    
-			  
-			    
-			  
-			    
 			      <li class="active">
 			        <a href="/watson/key-concepts/dependencyinjection.html">
 			          Dependency Injection
 			        </a>
 			      </li>
+			    
+			  
 			    
 			  
 			    
@@ -250,14 +250,16 @@
 			  
 			    
 			  
+			    
+			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Common Usage
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -321,19 +323,7 @@
 			    
 			  
 			    
-			      <li>
-			        <a href="/watson/common-usage/requests.html">
-			          Requests
-			        </a>
-			      </li>
-			    
 			  
-			    
-			      <li>
-			        <a href="/watson/common-usage/routing.html">
-			          Routing
-			        </a>
-			      </li>
 			    
 			  
 			    
@@ -365,9 +355,31 @@
 			    
 			  
 			    
+			      <li>
+			        <a href="/watson/common-usage/routing.html">
+			          Routing
+			        </a>
+			      </li>
+			    
 			  
 			    
 			  
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/common-usage/requests.html">
+			          Requests
+			        </a>
+			      </li>
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/common-usage/forms.html">
+			          Forms
+			        </a>
+			      </li>
 			    
 			  
 			</ul>
@@ -472,11 +484,15 @@
 			  
 			    
 			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Reference Library
 			<ul>
+				
+				
 				
 				
 				
@@ -728,7 +744,7 @@
 <li><a href="#configuring">Configuring the container</a></li>
 </ul>
 
-<h3><a id="introduction"></a>Introduction</h3>
+<h3 id="toc_0"><a id="introduction"></a>Introduction</h3>
 
 <p>Dependency injection is a design pattern that allows us to remove hardcoded dependencies from our code, making it easier to maintain and expand upon as an application grows in size.</p>
 
@@ -752,7 +768,7 @@
 
 <p>As you can see above, the latter removes the dependency from the class itself, creating a looser coupling between components of the application.</p>
 
-<h4>The lifecycle of a dependency</h4>
+<h4 id="toc_1">The lifecycle of a dependency</h4>
 
 <p>Dependencies within Watson go through two events prior to being retrieved from the container.</p>
 
@@ -765,7 +781,7 @@
 
 <p>These events are only triggered once per dependency, unless the dependency is defined as a &#39;prototype&#39;, in which case a new instance of the dependency is retrieved on each request.</p>
 
-<h3><a id="example"></a>Example Usage</h3>
+<h3 id="toc_2"><a id="example"></a>Example Usage</h3>
 
 <p>Watson provides an easy to use IoC (Inversion of Control) container which allows these sorts of dependencies to be managed easily. Lets take a look at how we might instantiate a database connection without dependency injection.</p>
 
@@ -799,7 +815,7 @@
 <p>One thing to note here is that the configuration for the collection is stored within the code itself. While we could abstract this out to another module, there would still be some sort of dependency on retrieving the configuration from that module. We also introduce a hardcoded dependency by requiring the db module.
 By using the IocContainer, we can abstract both of these issues out keeping our codebase clean.</p>
 
-<h4>Using the IocContainer</h4>
+<h4 id="toc_3">Using the IocContainer</h4>
 
 <p>First we&#39;ll create code required to connect to the database, removing any hardcoded configuration details (note this is purely an example).</p>
 
@@ -911,7 +927,7 @@ By using the IocContainer, we can abstract both of these issues out keeping our 
         <span class="bp">self</span><span class="o">.</span><span class="n">db_write</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 </code></pre></div>
 
-<h3><a id="configuring"></a>Configuring the container</h3>
+<h3 id="toc_4"><a id="configuring"></a>Configuring the container</h3>
 
 <p>The container is defined within your applications configuration under the key &#39;dependencies&#39; as seen below.</p>
 

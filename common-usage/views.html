@@ -113,15 +113,13 @@
 			    
 			  
 			    
-			  
-			    
-			  
-			    
 			      <li>
 			        <a href="/watson/getting-started/configuration.html">
 			          Configuration
 			        </a>
 			      </li>
+			    
+			  
 			    
 			  
 			    
@@ -136,12 +134,18 @@
 			      </li>
 			    
 			  
+			    
+			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Key Concepts
 			<ul>
 				
+			    
+			  
 			    
 			  
 			    
@@ -227,17 +231,13 @@
 			    
 			  
 			    
-			  
-			    
-			  
-			    
-			  
-			    
 			      <li>
 			        <a href="/watson/key-concepts/dependencyinjection.html">
 			          Dependency Injection
 			        </a>
 			      </li>
+			    
+			  
 			    
 			  
 			    
@@ -250,14 +250,16 @@
 			  
 			    
 			  
+			    
+			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Common Usage
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -321,19 +323,7 @@
 			    
 			  
 			    
-			      <li>
-			        <a href="/watson/common-usage/requests.html">
-			          Requests
-			        </a>
-			      </li>
-			    
 			  
-			    
-			      <li>
-			        <a href="/watson/common-usage/routing.html">
-			          Routing
-			        </a>
-			      </li>
 			    
 			  
 			    
@@ -365,9 +355,31 @@
 			    
 			  
 			    
+			      <li>
+			        <a href="/watson/common-usage/routing.html">
+			          Routing
+			        </a>
+			      </li>
+			    
 			  
 			    
 			  
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/common-usage/requests.html">
+			          Requests
+			        </a>
+			      </li>
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/common-usage/forms.html">
+			          Forms
+			        </a>
+			      </li>
 			    
 			  
 			</ul>
@@ -472,11 +484,15 @@
 			  
 			    
 			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Reference Library
 			<ul>
+				
+				
 				
 				
 				
@@ -738,7 +754,7 @@
 
 <p><code>my_new_renderer</code> needs to be configured within the IocContainer to instantiate the new renderer.</p>
 
-<h3>Specifying different response formats</h3>
+<h3 id="toc_0">Specifying different response formats</h3>
 
 <p>To output the response in different formats is quite a simple task and only involves modifying the route itself (it can be modified without changing the route, however this is not really encouraged).</p>
 
@@ -773,8 +789,38 @@
 <span class="p">}</span>
 </code></pre></div>
 
-<p>In the above route, any request being sent to /something.xml or /something.json will output the data in the requested format.
-</section></p>
+<p>In the above route, any request being sent to /something.xml or /something.json will output the data in the requested format.</p>
+
+<h3 id="toc_1">Customizing the view path</h3>
+
+<p>By default Watson will try to load views from <code>project_name/app_name/views/controller_name/action.html</code> where project_name is the name of your project, app_name is the name of your application module, controller_name is the name of the controller that was executed and action is http request method (if the controller is a Rest controller) or the specified action from the route (if the controller is an Action controller).</p>
+
+<p>This above convention is defined within watson.mvc.config.views, however this can be overridden if required.</p>
+
+<p><span class="sub">The views settings within watson.mvc.config</span></p>
+
+<div class="highlight"><pre><code class="python"><span class="n">views</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;default_format&#39;</span><span class="p">:</span> <span class="s">&#39;html&#39;</span><span class="p">,</span>
+    <span class="s">&#39;renderers&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;jinja2_renderer&#39;</span><span class="p">,</span>
+            <span class="s">&#39;config&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;extension&#39;</span><span class="p">:</span> <span class="s">&#39;html&#39;</span><span class="p">,</span>
+                <span class="s">&#39;paths&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s">&#39;views&#39;</span><span class="p">)]</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="s">&#39;xml&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;xml_renderer&#39;</span><span class="p">},</span>
+        <span class="s">&#39;json&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;json_renderer&#39;</span><span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s">&#39;templates&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;404&#39;</span><span class="p">:</span> <span class="s">&#39;errors/404&#39;</span><span class="p">,</span>
+        <span class="s">&#39;500&#39;</span><span class="p">:</span> <span class="s">&#39;errors/500&#39;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p></section></p>
+
 
 				</div>
 			</div>

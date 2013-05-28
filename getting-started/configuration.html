@@ -113,15 +113,13 @@
 			    
 			  
 			    
-			  
-			    
-			  
-			    
 			      <li class="active">
 			        <a href="/watson/getting-started/configuration.html">
 			          Configuration
 			        </a>
 			      </li>
+			    
+			  
 			    
 			  
 			    
@@ -136,12 +134,18 @@
 			      </li>
 			    
 			  
+			    
+			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Key Concepts
 			<ul>
 				
+			    
+			  
 			    
 			  
 			    
@@ -227,17 +231,13 @@
 			    
 			  
 			    
-			  
-			    
-			  
-			    
-			  
-			    
 			      <li>
 			        <a href="/watson/key-concepts/dependencyinjection.html">
 			          Dependency Injection
 			        </a>
 			      </li>
+			    
+			  
 			    
 			  
 			    
@@ -250,14 +250,16 @@
 			  
 			    
 			  
+			    
+			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Common Usage
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -321,19 +323,7 @@
 			    
 			  
 			    
-			      <li>
-			        <a href="/watson/common-usage/requests.html">
-			          Requests
-			        </a>
-			      </li>
-			    
 			  
-			    
-			      <li>
-			        <a href="/watson/common-usage/routing.html">
-			          Routing
-			        </a>
-			      </li>
 			    
 			  
 			    
@@ -365,9 +355,31 @@
 			    
 			  
 			    
+			      <li>
+			        <a href="/watson/common-usage/routing.html">
+			          Routing
+			        </a>
+			      </li>
+			    
 			  
 			    
 			  
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/common-usage/requests.html">
+			          Requests
+			        </a>
+			      </li>
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/common-usage/forms.html">
+			          Forms
+			        </a>
+			      </li>
 			    
 			  
 			</ul>
@@ -472,11 +484,15 @@
 			  
 			    
 			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Reference Library
 			<ul>
+				
+				
 				
 				
 				
@@ -729,7 +745,7 @@
 <li><a href="#extending">Extending the Configuration</a></li>
 </ul>
 
-<h3><a id="introduction"></a>Introduction</h3>
+<h3 id="toc_0"><a id="introduction"></a>Introduction</h3>
 
 <p>While Watson is primarily built with conventions in mind, there are still plenty of configuration options that can be modified to override the default behaviour.</p>
 
@@ -737,7 +753,7 @@
 <p><strong>Note:</strong> To override values within the default configuration, you only need to replace those values within your own configuration file. The application with automatically merge the defaults with your new options.</p>
 </blockquote>
 
-<h3><a id="application"></a>Application Configuration</h3>
+<h3 id="toc_1"><a id="application"></a>Application Configuration</h3>
 
 <p>Configuration for Watson is just a standard python module (and should be familiar to those who have used Django previously). Available keys for configuration are:</p>
 
@@ -751,7 +767,7 @@
 
 <p>You can see the default configuration that Watson uses within the <code>watson.mvc.config</code> module.</p>
 
-<h4>Debug</h4>
+<h4 id="toc_2">Debug</h4>
 
 <p>Debug is responsible for determining if the application is running in debug mode, and the relevant profiling settings.</p>
 
@@ -767,13 +783,13 @@
 <span class="p">}</span>
 </code></pre></div>
 
-<h4>Dependencies</h4>
+<h4 id="toc_3">Dependencies</h4>
 
 <p>The configuration of your application will automatically be added to the container, which can then be retrieved via the key <code>application.config</code>.</p>
 
 <p>See the dependency injection <a href="/watson/key-concepts/dependencyinjection.html#configuring">key concept</a> for more information on how to define dependencies and container parameters.</p>
 
-<h4>Views</h4>
+<h4 id="toc_4">Views</h4>
 
 <p>Watson utilizes multiple renderers to output the different views that the user may request. Each renderer is retrieved
 from the dependency injection container (see above), with the name key being the same as the relevant dependency name.</p>
@@ -804,7 +820,7 @@ from the dependency injection container (see above), with the name key being the
 XML and JSON respectively.
 There are also a set of templates defined, which allows you to override templates that will be used. The format of these being &#39;existing template path&#39;: &#39;new template path&#39; (relative to the views directory).</p>
 
-<h4>Session</h4>
+<h4 id="toc_5">Session</h4>
 
 <p>By default Watson will use File for session storage, which stores the contents of each session in their own file
 within your systems temporary directory (unless otherwise specified in the config).</p>
@@ -819,7 +835,7 @@ within your systems temporary directory (unless otherwise specified in the confi
 
 <p>See the storage methods that are available for sessions in the <a href="/watson/reference-library/http/sessions.html">Reference Library</a>.</p>
 
-<h4>Events</h4>
+<h4 id="toc_6">Events</h4>
 
 <p>Events are the core to the lifecycle of both a request and the initialization of a Watson application. The default configuration sets up 5 events which will be executed at different times of the lifecycle.</p>
 
@@ -836,7 +852,7 @@ within your systems temporary directory (unless otherwise specified in the confi
 <span class="p">}</span>
 </code></pre></div>
 
-<h3><a id="extending"></a>Extending the Configuration</h3>
+<h3 id="toc_7"><a id="extending"></a>Extending the Configuration</h3>
 
 <p>There are times when you may want to allow other developers to get access to your configuration from dependencies retrieved from the
 container. This can easily be achieved by the use of lambda functions.</p>
@@ -867,6 +883,7 @@ container. This can easily be achieved by the use of lambda functions.</p>
 <p>When my.module.Klass is initialized, the configuration settings will be passed as the first argument to the <code>__init__</code> method.</p>
 
 <p></section></p>
+
 
 				</div>
 			</div>

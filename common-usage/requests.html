@@ -113,15 +113,13 @@
 			    
 			  
 			    
-			  
-			    
-			  
-			    
 			      <li>
 			        <a href="/watson/getting-started/configuration.html">
 			          Configuration
 			        </a>
 			      </li>
+			    
+			  
 			    
 			  
 			    
@@ -136,12 +134,18 @@
 			      </li>
 			    
 			  
+			    
+			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Key Concepts
 			<ul>
 				
+			    
+			  
 			    
 			  
 			    
@@ -227,17 +231,13 @@
 			    
 			  
 			    
-			  
-			    
-			  
-			    
-			  
-			    
 			      <li>
 			        <a href="/watson/key-concepts/dependencyinjection.html">
 			          Dependency Injection
 			        </a>
 			      </li>
+			    
+			  
 			    
 			  
 			    
@@ -250,14 +250,16 @@
 			  
 			    
 			  
+			    
+			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Common Usage
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -321,19 +323,7 @@
 			    
 			  
 			    
-			      <li class="active">
-			        <a href="/watson/common-usage/requests.html">
-			          Requests
-			        </a>
-			      </li>
-			    
 			  
-			    
-			      <li>
-			        <a href="/watson/common-usage/routing.html">
-			          Routing
-			        </a>
-			      </li>
 			    
 			  
 			    
@@ -365,9 +355,31 @@
 			    
 			  
 			    
+			      <li>
+			        <a href="/watson/common-usage/routing.html">
+			          Routing
+			        </a>
+			      </li>
+			    
 			  
 			    
 			  
+			    
+			  
+			    
+			      <li class="active">
+			        <a href="/watson/common-usage/requests.html">
+			          Requests
+			        </a>
+			      </li>
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/common-usage/forms.html">
+			          Forms
+			        </a>
+			      </li>
 			    
 			  
 			</ul>
@@ -472,11 +484,15 @@
 			  
 			    
 			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Reference Library
 			<ul>
+				
+				
 				
 				
 				
@@ -733,9 +749,9 @@
 <span class="p">}</span>
 </code></pre></div>
 
-<h3>Accessing request variables</h3>
+<h3 id="toc_0">Accessing request variables</h3>
 
-<h4>Accessing GET variables</h4>
+<h4 id="toc_1">Accessing GET variables</h4>
 
 <p>Assuming the following http request:</p>
 <div class="highlight"><pre><code class="text">/path/?query=string&amp;value=something
@@ -745,7 +761,7 @@
         <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">[</span><span class="s">&#39;query&#39;</span><span class="p">]</span>  <span class="c"># string</span>
 </code></pre></div>
 
-<h4>Accessing POST variables</h4>
+<h4 id="toc_2">Accessing POST variables</h4>
 
 <p>Assuming the following http request:</p>
 <div class="highlight"><pre><code class="text">/path
@@ -758,7 +774,7 @@
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">post</span><span class="p">[</span><span class="s">&#39;data&#39;</span><span class="p">]</span>  <span class="c"># something</span>
 </code></pre></div>
 
-<h4>Accessing FILE variables</h4>
+<h4 id="toc_3">Accessing FILE variables</h4>
 
 <p>Assuming the following http request:</p>
 <div class="highlight"><pre><code class="text">/path
@@ -773,7 +789,7 @@
         <span class="nb">file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s">&#39;a_file&#39;</span><span class="p">]</span>  <span class="c"># cgi.FieldStorage</span>
 </code></pre></div>
 
-<h4>Accessing cookies</h4>
+<h4 id="toc_4">Accessing cookies</h4>
 
 <p>Assuming the following http request:</p>
 <div class="highlight"><pre><code class="text">/path
@@ -783,7 +799,7 @@
         <span class="n">cookies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">cookies</span>  <span class="c"># CookieDict</span>
 </code></pre></div>
 
-<h4>Accessing session data</h4>
+<h4 id="toc_5">Accessing session data</h4>
 
 <p>Assuming the following http request:</p>
 <div class="highlight"><pre><code class="text">/path
@@ -798,7 +814,7 @@
         <span class="n">session</span><span class="o">.</span><span class="n">id</span>  <span class="c"># id of the session</span>
 </code></pre></div>
 
-<h4>Accessing SERVER variables (environ variables)</h4>
+<h4 id="toc_6">Accessing SERVER variables (environ variables)</h4>
 
 <div class="highlight"><pre><code class="python"><span class="k">class</span> <span class="nc">Public</span><span class="p">(</span><span class="n">controllers</span><span class="o">.</span><span class="n">Rest</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">GET</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -806,6 +822,7 @@
 </code></pre></div>
 
 <p></section></p>
+
 
 				</div>
 			</div>

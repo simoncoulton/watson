@@ -113,15 +113,13 @@
 			    
 			  
 			    
-			  
-			    
-			  
-			    
 			      <li>
 			        <a href="/watson/getting-started/configuration.html">
 			          Configuration
 			        </a>
 			      </li>
+			    
+			  
 			    
 			  
 			    
@@ -136,12 +134,18 @@
 			      </li>
 			    
 			  
+			    
+			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Key Concepts
 			<ul>
 				
+			    
+			  
 			    
 			  
 			    
@@ -227,17 +231,13 @@
 			    
 			  
 			    
-			  
-			    
-			  
-			    
-			  
-			    
 			      <li>
 			        <a href="/watson/key-concepts/dependencyinjection.html">
 			          Dependency Injection
 			        </a>
 			      </li>
+			    
+			  
 			    
 			  
 			    
@@ -250,14 +250,16 @@
 			  
 			    
 			  
+			    
+			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Common Usage
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -321,19 +323,7 @@
 			    
 			  
 			    
-			      <li>
-			        <a href="/watson/common-usage/requests.html">
-			          Requests
-			        </a>
-			      </li>
-			    
 			  
-			    
-			      <li class="active">
-			        <a href="/watson/common-usage/routing.html">
-			          Routing
-			        </a>
-			      </li>
 			    
 			  
 			    
@@ -365,9 +355,31 @@
 			    
 			  
 			    
+			      <li class="active">
+			        <a href="/watson/common-usage/routing.html">
+			          Routing
+			        </a>
+			      </li>
+			    
 			  
 			    
 			  
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/common-usage/requests.html">
+			          Requests
+			        </a>
+			      </li>
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/common-usage/forms.html">
+			          Forms
+			        </a>
+			      </li>
 			    
 			  
 			</ul>
@@ -472,11 +484,15 @@
 			  
 			    
 			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Reference Library
 			<ul>
+				
+				
 				
 				
 				
@@ -721,8 +737,237 @@
 </nav>
 			    <div class="content">
 			    	<h2 class="section-title">Routing</h2>
-					<p><section>
-</section></p>
+					<p><section></p>
+
+<p>Routing is an important part of Watson as it ties a request directly to a controller (and subsequently a view). Routes are generally defined within the <code>project/app_name/config/routes.py</code> file, which is then imported into your applications configuration file.</p>
+
+<h3 id="toc_0">The anatomy of a route</h3>
+
+<p>Routes within Watson consist of several key parts, and at a bare minimum must contain the following:</p>
+
+<ol>
+<li>A name to identify it</li>
+<li>A path to match against</li>
+<li>A controller to execute</li>
+</ol>
+
+<p>A route is defined within a simple dict() in the following way:</p>
+
+<div class="highlight"><pre><code class="python"><span class="n">routes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;route_name&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;path&#39;</span><span class="p">:</span> <span class="s">&#39;/&#39;</span><span class="p">,</span>
+        <span class="s">&#39;defaults&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;controller&#39;</span><span class="p">:</span> <span class="s">&#39;package.module.Controller&#39;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>When a user hits / in their browser, then a new instance of package.module.Controller will be instantiated, and the relevant view will be rendered to the browser.</p>
+
+<h3 id="toc_1">Ordering of routes</h3>
+
+<p>The ordering of routes is important, however as dicts are unordered you must supply a priority within the route.</p>
+
+<div class="highlight"><pre><code class="python"><span class="n">routes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;route_name&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;path&#39;</span><span class="p">:</span> <span class="s">&#39;/resource&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s">&#39;route_name_post&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;path&#39;</span><span class="p">:</span> <span class="s">&#39;/resource&#39;</span><span class="p">,</span>
+        <span class="s">&#39;accepts&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;POST&#39;</span><span class="p">,)</span>
+        <span class="s">&#39;priority&#39;</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>When /resource is sent to the browser, the response from route_name will always be returned first, regardless of the http request method being used. However by adding priority to route_name_post, if the POST request method is used, then route_name_posts contents will be returned.</p>
+
+<h3 id="toc_2">Creating complex routes</h3>
+
+<p>There are times when you may wish to only allow access to a particular route via a single http request method, or perhaps only if a specific format is requested.</p>
+
+<h4 id="toc_3">Accepting specific request methods</h4>
+
+<p>Simply add a list/tuple of valid http request methods to the &#39;accepts&#39; key on the route.</p>
+
+<div class="highlight"><pre><code class="python"><span class="n">routes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;route_name&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;path&#39;</span><span class="p">:</span> <span class="s">&#39;/resource&#39;</span><span class="p">,</span>
+        <span class="s">&#39;accepts&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="s">&#39;POST&#39;</span><span class="p">)</span>
+        <span class="s">&#39;defaults&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;controller&#39;</span><span class="p">:</span> <span class="s">&#39;package.module.Controller&#39;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Url                | Method | Matched
+-------            | ------ | -
+/resource          | GET    | Yes
+/resource          | PUT    | No</p>
+
+<h4 id="toc_4">Subdomains</h4>
+
+<p>Simply add the subdomain to the &#39;subdomain&#39; key on the route.</p>
+
+<div class="highlight"><pre><code class="python"><span class="n">routes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;route_name&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;path&#39;</span><span class="p">:</span> <span class="s">&#39;/resource&#39;</span><span class="p">,</span>
+        <span class="s">&#39;subdomain&#39;</span><span class="p">:</span> <span class="s">&#39;clients&#39;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Url                | Host              | Matched
+-------            | ---------         | -
+/resource          | <a href="http://www.site.com">www.site.com</a>      | No
+/resource          | clients.site.com  | Yes</p>
+
+<h4 id="toc_5">Creating segment driven routes</h4>
+
+<p>A segment route is basically a route that contains a series of placeholder values. These can be mandatory, or optional depending on how they are configured. Any segments will be sent as keyword arguments to the controllers that they execute, though they can be ignored.</p>
+
+<p><span class="sub">Mandatory segment</span></p>
+
+<div class="highlight"><pre><code class="python"><span class="n">routes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;route_name&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;path&#39;</span><span class="p">:</span> <span class="s">&#39;/resource/:id&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<table><thead>
+<tr>
+<th>Url</th>
+<th>Matched</th>
+<th>id</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>/resource</td>
+<td>No</td>
+<td>-</td>
+</tr>
+<tr>
+<td>/resource/123</td>
+<td>Yes</td>
+<td>123</td>
+</tr>
+</tbody></table>
+
+<p><span class="sub">Optional segment</span></p>
+
+<div class="highlight"><pre><code class="python"><span class="n">routes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;route_name&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;path&#39;</span><span class="p">:</span> <span class="s">&#39;/resource/:id[/:resource_action]&#39;</span><span class="p">,</span>
+        <span class="s">&#39;defaults&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;resource_action&#39;</span><span class="p">:</span> <span class="s">&#39;view&#39;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<table><thead>
+<tr>
+<th>Url</th>
+<th>Matched</th>
+<th>id</th>
+<th>resource_action</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>/resource</td>
+<td>No</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>/resource/123</td>
+<td>Yes</td>
+<td>123</td>
+<td>view</td>
+</tr>
+<tr>
+<td>/resource/123/edit</td>
+<td>Yes</td>
+<td>123</td>
+<td>edit</td>
+</tr>
+</tbody></table>
+
+<p><span class="sub">Optional segment with required values</span></p>
+
+<div class="highlight"><pre><code class="python"><span class="n">routes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;route_name&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;path&#39;</span><span class="p">:</span> <span class="s">&#39;/resource/:id[/:resource_action]&#39;</span><span class="p">,</span>
+        <span class="s">&#39;defaults&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;resource_action&#39;</span><span class="p">:</span> <span class="s">&#39;view&#39;</span>
+        <span class="p">},</span>
+        <span class="s">&#39;requires&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;resource_action&#39;</span><span class="p">:</span> <span class="s">&#39;view|edit|delete&#39;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<table><thead>
+<tr>
+<th>Url</th>
+<th>Matched</th>
+<th>id</th>
+<th>resource_action</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>/resource</td>
+<td>No</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>/resource/123</td>
+<td>Yes</td>
+<td>123</td>
+<td>view</td>
+</tr>
+<tr>
+<td>/resource/123/edit</td>
+<td>Yes</td>
+<td>123</td>
+<td>edit</td>
+</tr>
+<tr>
+<td>/resource/123/show</td>
+<td>No</td>
+<td>-</td>
+<td>-</td>
+</tr>
+</tbody></table>
+
+<h3 id="toc_6">Generating urls from routes</h3>
+
+<p>Routes can be converted back to specific urls by using the assemble method on either the router object itself, or the assemble method on the route. Most of the time a url needs to be generated within the controller action, and as such the controller class provides a url() method which takes the same arguments as assemble(). Any keyword arguments that are passed to these functions replace any segments within the route path.</p>
+
+<p><span class="sub">Route configuration (leaving out default key for berevity)</span></p>
+
+<div class="highlight"><pre><code class="python"><span class="n">routes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;route_name&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;path&#39;</span><span class="p">:</span> <span class="s">&#39;/resource/:id&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><span class="sub">In a controller within your application</span></p>
+
+<div class="highlight"><pre><code class="python"><span class="k">class</span> <span class="nc">Resource</span><span class="p">(</span><span class="n">controllers</span><span class="o">.</span><span class="n">Rest</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">GET</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">resource</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>  <span class="c"># /resource/3</span>
+        <span class="c"># could also be represented as self.get(&#39;router&#39;).assemble(id=3)</span>
+</code></pre></div>
+
+<p></section></p>
+
 
 				</div>
 			</div>

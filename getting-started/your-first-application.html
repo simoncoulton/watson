@@ -113,15 +113,13 @@
 			    
 			  
 			    
-			  
-			    
-			  
-			    
 			      <li>
 			        <a href="/watson/getting-started/configuration.html">
 			          Configuration
 			        </a>
 			      </li>
+			    
+			  
 			    
 			  
 			    
@@ -136,12 +134,18 @@
 			      </li>
 			    
 			  
+			    
+			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Key Concepts
 			<ul>
 				
+			    
+			  
 			    
 			  
 			    
@@ -227,17 +231,13 @@
 			    
 			  
 			    
-			  
-			    
-			  
-			    
-			  
-			    
 			      <li>
 			        <a href="/watson/key-concepts/dependencyinjection.html">
 			          Dependency Injection
 			        </a>
 			      </li>
+			    
+			  
 			    
 			  
 			    
@@ -250,14 +250,16 @@
 			  
 			    
 			  
+			    
+			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Common Usage
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -321,19 +323,7 @@
 			    
 			  
 			    
-			      <li>
-			        <a href="/watson/common-usage/requests.html">
-			          Requests
-			        </a>
-			      </li>
-			    
 			  
-			    
-			      <li>
-			        <a href="/watson/common-usage/routing.html">
-			          Routing
-			        </a>
-			      </li>
 			    
 			  
 			    
@@ -365,9 +355,31 @@
 			    
 			  
 			    
+			      <li>
+			        <a href="/watson/common-usage/routing.html">
+			          Routing
+			        </a>
+			      </li>
+			    
 			  
 			    
 			  
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/common-usage/requests.html">
+			          Requests
+			        </a>
+			      </li>
+			    
+			  
+			    
+			      <li>
+			        <a href="/watson/common-usage/forms.html">
+			          Forms
+			        </a>
+			      </li>
 			    
 			  
 			</ul>
@@ -472,11 +484,15 @@
 			  
 			    
 			  
+			    
+			  
 			</ul>
 		</li>
 		<li>
 			Reference Library
 			<ul>
+				
+				
 				
 				
 				
@@ -729,7 +745,7 @@
 <li><a href="#putting-it-all-together">Putting it all together</a></li>
 </ul>
 
-<h3><a id="directory-structure"></a>Directory Structure</h3>
+<h3 id="toc_0"><a id="directory-structure"></a>Directory Structure</h3>
 
 <p>Watson has a preferred directory structure for it&#39;s applications which can be created automatically by the <code>watson-console.py newproject [project name] [app name]</code> command.</p>
 <div class="highlight"><pre><code class="text">/project_root
@@ -762,7 +778,7 @@
 
 <p>Once the structure has been created, you can use <code>./console.py</code> to perform related console commands from within the application, for example: <code>./console.py routes</code> to display a list of routes for the application.</p>
 
-<h3><a id="configuration"></a>Configuration</h3>
+<h3 id="toc_1"><a id="configuration"></a>Configuration</h3>
 
 <p>By creating your project using the <strong>newproject</strong> command Watson will generate 3 configuration files for your application as well as a route file.</p>
 
@@ -804,9 +820,9 @@ If you have retrieved the application from a VCS then you would make a copy of <
 <span class="p">}</span>
 </code></pre></div>
 
-<h3><a id="putting-it-all-together"></a>Putting it all together</h3>
+<h3 id="toc_2"><a id="putting-it-all-together"></a>Putting it all together</h3>
 
-<p>Most likely you&#39;ll want to develop locally first and then <a href="/watson/advanced-topics/deployment.html">deploy to a production environment</a> later. Watson comes packaged with a command to run a local development server which will automatically reload when changes are saved. To run the server simply change to the project directory and run <code>./console.py rundev</code> and then visit http://127.0.0.1:8000 in your favorite browser where you&#39;ll be greeted with a page saying welcome to Watson.</p>
+<p>Most likely you&#39;ll want to develop locally first and then <a href="/watson/advanced-topics/deployment.html">deploy to a production environment</a> later. Watson comes packaged with a command to run a local development server which will automatically reload when changes are saved. To run the server simply change to the project directory and run <code>./console.py rundev</code> and then visit <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a> in your favorite browser where you&#39;ll be greeted with a page saying welcome to Watson.</p>
 
 <p>A initial controller is created for you in <em>app_name/controllers/index.py</em> which will response to a request for / in your browser (from the above routes.py definition)</p>
 
