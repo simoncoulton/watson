@@ -747,10 +747,10 @@
 <h3 id="toc_0">ConstructorInjection</h3>
 
 <blockquote>
-<p>A dictionary type that can contain multiple items for a single key.</p>
+<p>Responsible for initializing the dependency.</p>
 </blockquote>
 
-<p>Dictionary type that will create a list of values if more than one item is set for that particular key.</p>
+<p>Responsible for initializing the dependency and injecting any required values into the constructor.</p>
 
 <h4 id="toc_1">Methods</h4>
 
@@ -781,10 +781,8 @@
 <h3 id="toc_5">SetterInjection</h3>
 
 <blockquote>
-<p>A dictionary type that can contain multiple items for a single key.</p>
+<p>Responsible for injecting required values into setter methods.</p>
 </blockquote>
-
-<p>Dictionary type that will create a list of values if more than one item is set for that particular key.</p>
 
 <h4 id="toc_6">Methods</h4>
 
@@ -815,10 +813,8 @@
 <h3 id="toc_10">AttributeInjection</h3>
 
 <blockquote>
-<p>A dictionary type that can contain multiple items for a single key.</p>
+<p>Responsibile for injecting required values into attributes.</p>
 </blockquote>
-
-<p>Dictionary type that will create a list of values if more than one item is set for that particular key.</p>
 
 <h4 id="toc_11">Methods</h4>
 
@@ -849,10 +845,8 @@
 <h3 id="toc_15">ContainerAware</h3>
 
 <blockquote>
-<p>A dictionary type that can contain multiple items for a single key.</p>
+<p>Responsible for injecting the container in any class that extends watson.di.ContainerAware. The container is then accessible via object.container.</p>
 </blockquote>
-
-<p>Dictionary type that will create a list of values if more than one item is set for that particular key.</p>
 
 <h4 id="toc_16">Methods</h4>
 

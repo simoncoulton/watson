@@ -744,7 +744,176 @@
 	</dl>
 </section>
 <section class="code">
-<p>Collections documentation</p>
+<h3 id="toc_0">ListenerDefinition</h3>
+
+<p>A named tuple consisting of a callback, priority, and once_only flag.</p>
+
+<hr>
+
+<h3 id="toc_1">Listener</h3>
+
+<blockquote>
+<p>A list of listeners to be used in an EventDispatcher.</p>
+</blockquote>
+
+<p>A Listener Collection is a list of callbacks that are to be triggered by an event dispatcher. Each item in the list contains the callback, a priority, and whether or not the callback should only be triggered once.</p>
+
+<h4 id="toc_2">Methods</h4>
+
+<h5 id="toc_3">add(callback, priority=1, only_once=False)</h5>
+
+<p>Adds a new callback to the collection.</p>
+
+<h6 id="toc_4">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>callable</td>
+<td>callback</td>
+<td>the function to be triggered</td>
+</tr>
+<tr>
+<td>int</td>
+<td>priority</td>
+<td>how important the callback is in relation to others</td>
+</tr>
+<tr>
+<td>bool</td>
+<td>only_once</td>
+<td>the callback should only be fired once and then removed</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_5">Raises</h6>
+
+<p>TypeError if non-callable is added.</p>
+
+<h5 id="toc_6">remove(callback)</h5>
+
+<p>Removes all callbacks matching <code>callback</code> from the collection.</p>
+
+<h6 id="toc_7">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>callable</td>
+<td>callback</td>
+<td>the callback to be removed.</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_8">sort_priority()</h5>
+
+<p>Sort the collection based on the priority of the callbacks.</p>
+
+<h6 id="toc_9">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>callable</td>
+<td>callback</td>
+<td>the callback to be removed.</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_10">__contains__(callback)</h5>
+
+<p>Determine whether or not a callback is in the collection.</p>
+
+<h6 id="toc_11">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>callable</td>
+<td>callback</td>
+<td>the callback to be removed.</td>
+</tr>
+</tbody></table>
+
+<hr>
+
+<h3 id="toc_12">Result</h3>
+
+<blockquote>
+<p>A list of responses from a EventDispatcher.trigger call.</p>
+</blockquote>
+
+<p>A result collection contains all the resulting output from an event that has
+been triggered from an event dispatcher. It provides some convenience methods to deal with the results.</p>
+
+<h4 id="toc_13">Methods</h4>
+
+<h5 id="toc_14">first(default=None)</h5>
+
+<p>Return the first result from the list.</p>
+
+<h6 id="toc_15">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>mixed</td>
+<td>default</td>
+<td>The value to return if the index doesn&#39;t exist</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_16">Returns</h6>
+
+<p>mixed: The first result in the collection</p>
+
+<h5 id="toc_17">last(default=None)</h5>
+
+<p>Return the last result from the list.</p>
+
+<h6 id="toc_18">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>mixed</td>
+<td>default</td>
+<td>The value to return if the index doesn&#39;t exist</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_19">Returns</h6>
+
+<p>mixed: The last result in the collection</p>
 
 </section>
 
@@ -832,17 +1001,27 @@
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/mvc/listeners.html">watson.mvc.listeners</a>
-	
-	
-	
-	
 	<a class="label blue" href="/watson/reference-library/mvc/exceptions.html">watson.mvc.exceptions</a>
 	
 	
 	
 	
+	<a class="label blue" href="/watson/reference-library/mvc/config.html">watson.mvc.config</a>
+	
+	
+	
+	
 	<a class="label blue" href="/watson/reference-library/mvc/applications.html">watson.mvc.applications</a>
+	
+	
+	
+	
+	<a class="label blue" href="/watson/reference-library/mvc/controllers.html">watson.mvc.controllers</a>
+	
+	
+	
+	
+	<a class="label blue" href="/watson/reference-library/mvc/listeners.html">watson.mvc.listeners</a>
 	
 	
 	
@@ -853,16 +1032,6 @@
 	
 	
 	<a class="label blue" href="/watson/reference-library/mvc/views.html">watson.mvc.views</a>
-	
-	
-	
-	
-	<a class="label blue" href="/watson/reference-library/mvc/controllers.html">watson.mvc.controllers</a>
-	
-	
-	
-	
-	<a class="label blue" href="/watson/reference-library/mvc/config.html">watson.mvc.config</a>
 	
 	
 	

@@ -744,7 +744,89 @@
 	</dl>
 </section>
 <section class="code">
-<p>Types documentation</p>
+<h3 id="toc_0">Event</h3>
+
+<blockquote>
+<p>A base event that can be subclassed for use with an EventDispatcher.</p>
+</blockquote>
+
+<h4 id="toc_1">Usage</h4>
+
+<div class="highlight"><pre><code class="python"><span class="k">def</span> <span class="nf">my_listener</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;config&#39;</span><span class="p">])</span>
+
+<span class="n">dispatcher</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&#39;MyEvent&#39;</span><span class="p">,</span> <span class="n">my_listener</span><span class="p">)</span>
+
+<span class="n">event</span> <span class="o">=</span> <span class="n">Event</span><span class="p">(</span><span class="s">&#39;MyEvent&#39;</span><span class="p">)</span>
+<span class="n">event</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;some&#39;</span><span class="p">:</span> <span class="s">&#39;config&#39;</span><span class="p">}</span>
+<span class="n">dispatcher</span><span class="o">.</span><span class="n">trigger</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</code></pre></div>
+
+<h4 id="toc_2">Properties</h4>
+
+<h5 id="toc_3">name</h5>
+
+<p>The name of the event</p>
+
+<h5 id="toc_4">params</h5>
+
+<p>A dictionary of parameters that can be included within an Event.</p>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>dict</td>
+<td>params</td>
+<td>data that is to be sent with the event</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_5">stopped</h5>
+
+<p>Return whether or not the event has been stopped.</p>
+
+<h4 id="toc_6">Methods</h4>
+
+<h5 id="toc_7"><strong>init</strong>(name, target=None, params=None)</h5>
+
+<p>Initialize the Event based on an event name. The name will be used when the event is triggered from the event dispatcher.</p>
+
+<h6 id="toc_8">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>name</td>
+<td>the name of the event</td>
+</tr>
+<tr>
+<td>mixed</td>
+<td>target</td>
+<td>the originating target of the event</td>
+</tr>
+<tr>
+<td>dict</td>
+<td>params</td>
+<td>the params associated with the event</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_9">stop_propagation()</h5>
+
+<p>Prevents the event from triggering any more event listeners.</p>
+
+<p>This should be used within an event listener when you wish to halt any further listeners from being triggered.</p>
 
 </section>
 
@@ -832,12 +914,12 @@
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/mvc/listeners.html">watson.mvc.listeners</a>
-	
-	
-	
-	
 	<a class="label blue" href="/watson/reference-library/mvc/exceptions.html">watson.mvc.exceptions</a>
+	
+	
+	
+	
+	<a class="label blue" href="/watson/reference-library/mvc/config.html">watson.mvc.config</a>
 	
 	
 	
@@ -847,22 +929,22 @@
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/mvc/routing.html">watson.mvc.routing</a>
-	
-	
-	
-	
 	<a class="label blue" href="/watson/reference-library/mvc/controllers.html">watson.mvc.controllers</a>
 	
 	
 	
 	
+	<a class="label blue" href="/watson/reference-library/mvc/listeners.html">watson.mvc.listeners</a>
+	
+	
+	
+	
+	<a class="label blue" href="/watson/reference-library/mvc/routing.html">watson.mvc.routing</a>
+	
+	
+	
+	
 	<a class="label blue" href="/watson/reference-library/mvc/views.html">watson.mvc.views</a>
-	
-	
-	
-	
-	<a class="label blue" href="/watson/reference-library/mvc/config.html">watson.mvc.config</a>
 	
 	
 	

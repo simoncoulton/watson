@@ -744,7 +744,39 @@
 	</dl>
 </section>
 <section class="code">
-<p>Elements documentation</p>
+<h3 id="toc_0">flatten_attributes(attrs, keep_empty=False)</h3>
+
+<blockquote>
+<p>Flattens attributes into a single string of key=value pairs.</p>
+</blockquote>
+
+<p>Attributes are sorted alphabetically.</p>
+
+<h4 id="toc_1">Arguments</h4>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>dict</td>
+<td>attrs</td>
+<td>A dict of key/value pairs to flatten</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>keep_empty</td>
+<td>Whether or not to maintain keys with None</td>
+</tr>
+</tbody></table>
+
+<h4 id="toc_2">Usage</h4>
+
+<div class="highlight"><pre><code class="python"><span class="n">flatten_attributes</span><span class="p">({</span><span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="s">&#39;MyId&#39;</span><span class="p">})</span>  <span class="c"># id=&quot;MyId&quot;</span>
+</code></pre></div>
 
 </section>
 
@@ -777,12 +809,12 @@
 	<h4>See also:</h4>
 	
 	
-	<a class="label blue" href="/watson/reference-library/form/__init__.html">watson.form</a>
-	
-	
-	
-	
 	<a class="label blue" href="/watson/reference-library/form/decorators.html">watson.form.decorators</a>
+	
+	
+	
+	
+	<a class="label blue" href="/watson/reference-library/form/fields.html">watson.form.fields</a>
 	
 	
 	
@@ -792,7 +824,7 @@
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/form/fields.html">watson.form.fields</a>
+	<a class="label blue" href="/watson/reference-library/form/__init__.html">watson.form</a>
 	
 	
 	

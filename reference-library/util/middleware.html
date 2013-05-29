@@ -744,7 +744,49 @@
 	</dl>
 </section>
 <section class="code">
-<p>Middleware documentation</p>
+<h3 id="toc_0">StaticFileMiddleware</h3>
+
+<blockquote>
+<p>A WSGI compatibile Middleware class that allows content to be retrieved from the directory that the <strong>main</strong> is called from.</p>
+</blockquote>
+
+<h4 id="toc_1">Usage</h4>
+
+<div class="highlight"><pre><code class="python"><span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">environ</span><span class="p">,</span> <span class="n">start_response</span><span class="p">):</span>
+    <span class="n">start_response</span><span class="p">(</span><span class="s">&#39;200 OK&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;Content-Type&#39;</span><span class="p">,</span> <span class="s">&#39;text/plain&#39;</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">b</span><span class="s">&#39;Hello World!&#39;</span><span class="p">]</span>
+
+<span class="n">my_app</span> <span class="o">=</span> <span class="n">StaticFileMiddleware</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+</code></pre></div>
+
+<h4 id="toc_2">Methods</h4>
+
+<h5 id="toc_3"><strong>init</strong>(app, initial_dir=None)</h5>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>callable</td>
+<td>app</td>
+<td>The application to serve</td>
+</tr>
+<tr>
+<td>string</td>
+<td>initial_dir</td>
+<td>The initial directory to serve from</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_4"><strong>call</strong>(environ, start_response)</h5>
+
+<h6 id="toc_5">Returns</h6>
+
+<p>The content found at the requested url</p>
 
 </section>
 

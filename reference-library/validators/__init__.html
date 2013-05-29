@@ -744,7 +744,243 @@
 	</dl>
 </section>
 <section class="code">
-<p>Init documentation</p>
+<h3 id="toc_0">Length</h3>
+
+<blockquote>
+<p>Validates the length of a string.</p>
+</blockquote>
+
+<div class="highlight"><pre><code class="python"><span class="n">validator</span> <span class="o">=</span> <span class="n">Length</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">validator</span><span class="p">(</span><span class="s">&#39;Test&#39;</span><span class="p">)</span>  <span class="c"># True</span>
+<span class="n">validator</span><span class="p">(</span><span class="s">&#39;Testing maximum&#39;</span><span class="p">)</span>  <span class="c"># raises ValueError</span>
+</code></pre></div>
+
+<h4 id="toc_1">Methods</h4>
+
+<h5 id="toc_2"><strong>init</strong>(min=-1, max=-1, message=&#39;&quot;{value}&quot; does not meet the required length&#39;)</h5>
+
+<p>Initializes the validator.</p>
+
+<p>Min, max, length are interpolated into the message.</p>
+
+<h6 id="toc_3">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>int</td>
+<td>min</td>
+<td>The minimum length of the string.</td>
+</tr>
+<tr>
+<td>int</td>
+<td>max</td>
+<td>The maximum length of the string.</td>
+</tr>
+<tr>
+<td>string</td>
+<td>message</td>
+<td>The message to be used if the validator fails.</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_4"><strong>call</strong>(value)</h5>
+
+<p>Executes the validator.</p>
+
+<h6 id="toc_5">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>value</td>
+<td>the value to validate</td>
+</tr>
+</tbody></table>
+
+<hr>
+
+<h3 id="toc_6">Required</h3>
+
+<blockquote>
+<p>Validates whether or not a value exists.</p>
+</blockquote>
+
+<div class="highlight"><pre><code class="python"><span class="n">validator</span> <span class="o">=</span> <span class="n">Required</span><span class="p">()</span>
+<span class="n">validator</span><span class="p">(</span><span class="s">&#39;Test&#39;</span><span class="p">)</span>  <span class="c"># True</span>
+<span class="n">validator</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>  <span class="c"># raises ValueError</span>
+</code></pre></div>
+
+<h4 id="toc_7">Methods</h4>
+
+<h5 id="toc_8"><strong>init</strong>(message=&#39;Value is required&#39;)</h5>
+
+<h6 id="toc_9">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>message</td>
+<td>The message to be used if the validator fails.</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_10"><strong>call</strong>(value)</h5>
+
+<p>Executes the validator.</p>
+
+<h6 id="toc_11">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>value</td>
+<td>the value to validate</td>
+</tr>
+</tbody></table>
+
+<hr>
+
+<h3 id="toc_12">RegEx</h3>
+
+<blockquote>
+<p>Validates a value based on a regular expression.</p>
+</blockquote>
+
+<div class="highlight"><pre><code class="python"><span class="n">validator</span> <span class="o">=</span> <span class="n">RegEx</span><span class="p">(</span><span class="s">&#39;Match&#39;</span><span class="p">)</span>
+<span class="n">validator</span><span class="p">(</span><span class="s">&#39;Match&#39;</span><span class="p">)</span>  <span class="c"># True</span>
+<span class="n">validator</span><span class="p">(</span><span class="s">&#39;Other&#39;</span><span class="p">)</span>  <span class="c"># raises ValueError</span>
+</code></pre></div>
+
+<h4 id="toc_13">Methods</h4>
+
+<h5 id="toc_14"><strong>init</strong>(regex, flags=0, message=&#39;&quot;{value}&quot; does not match pattern &quot;{pattern}&quot;&#39;)</h5>
+
+<h6 id="toc_15">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>regex OR string</td>
+<td>regex</td>
+<td>The pattern to match</td>
+</tr>
+<tr>
+<td>int</td>
+<td>flags</td>
+<td>The regular expression flags</td>
+</tr>
+<tr>
+<td>string</td>
+<td>message</td>
+<td>The message to be used if the validator fails.</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_16"><strong>call</strong>(value)</h5>
+
+<p>Executes the validator.</p>
+
+<h6 id="toc_17">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>value</td>
+<td>the value to validate</td>
+</tr>
+</tbody></table>
+
+<hr>
+
+<h3 id="toc_18">Csrf</h3>
+
+<blockquote>
+<p>Validates a csrf token.</p>
+</blockquote>
+
+<div class="highlight"><pre><code class="python"><span class="n">validator</span> <span class="o">=</span> <span class="n">Csrf</span><span class="p">()</span>
+<span class="n">validator</span><span class="p">(</span><span class="s">&#39;submitted token&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<h4 id="toc_19">Methods</h4>
+
+<h5 id="toc_20"><strong>init</strong>(token=None, message=&#39;Cross-Site request forgery attempt detected, invalid token specified &quot;{token}&quot;&#39;)</h5>
+
+<h6 id="toc_21">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>token</td>
+<td>The token to match</td>
+</tr>
+<tr>
+<td>string</td>
+<td>message</td>
+<td>The message to be used if the validator fails.</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_22"><strong>call</strong>(value)</h5>
+
+<p>Executes the validator.</p>
+
+<h6 id="toc_23">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>value</td>
+<td>the value to validate</td>
+</tr>
+</tbody></table>
 
 </section>
 

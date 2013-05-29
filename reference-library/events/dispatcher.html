@@ -744,7 +744,191 @@
 	</dl>
 </section>
 <section class="code">
-<p>Dispatcher documentation</p>
+<h3 id="toc_0">EventDispatcher</h3>
+
+<blockquote>
+<p>Register and trigger events that will be executed by callables.</p>
+</blockquote>
+
+<p>The EventDispatcher allows user defined events to be specified. Any listener that is triggered will have the event that was triggered passed to it as the first argument. Attributes can be added to the event params (see watson.events.types.Event) which can then be accessed by the listener.</p>
+
+<h4 id="toc_1">Usage</h4>
+
+<div class="highlight"><pre><code class="python"><span class="n">dispatcher</span> <span class="o">=</span> <span class="n">EventDispatcher</span><span class="p">()</span>
+<span class="n">dispatcher</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&#39;MyEvent&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">dispatcher</span><span class="o">.</span><span class="n">trigger</span><span class="p">(</span><span class="n">Event</span><span class="p">(</span><span class="s">&#39;SampleEvent&#39;</span><span class="p">))</span>
+<span class="n">result</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>  <span class="c"># &#39;SampleEvent&#39;</span>
+</code></pre></div>
+
+<h4 id="toc_2">Properties</h4>
+
+<h5 id="toc_3">events</h5>
+
+<p>Returns the events registered on the event dispatcher.</p>
+
+<h4 id="toc_4">Methods</h4>
+
+<h5 id="toc_5">clear()</h5>
+
+<p>Clears all registered events from the event dispatcher.</p>
+
+<h5 id="toc_6">add(event, callback, priority=1, only_once=False)</h5>
+
+<p>Add an event listener to the dispatcher.</p>
+
+<p>Adds an event listener to the relevant event listener collection. If a listener is set to once_only, it will be removed when the event is triggered on the EventDispatcher.</p>
+
+<h6 id="toc_7">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>event</td>
+<td>The name of the event</td>
+</tr>
+<tr>
+<td>callable</td>
+<td>callback</td>
+<td>A callable function to be triggered</td>
+</tr>
+<tr>
+<td>int</td>
+<td>priority</td>
+<td>The priority of the listener (higher == more important)</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>once_only</td>
+<td>When triggered, the listener will be removed</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_8">Returns</h6>
+
+<p>ListCollection: A list of listeners attached to the event</p>
+
+<h5 id="toc_9">remove(event, callback=None)</h5>
+
+<p>Remove an event listener from the dispatcher.</p>
+
+<p>Removes an event listener from the relevant Listener.
+If no callback is specified, all event listeners for that event are removed.</p>
+
+<h6 id="toc_10">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>event</td>
+<td>The name of the event</td>
+</tr>
+<tr>
+<td>callable</td>
+<td>callback</td>
+<td>A callable function to be triggered</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_11">Returns</h6>
+
+<p>Listener: A list of listeners attached to the event</p>
+
+<h5 id="toc_12"><strong>contains</strong>(event):</h5>
+
+<p>Return whether or not an event is registered with the event dispatcher.</p>
+
+<h6 id="toc_13">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>event</td>
+<td>The name of the event</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_14">has(event, callback=None):</h5>
+
+<p>Return whether or not a callback is found for a particular event.</p>
+
+<h6 id="toc_15">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>event</td>
+<td>The name of the event</td>
+</tr>
+<tr>
+<td>callable</td>
+<td>callback</td>
+<td>The callback to find</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_16">trigger(event)</h5>
+
+<p>Fire an event and return a list of results from all listeners.</p>
+
+<p>Dispatches an event to all associated listeners and returns a list of results. If the event is stopped (Event.stopped) then the Result returned will only contain the response from the first listener in the stack.</p>
+
+<h6 id="toc_17">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>watson.events.types.Event</td>
+<td>event</td>
+<td>The event to trigger</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_18">Returns</h6>
+
+<p>Result: A list of all the responses</p>
+
+<hr>
+
+<h3 id="toc_19">EventDispatcherAware</h3>
+
+<blockquote>
+<p>Provides an interface for event dispatchers to be injected.</p>
+</blockquote>
+
+<h4 id="toc_20">Properties</h4>
+
+<h5 id="toc_21">dispatcher</h5>
+
+<p>Retrieve the event dispatcher. If no event dispatcher exists, create a default one.</p>
 
 </section>
 
@@ -812,12 +996,12 @@
 	<h4>See also:</h4>
 	
 	
-	<a class="label blue" href="/watson/reference-library/events/collections.html">watson.events.collections</a>
-	
-	
-	
-	
 	<a class="label blue" href="/watson/reference-library/events/types.html">watson.events.types</a>
+	
+	
+	
+	
+	<a class="label blue" href="/watson/reference-library/events/collections.html">watson.events.collections</a>
 	
 	
 	
@@ -837,6 +1021,16 @@
 	
 	
 	
+	<a class="label blue" href="/watson/reference-library/mvc/config.html">watson.mvc.config</a>
+	
+	
+	
+	
+	<a class="label blue" href="/watson/reference-library/mvc/applications.html">watson.mvc.applications</a>
+	
+	
+	
+	
 	<a class="label blue" href="/watson/reference-library/mvc/controllers.html">watson.mvc.controllers</a>
 	
 	
@@ -847,22 +1041,12 @@
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/mvc/applications.html">watson.mvc.applications</a>
-	
-	
-	
-	
 	<a class="label blue" href="/watson/reference-library/mvc/routing.html">watson.mvc.routing</a>
 	
 	
 	
 	
 	<a class="label blue" href="/watson/reference-library/mvc/views.html">watson.mvc.views</a>
-	
-	
-	
-	
-	<a class="label blue" href="/watson/reference-library/mvc/config.html">watson.mvc.config</a>
 	
 	
 	

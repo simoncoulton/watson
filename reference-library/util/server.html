@@ -744,7 +744,54 @@
 	</dl>
 </section>
 <section class="code">
-<p>Server documentation</p>
+<h3 id="toc_0">make_dev_server(app, host=&#39;127.0.0.1&#39;, port=8000, do_reload=True, script_dir=None, public_dir=None)</h3>
+
+<blockquote>
+<p>A simple local development server utilizing the existing simple_server module, but allows for serving of static files.</p>
+</blockquote>
+
+<p>Never use this in production. EVER.</p>
+
+<h4 id="toc_1">Arguments</h4>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>callable</td>
+<td>app</td>
+<td>A WSGI callable</td>
+</tr>
+<tr>
+<td>string</td>
+<td>host</td>
+<td>The host</td>
+</tr>
+<tr>
+<td>int</td>
+<td>port</td>
+<td>The port</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>do_reload</td>
+<td>Whether or not to automatically reload the application when source code changes.</td>
+</tr>
+</tbody></table>
+
+<h4 id="toc_2">Usage</h4>
+
+<div class="highlight"><pre><code class="python"><span class="k">def</span> <span class="nf">my_app</span><span class="p">(</span><span class="n">environ</span><span class="p">,</span> <span class="n">start_response</span><span class="p">):</span>
+    <span class="n">start_response</span><span class="p">(</span><span class="s">&#39;200 OK&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;Content-Type&#39;</span><span class="p">,</span> <span class="s">&#39;text/html&#39;</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">b</span><span class="s">&#39;&lt;h1&gt;Hello World!&lt;/h1&gt;&#39;</span><span class="p">]</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">make_dev_server</span><span class="p">(</span><span class="n">my_app</span><span class="p">)</span>
+</code></pre></div>
 
 </section>
 

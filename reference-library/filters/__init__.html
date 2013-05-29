@@ -744,7 +744,281 @@
 	</dl>
 </section>
 <section class="code">
-<p>Init documentation</p>
+<h3 id="toc_0">Trim</h3>
+
+<blockquote>
+<p>Strips whitespace from value.</p>
+</blockquote>
+
+<h4 id="toc_1">Methods</h4>
+
+<h5 id="toc_2"><strong>call</strong>(value)</h5>
+
+<p>Executes the filter.</p>
+
+<h6 id="toc_3">Returns</h6>
+
+<p>The original value, but whitespace has been removed.</p>
+
+<h6 id="toc_4">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>value</td>
+<td>the string to filter</td>
+</tr>
+</tbody></table>
+
+<hr>
+
+<h3 id="toc_5">Upper</h3>
+
+<blockquote>
+<p>Converts all characters to uppercase.</p>
+</blockquote>
+
+<h4 id="toc_6">Usage</h4>
+
+<div class="highlight"><pre><code class="python"><span class="nb">filter</span> <span class="o">=</span> <span class="n">Upper</span><span class="p">()</span>
+<span class="nb">filter</span><span class="p">(</span><span class="s">&#39;abcd&#39;</span><span class="p">)</span>  <span class="c"># ABCD</span>
+</code></pre></div>
+
+<h4 id="toc_7">Methods</h4>
+
+<h5 id="toc_8"><strong>call</strong>(value)</h5>
+
+<p>Executes the filter.</p>
+
+<h6 id="toc_9">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>value</td>
+<td>the string to filter</td>
+</tr>
+</tbody></table>
+
+<hr>
+
+<h3 id="toc_10">Lower</h3>
+
+<blockquote>
+<p>Converts all characters to lowercase.</p>
+</blockquote>
+
+<h4 id="toc_11">Usage</h4>
+
+<div class="highlight"><pre><code class="python"><span class="nb">filter</span> <span class="o">=</span> <span class="n">Lower</span><span class="p">()</span>
+<span class="nb">filter</span><span class="p">(</span><span class="s">&#39;ABCD&#39;</span><span class="p">)</span>  <span class="c"># abcd</span>
+</code></pre></div>
+
+<h4 id="toc_12">Methods</h4>
+
+<h5 id="toc_13"><strong>call</strong>(value)</h5>
+
+<p>Executes the filter.</p>
+
+<h6 id="toc_14">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>value</td>
+<td>the string to filter</td>
+</tr>
+</tbody></table>
+
+<hr>
+
+<h3 id="toc_15">RegEx</h3>
+
+<blockquote>
+<p>Uses regular expressions to replace values.</p>
+</blockquote>
+
+<h4 id="toc_16">Usage</h4>
+
+<div class="highlight"><pre><code class="python"><span class="nb">filter</span> <span class="o">=</span> <span class="n">RegEx</span><span class="p">(</span><span class="s">&#39;ing&#39;</span><span class="p">,</span> <span class="n">replacement</span><span class="o">=</span><span class="s">&#39;ed&#39;</span><span class="p">)</span>
+<span class="nb">filter</span><span class="p">(</span><span class="s">&#39;Stopping&#39;</span><span class="p">)</span>  <span class="c"># Stopped</span>
+</code></pre></div>
+
+<h4 id="toc_17">Methods</h4>
+
+<h5 id="toc_18"><strong>init</strong>(regex, replacement=&#39;&#39;, flags=0)</h5>
+
+<p>Initializes the filter.</p>
+
+<h6 id="toc_19">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string OR regex</td>
+<td>regex</td>
+<td>The pattern to match.</td>
+</tr>
+<tr>
+<td>string</td>
+<td>replacement</td>
+<td>The value to be used in the replacement.</td>
+</tr>
+<tr>
+<td>int</td>
+<td>flags</td>
+<td>The regex flags.</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_20"><strong>call</strong>(value)</h5>
+
+<p>Executes the filter.</p>
+
+<h6 id="toc_21">Returns</h6>
+
+<p>The value with replaced contents.</p>
+
+<h6 id="toc_22">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>value</td>
+<td>the string to filter</td>
+</tr>
+</tbody></table>
+
+<hr>
+
+<h3 id="toc_23">Numbers</h3>
+
+<blockquote>
+<p>Strips all characters except for numbers.</p>
+</blockquote>
+
+<div class="highlight"><pre><code class="python"><span class="nb">filter</span> <span class="o">=</span> <span class="n">Numbers</span><span class="p">()</span>
+<span class="nb">filter</span><span class="p">(</span><span class="s">&#39;abcd1234&#39;</span><span class="p">)</span>  <span class="c"># 1234</span>
+</code></pre></div>
+
+<h4 id="toc_24">Methods</h4>
+
+<h5 id="toc_25"><strong>call</strong>(value)</h5>
+
+<p>Executes the filter.</p>
+
+<h6 id="toc_26">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>value</td>
+<td>the string to filter</td>
+</tr>
+</tbody></table>
+
+<hr>
+
+<h3 id="toc_27">StripTags</h3>
+
+<blockquote>
+<p>Strips all html tags.</p>
+</blockquote>
+
+<div class="highlight"><pre><code class="python"><span class="nb">filter</span> <span class="o">=</span> <span class="n">StripTags</span><span class="p">()</span>
+<span class="nb">filter</span><span class="p">(</span><span class="s">&#39;test&lt;div&gt;blah&lt;/div&gt;&#39;</span><span class="p">)</span>  <span class="c"># testblah</span>
+</code></pre></div>
+
+<h4 id="toc_28">Methods</h4>
+
+<h5 id="toc_29"><strong>call</strong>(value)</h5>
+
+<p>Executes the filter.</p>
+
+<h6 id="toc_30">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>value</td>
+<td>the string to filter</td>
+</tr>
+</tbody></table>
+
+<hr>
+
+<h3 id="toc_31">HtmlEntities</h3>
+
+<blockquote>
+<p>Encodes all html entities.</p>
+</blockquote>
+
+<div class="highlight"><pre><code class="python"><span class="nb">filter</span> <span class="o">=</span> <span class="n">HtmlEntities</span><span class="p">()</span>
+<span class="nb">filter</span><span class="p">(</span><span class="s">&#39;&lt;div&gt;test&lt;/div&gt;&#39;</span><span class="p">)</span>  <span class="c"># &amp;lt;div&amp;gt;test&amp;lt;/div&amp;gt;</span>
+</code></pre></div>
+
+<h4 id="toc_32">Methods</h4>
+
+<h5 id="toc_33"><strong>call</strong>(value)</h5>
+
+<p>Executes the filter.</p>
+
+<h6 id="toc_34">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>value</td>
+<td>the string to filter</td>
+</tr>
+</tbody></table>
 
 </section>
 
