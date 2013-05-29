@@ -40,7 +40,7 @@ class Form(TagMixin):
     _bound_object = None
     _bound_object_mapping = None
 
-    def __init__(self, name, method='post', action=None, detect_multipart=True, **kwargs):
+    def __init__(self, name=None, method='post', action=None, detect_multipart=True, **kwargs):
         """Inititalize the form and set some default attributes.
 
         Args:
@@ -51,7 +51,7 @@ class Form(TagMixin):
         """
         method = method.lower()
         self.attributes = collections.ChainMap({
-            'name': name,
+            'name': name or self.__class__.__name__,
             'method': method,
             'action': action or '/',
             'enctype': kwargs.get('enctype', 'application/x-www-form-urlencoded')

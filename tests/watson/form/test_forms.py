@@ -15,6 +15,12 @@ class TestForm(object):
         form2 = LoginForm('test')
         assert len(form2) == 5
 
+    def test_form_create_no_name(self):
+        form = Form()
+        assert form.name == 'Form'
+        login_form = LoginForm()
+        assert login_form.name == 'LoginForm'
+
     def test_form_start_tag(self):
         form = Form('test')
         assert form.open() == '<form action="/" enctype="application/x-www-form-urlencoded" method="post" name="test">'
