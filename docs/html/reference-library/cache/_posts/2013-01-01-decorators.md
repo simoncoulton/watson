@@ -7,7 +7,7 @@ module: watson.cache.decorators
 api: [cache]
 ---
 
-### cache
+### cache(func=None, timeout=0, key=None)
 
 > Retrieve a value from the cache
 

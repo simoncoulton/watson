@@ -4,7 +4,3 @@ title: Filters
 package: watson.filters
 module: watson.filters
 ---
-<section>
-
-Filters Index
-</section>
