@@ -771,7 +771,7 @@ value is to be specified on a get.</p>
 
 <h4 id="toc_2">Methods</h4>
 
-<h5 id="toc_3">__init__</h5>
+<h5 id="toc_3">__init__(config=None)</h5>
 
 <h6 id="toc_4">Arguments</h6>
 
@@ -789,7 +789,7 @@ value is to be specified on a get.</p>
 </tr>
 </tbody></table>
 
-<h5 id="toc_5">__delitem__</h5>
+<h5 id="toc_5">__delitem__(key)</h5>
 
 <p>Delete a key from the cache.</p>
 
@@ -814,7 +814,7 @@ value is to be specified on a get.</p>
 <div class="highlight"><pre><code class="python"><span class="k">del</span> <span class="n">cache</span><span class="p">[</span><span class="s">&#39;key&#39;</span><span class="p">]</span> <span class="c"># deletes &#39;key&#39; from the cache</span>
 </code></pre></div>
 
-<h5 id="toc_8">__contains__</h5>
+<h5 id="toc_8">__contains__(key)</h5>
 
 <p>Determine whether or not a key exists in the cache.</p>
 
@@ -844,7 +844,7 @@ value is to be specified on a get.</p>
     <span class="k">print</span><span class="p">(</span><span class="s">&#39;exists!&#39;</span><span class="p">)</span>
 </code></pre></div>
 
-<h5 id="toc_12">flush</h5>
+<h5 id="toc_12">flush()</h5>
 
 <p>Clears all items from the cache.</p>
 
@@ -857,7 +857,7 @@ value is to be specified on a get.</p>
 <div class="highlight"><pre><code class="python"><span class="n">cache</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 </code></pre></div>
 
-<h5 id="toc_15">expired</h5>
+<h5 id="toc_15">expired(key)</h5>
 
 <p>Determine if a key has expired or not.</p>
 
@@ -887,7 +887,7 @@ value is to be specified on a get.</p>
     <span class="k">print</span><span class="p">(</span><span class="s">&#39;Expired!&#39;</span><span class="p">)</span>
 </code></pre></div>
 
-<h5 id="toc_19">set</h5>
+<h5 id="toc_19">set(key, value, timeout=0)</h5>
 
 <p>Sets a key in the cache.</p>
 
@@ -922,7 +922,7 @@ value is to be specified on a get.</p>
 <div class="highlight"><pre><code class="python"><span class="n">cache</span><span class="p">[</span><span class="s">&#39;key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;value&#39;</span>
 </code></pre></div>
 
-<h5 id="toc_22">get</h5>
+<h5 id="toc_22">get(key, default=None)</h5>
 
 <p>Gets a key from the cache, returns the default if not set.</p>
 
@@ -978,7 +978,7 @@ value is to be specified on a get.</p>
 
 <h4 id="toc_28">Methods</h4>
 
-<h5 id="toc_29">__init__</h5>
+<h5 id="toc_29">__init__(config=None)</h5>
 
 <p>Initializes the cache.</p>
 
@@ -1019,7 +1019,7 @@ python3-memcached documentation can be found at <a href="http://pypi.python.org/
 
 <h4 id="toc_33">Methods</h4>
 
-<h5 id="toc_34">__init__</h5>
+<h5 id="toc_34">__init__(config=None)</h5>
 
 <p>Initializes the cache.</p>
 

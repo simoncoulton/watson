@@ -744,7 +744,173 @@
 	</dl>
 </section>
 <section class="code">
-<p>Datastructures documentation</p>
+<h3 id="toc_0">dict_deep_update(d1, d2)</h3>
+
+<blockquote>
+<p>Recursively merge two dictionaries.</p>
+</blockquote>
+
+<p>Merges two dictionaries together rather than a shallow update().</p>
+
+<h4 id="toc_1">Arguments</h4>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>dict</td>
+<td>d1</td>
+<td>The original dict.</td>
+</tr>
+<tr>
+<td>dict</td>
+<td>d2</td>
+<td>The dict to merge with d1.</td>
+</tr>
+</tbody></table>
+
+<h4 id="toc_2">Returns</h4>
+
+<p>A new dict containing the merged dicts.</p>
+
+<h4 id="toc_3">Usage</h4>
+
+<div class="highlight"><pre><code class="python"><span class="n">d1</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&#39;key&#39;</span><span class="p">:</span> <span class="s">&#39;value&#39;</span><span class="p">,</span>
+        <span class="s">&#39;dict&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;key&#39;</span><span class="p">:</span> <span class="s">&#39;value&#39;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="n">d2</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&#39;dict&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;key&#39;</span><span class="p">:</span> <span class="s">&#39;new value&#39;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+<span class="n">d3</span> <span class="o">=</span> <span class="n">dict_deep_update</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">)</span>
+<span class="c"># {&#39;key&#39;: &#39;value&#39;, &#39;dict&#39;: {&#39;key&#39;: &#39;new value&#39;}}</span>
+</code></pre></div>
+
+<hr>
+
+<h3 id="toc_4">module_to_dict(module, ignore_starts_with=&#39;&#39;)</h3>
+
+<blockquote>
+<p>Load the contents of a module into a dict.</p>
+</blockquote>
+
+<h4 id="toc_5">Arguments</h4>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>dict</td>
+<td>d1</td>
+<td>The original dict.</td>
+</tr>
+<tr>
+<td>dict</td>
+<td>d2</td>
+<td>The dict to merge with d1.</td>
+</tr>
+</tbody></table>
+
+<h4 id="toc_6">Returns</h4>
+
+<p>A new dict containg the module data</p>
+
+<h4 id="toc_7">Usage</h4>
+
+<div class="highlight"><pre><code class="python"><span class="c"># my_module.py contents:</span>
+<span class="c"># variable = &#39;value&#39;</span>
+<span class="kn">import</span> <span class="nn">my_module</span>
+<span class="n">a_dict</span> <span class="o">=</span> <span class="n">module_to_dict</span><span class="p">(</span><span class="n">my_module</span><span class="p">)</span>
+<span class="n">a_dict</span><span class="p">[</span><span class="s">&#39;variable&#39;</span><span class="p">]</span>
+</code></pre></div>
+
+<hr>
+
+<h3 id="toc_8">MultiDict</h3>
+
+<blockquote>
+<p>A dictionary type that can contain multiple items for a single key.</p>
+</blockquote>
+
+<p>Dictionary type that will create a list of values if more than one item is set for that particular key.</p>
+
+<h4 id="toc_9">Usage</h4>
+
+<div class="highlight"><pre><code class="python"><span class="n">multi_dict</span> <span class="o">=</span> <span class="n">MultiDict</span><span class="p">()</span>
+<span class="n">multi_dict</span><span class="p">[</span><span class="s">&#39;one&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">multi_dict</span><span class="p">[</span><span class="s">&#39;one&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;itchi&#39;</span>
+<span class="k">print</span><span class="p">(</span><span class="n">multi_dict</span><span class="p">)</span>  <span class="c"># {&#39;one&#39;: [1, &#39;itchi&#39;]}</span>
+</code></pre></div>
+
+<h4 id="toc_10">Methods</h4>
+
+<h5 id="toc_11">set(key, value, replace=False)</h5>
+
+<p>Add a new item to the dictionary.
+Set the key to value on the dictionary, converting the existing value to a list if it is a string, otherwise append the value.</p>
+
+<h6 id="toc_12">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>mixed</td>
+<td>key</td>
+<td>The key used to the store the value.</td>
+</tr>
+<tr>
+<td>mixed</td>
+<td>value</td>
+<td>The value to store.</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>replace</td>
+<td>Whether or not the value should be replaced.</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_13">Usage</h6>
+
+<div class="highlight"><pre><code class="python"><span class="n">multi_dict</span> <span class="o">=</span> <span class="n">MultiDict</span><span class="p">()</span>
+<span class="n">multi_dict</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;item&#39;</span><span class="p">,</span> <span class="s">&#39;value&#39;</span><span class="p">)</span>  <span class="c"># or multi_dict[&#39;item&#39;] = &#39;value&#39;</span>
+</code></pre></div>
+
+<hr>
+
+<h3 id="toc_14">ImmutableDict</h3>
+
+<blockquote>
+<p>Creates an immutable dict.</p>
+</blockquote>
+
+<p>While not truly immutable (_mutable can be changed), it works effectively.</p>
+
+<hr>
+
+<h3 id="toc_15">ImmutableMultiDict</h3>
+
+<blockquote>
+<p>Creates an immuatable MultiDict.</p>
+</blockquote>
 
 </section>
 

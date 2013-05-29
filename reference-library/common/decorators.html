@@ -744,7 +744,39 @@
 	</dl>
 </section>
 <section class="code">
-<p>Decorators documentation</p>
+<h3 id="toc_0">cached_property(func)</h3>
+
+<blockquote>
+<p>Allows expensive property calls to be cached.</p>
+</blockquote>
+
+<h4 id="toc_1">Arguments</h4>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>callable</td>
+<td>func</td>
+<td>the function that is being wrapped</td>
+</tr>
+</tbody></table>
+
+<h4 id="toc_2">Usage</h4>
+
+<div class="highlight"><pre><code class="python"><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">expensive_call</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># do something expensive</span>
+
+<span class="n">klass</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+<span class="n">klass</span><span class="o">.</span><span class="n">expensive_call</span>  <span class="c"># initial call is made</span>
+<span class="n">klass</span><span class="o">.</span><span class="n">expensive_call</span>  <span class="c"># return value is retrieved from an internal cache</span>
+</code></pre></div>
 
 </section>
 

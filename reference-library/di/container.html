@@ -744,7 +744,203 @@
 	</dl>
 </section>
 <section class="code">
-<p>Container documentation</p>
+<h3 id="toc_0">IocContainer</h3>
+
+<blockquote>
+<p>A simple dependency injection container that can store and retrieve dependencies for an application.</p>
+</blockquote>
+
+<p>The container is configured via a dict containing the following keys:<br /></p>
+
+<ul>
+<li><strong>params</strong>: a dict of data that can be injected into a dependency.<br />
+    If the value of the key is the same as the name of another dependency then the dependency will be referenced.<br /></li>
+<li><strong>definitions</strong>: a dict of definitions that are to be loaded by the container.<br />
+Available keys within a definition are:<br />
+    - item: The qualified name of a class or function<br />
+    - type: singleton (only load the dependency once) or prototype (instantiate and return a new dependency on each request)<br />
+    - init: a list or dict of items to be injected into the dependency on instantiation.<br />
+    - setter: a list or dict of methods to be called upon instantiation.
+    - property:
+Only &#39;item&#39; is a required key.<br /></li>
+<li><strong>processors</strong>: a dict of events to be listened for and processors to be called.</li>
+</ul>
+
+<h4 id="toc_1">Attributes</h4>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>dict</td>
+<td>config</td>
+<td>A dict containing the definitions, params and processors.</td>
+</tr>
+<tr>
+<td>dict</td>
+<td>__instantiated</td>
+<td>A cache of already instantiated dependencies.</td>
+</tr>
+</tbody></table>
+
+<h4 id="toc_2">Usage</h4>
+
+<div class="highlight"><pre><code class="python"><span class="n">container</span> <span class="o">=</span> <span class="n">IocContainer</span><span class="p">({</span>
+    <span class="s">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;db.host&#39;</span><span class="p">:</span> <span class="s">&#39;localhost&#39;</span>
+    <span class="p">},</span>
+    <span class="s">&#39;definitions&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;database&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;item&#39;</span><span class="p">:</span> <span class="s">&#39;db.adapters.MySQL&#39;</span>
+            <span class="s">&#39;init&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;host&#39;</span><span class="p">:</span> <span class="s">&#39;db.host&#39;</span><span class="p">,</span>
+                <span class="s">&#39;username&#39;</span><span class="p">:</span> <span class="s">&#39;simon&#39;</span><span class="p">,</span>
+                <span class="s">&#39;password&#39;</span><span class="p">:</span> <span class="s">&#39;test&#39;</span><span class="p">,</span>
+                <span class="s">&#39;db&#39;</span><span class="p">:</span> <span class="s">&#39;test&#39;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">container</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;database&#39;</span><span class="p">)</span>  <span class="c"># an instance of db.adapters.MySQL</span>
+</code></pre></div>
+
+<h4 id="toc_3">Properties</h4>
+
+<h5 id="toc_4">params</h5>
+
+<p>Convenience method for retrieving the params.</p>
+
+<h6 id="toc_5">Returns</h6>
+
+<p>A dict of params.</p>
+
+<h5 id="toc_6">definitions</h5>
+
+<p>Convenience method for retrieving the definitions.</p>
+
+<h6 id="toc_7">Returns</h6>
+
+<p>A dict of definitions.</p>
+
+<h6 id="toc_8">Usage</h6>
+
+<div class="highlight"><pre><code class="python"><span class="n">Resolver</span><span class="p">(</span><span class="s">&#39;watson&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<h4 id="toc_9">Methods</h4>
+
+<h5 id="toc_10">__init__(config=None)</h5>
+
+<p>Initializes the container and set some default configuration options.</p>
+
+<h6 id="toc_11">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>dict</td>
+<td>config</td>
+<td>A dict containing the params, definitions and processors.</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_12">get(name)</h5>
+
+<p>Retrieve a dependency from the container.</p>
+
+<h6 id="toc_13">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>name</td>
+<td>The name of the dependency to retrieve.</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_14">Raises</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>KeyError</td>
+<td>If the definition or item within the definition are not specified.</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_15">Returns</h6>
+
+<p>mixed: The dependency</p>
+
+<h5 id="toc_16">add(name, item, type=&#39;singleton&#39;)</h5>
+
+<p>Add a dependency to the container (either already instatiated or not).</p>
+
+<h6 id="toc_17">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>name</td>
+<td>The name used to reference the dependency</td>
+</tr>
+<tr>
+<td>mixed</td>
+<td>item</td>
+<td>The dependency to add (either qualified name or instance)</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_18">attach_processor(event, processor)</h5>
+
+<p>Attaches a processor to the container that will be triggered on a specific
+        event.</p>
+
+<h6 id="toc_19">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>event</td>
+<td>The name of the event (watson.di.container.POST_EVENT or PRE_EVENT)</td>
+</tr>
+<tr>
+<td>watson.di.processors.BaseProcessor</td>
+<td>processor</td>
+<td>The processor to attach.</td>
+</tr>
+</tbody></table>
 
 </section>
 
