@@ -75,8 +75,6 @@
 			    
 			  
 			    
-			  
-			    
 			      <li>
 			        <a href="/watson/getting-started/installation.html">
 			          Installation
@@ -144,8 +142,6 @@
 			Key Concepts
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -337,8 +333,6 @@
 			    
 			  
 			    
-			  
-			    
 			      <li>
 			        <a href="/watson/common-usage/views.html">
 			          Views
@@ -388,8 +382,6 @@
 			Advanced Topics
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -700,11 +692,6 @@
 				
 				
 				
-				
-				
-				
-				
-				
 				<li>
 					<a href="/watson/reference-library/util">watson.util</a>
 				</li>
@@ -744,7 +731,293 @@
 	</dl>
 </section>
 <section class="code">
-<p>Routing documentation</p>
+<h3 id="toc_0">Router</h3>
+
+<blockquote>
+<p>Responsible for maintaining a list of routes.</p>
+</blockquote>
+
+<p>Can be iterated over to retrieve each route.</p>
+
+<h4 id="toc_1">Attributes</h4>
+
+<h5 id="toc_2">routes</h5>
+
+<p>An OrderedDict of routes</p>
+
+<h4 id="toc_3">Methods</h4>
+
+<h5 id="toc_4">__init__(routes=None)</h5>
+
+<p>Converts a dict of routes into Route objects.</p>
+
+<h6 id="toc_5">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>dict, list</td>
+<td>routes</td>
+<td>The routes to add.</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_6">matches(request)</h5>
+
+<p>Match a request against all the routes.</p>
+
+<h6 id="toc_7">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>dict, list</td>
+<td>routes</td>
+<td>The routes to add.</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_8">Returns</h6>
+
+<p>A list of RouteMatch namedtuples.</p>
+
+<h5 id="toc_9">assemble(route_name, **kwargs)</h5>
+
+<p>Converts the route into a path.</p>
+
+<p>Applies any keyword arguments as params on the route. This is a convenience method for accessing the assemble method on an individual route.</p>
+
+<h6 id="toc_10">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>route_name</td>
+<td>The name of the route</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_11">Returns</h6>
+
+<p>The assembled route</p>
+
+<h6 id="toc_12">Raises</h6>
+
+<p>KeyError if route is not found.</p>
+
+<h5 id="toc_13">add_route(route)</h5>
+
+<p>Adds an instantiated route to the router.</p>
+
+<h6 id="toc_14">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>watson.mvc.routing.Route</td>
+<td>route</td>
+<td>The route to add.</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_15">sort()</h5>
+
+<p>Sorts the routes based on their priority.</p>
+
+<hr>
+
+<h3 id="toc_16">RouteMatch</h3>
+
+<p>Namedtuple</p>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Route</td>
+<td>route</td>
+<td>The matched route</td>
+</tr>
+<tr>
+<td>dict</td>
+<td>params</td>
+<td>Route params</td>
+</tr>
+<tr>
+<td>bool</td>
+<td>matched</td>
+<td>Whether or not it was matched</td>
+</tr>
+</tbody></table>
+
+<hr>
+
+<h3 id="toc_17">Route</h3>
+
+<blockquote>
+<p>A route is designed to validate a request against a specific path.</p>
+</blockquote>
+
+<p>Can be iterated over to retrieve each route.</p>
+
+<h4 id="toc_18">Attributes</h4>
+
+<h5 id="toc_19">regex</h5>
+
+<p>The regular expression to match, generated from the path</p>
+
+<h5 id="toc_20">segments</h5>
+
+<p>A list of segments from the path</p>
+
+<h4 id="toc_21">Properties</h4>
+
+<h5 id="toc_22">name</h5>
+
+<p>Convenience method to return the name of the route.</p>
+
+<h5 id="toc_23">path</h5>
+
+<p>Convenience method to return the path of the route.</p>
+
+<h4 id="toc_24">Methods</h4>
+
+<h5 id="toc_25">__init__(name, path, *args, **kwargs)</h5>
+
+<p>Initializes a new route.</p>
+
+<h6 id="toc_26">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>name</td>
+<td>The name of the route</td>
+</tr>
+<tr>
+<td>string</td>
+<td>path</td>
+<td>The path to match</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_27">Optional Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>list, tuple</td>
+<td>accepts</td>
+<td>A list of accepted http request methods</td>
+</tr>
+<tr>
+<td>dict</td>
+<td>defaults</td>
+<td>A dict of defaults for optional params</td>
+</tr>
+<tr>
+<td>dict</td>
+<td>requires</td>
+<td>A dict of required params to match</td>
+</tr>
+<tr>
+<td>string</td>
+<td>subdomain</td>
+<td>The subdomain to match</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_28">match(request)</h5>
+
+<p>Matches a request against the route.</p>
+
+<h6 id="toc_29">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>watson.http.messages.Request</td>
+<td>request</td>
+<td>The request to match.</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_30">Returns</h6>
+
+<p>A RouteMatch namedtuple containing the keys route, params, matched.</p>
+
+<h5 id="toc_31">assemble(route_name, **kwargs)</h5>
+
+<p>Converts the route into a path.</p>
+
+<p>Applies any keyword arguments as params on the route.</p>
+
+<h6 id="toc_32">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>route_name</td>
+<td>The name of the route</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_33">Returns</h6>
+
+<p>The assembled route</p>
+
+<h6 id="toc_34">Usage</h6>
+
+<div class="highlight"><pre><code class="python"><span class="n">route</span> <span class="o">=</span> <span class="n">Route</span><span class="p">(</span><span class="s">&#39;search&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s">&#39;/search/:keyword&#39;</span><span class="p">)</span>
+<span class="n">route</span><span class="o">.</span><span class="n">assemble</span><span class="p">(</span><span class="n">keyword</span><span class="o">=</span><span class="s">&#39;test&#39;</span><span class="p">)</span>  <span class="c"># /search/test</span>
+</code></pre></div>
 
 </section>
 
@@ -802,11 +1075,6 @@
 			
 		
 	
-		
-		
-			
-		
-	
 
 	
 	<h4>See also:</h4>
@@ -822,12 +1090,12 @@
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/events/types.html">watson.events.types</a>
+	<a class="label blue" href="/watson/reference-library/mvc/listeners.html">watson.mvc.listeners</a>
 	
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/mvc/config.html">watson.mvc.config</a>
+	<a class="label blue" href="/watson/reference-library/mvc/views.html">watson.mvc.views</a>
 	
 	
 	
@@ -837,12 +1105,7 @@
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/mvc/applications.html">watson.mvc.applications</a>
-	
-	
-	
-	
-	<a class="label blue" href="/watson/reference-library/events/collections.html">watson.events.collections</a>
+	<a class="label blue" href="/watson/reference-library/mvc/controllers.html">watson.mvc.controllers</a>
 	
 	
 	
@@ -852,17 +1115,17 @@
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/mvc/controllers.html">watson.mvc.controllers</a>
+	<a class="label blue" href="/watson/reference-library/mvc/applications.html">watson.mvc.applications</a>
 	
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/mvc/listeners.html">watson.mvc.listeners</a>
+	<a class="label blue" href="/watson/reference-library/events/types.html">watson.events.types</a>
 	
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/mvc/views.html">watson.mvc.views</a>
+	<a class="label blue" href="/watson/reference-library/events/collections.html">watson.events.collections</a>
 	
 	
 	
@@ -877,8 +1140,6 @@
 	
 	
 	<a class="label yellow" href="/watson/key-concepts/mvc.html">Mvc</a>
-	
-	
 	
 	
 	

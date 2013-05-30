@@ -75,8 +75,6 @@
 			    
 			  
 			    
-			  
-			    
 			      <li>
 			        <a href="/watson/getting-started/installation.html">
 			          Installation
@@ -144,8 +142,6 @@
 			Key Concepts
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -337,8 +333,6 @@
 			    
 			  
 			    
-			  
-			    
 			      <li>
 			        <a href="/watson/common-usage/views.html">
 			          Views
@@ -388,8 +382,6 @@
 			Advanced Topics
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -700,11 +692,6 @@
 				
 				
 				
-				
-				
-				
-				
-				
 				<li>
 					<a href="/watson/reference-library/util">watson.util</a>
 				</li>
@@ -744,7 +731,209 @@
 	</dl>
 </section>
 <section class="code">
-<p>Sessions documentation</p>
+<p>Available storage types include Memory, File and Memcache. Each has the same api, and as such will only be defined once here.</p>
+
+<h3 id="toc_0">StorageMixin</h3>
+
+<blockquote>
+<p>The base mixin for all session storage adapters.</p>
+</blockquote>
+
+<p>By default, if no id is specified when the session is created a new
+session id will be generated. When a user is logged in, it is good
+practice to regenerate the id of the session id to prevent
+session hijacking.</p>
+
+<p>If autosave is set to True, then when data is added to the session
+the save() method will be called. If set to False, the developer
+will be required to manually call the save() method themselves.</p>
+
+<p>To function correctly sessions require that cookies are enabled in
+the users browser.</p>
+
+<h4 id="toc_1">Usage</h4>
+
+<div class="highlight"><pre><code class="python"><span class="n">session</span> <span class="o">=</span> <span class="n">SessionStorageMethod</span><span class="p">()</span>
+<span class="c"># where SessionStorageMethod is a valid storage class</span>
+<span class="n">session</span><span class="p">[</span><span class="s">&#39;key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;some value&#39;</span>
+<span class="n">session</span><span class="p">[</span><span class="s">&#39;key&#39;</span><span class="p">]</span> <span class="c"># &#39;some value&#39;</span>
+</code></pre></div>
+
+<h4 id="toc_2">Properties</h4>
+
+<h5 id="toc_3">id</h5>
+
+<p>The id of the session.</p>
+
+<h5 id="toc_4">data</h5>
+
+<p>The data associated with the session.</p>
+
+<h5 id="toc_5">cookie_params</h5>
+
+<p>The cookie params used when saving the session id as a cookie.</p>
+
+<h4 id="toc_6">Methods</h4>
+
+<h5 id="toc_7">__init__(id=None, timeout=None, autosave=True)</h5>
+
+<p>If no id is specified, a new one will be generated automatically.</p>
+
+<h6 id="toc_8">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>id</td>
+<td>the id of the session</td>
+</tr>
+<tr>
+<td>int</td>
+<td>timeout</td>
+<td>the expiry time from the current time in seconds</td>
+</tr>
+<tr>
+<td>string</td>
+<td>key</td>
+<td>the key used to reference the session id in a cookie</td>
+</tr>
+<tr>
+<td>bool</td>
+<td>autosave</td>
+<td>save the contents on __setitem__</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_9">generate_id()</h5>
+
+<p>A new session id based on a random 24 char string</p>
+
+<h5 id="toc_10">regenerate_id()</h5>
+
+<p>Regenerate a new id for the session.</p>
+
+<h5 id="toc_11">load()</h5>
+
+<p>Loads the data from storage into the session. If the session data was set to expire before the current time, destroy the session.</p>
+
+<h5 id="toc_12">save()</h5>
+
+<p>Save the contents of the session into storage.</p>
+
+<h5 id="toc_13">destroy()</h5>
+
+<p>Destroy the session data from storage, but leave the actual session intact.</p>
+
+<h5 id="toc_14">exists()</h5>
+
+<p>Determine whether or not the session exists in storage.</p>
+
+<h5 id="toc_15">get(key, default=None)</h5>
+
+<p>If no id is specified, a new one will be generated automatically.</p>
+
+<h6 id="toc_16">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>key</td>
+<td>the key to retrieve</td>
+</tr>
+<tr>
+<td>mixed</td>
+<td>default</td>
+<td>the default value to return if the key is not found</td>
+</tr>
+</tbody></table>
+
+<hr>
+
+<h3 id="toc_17">watson.http.session.File</h3>
+
+<blockquote>
+<p>A file based storage adapter for session data.</p>
+</blockquote>
+
+<p>By default it will store data in the systems temp directory, however this can be overriden in the __init__.</p>
+
+<h4 id="toc_18">Attributes</h4>
+
+<h5 id="toc_19">file_prefix</h5>
+
+<p>The prefix added to the file name</p>
+
+<h4 id="toc_20">Methods</h4>
+
+<h5 id="toc_21">__init__(id=None, timeout=None, autosave=True, storage=None)</h5>
+
+<h6 id="toc_22">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>storage</td>
+<td>where the files should be stored</td>
+</tr>
+</tbody></table>
+
+<hr>
+
+<h3 id="toc_23">watson.http.session.Memcache</h3>
+
+<blockquote>
+<p>A file based storage adapter for session data.</p>
+</blockquote>
+
+<p>By default it will store data in the systems temp directory, however this can be overriden in the __init__.</p>
+
+<h4 id="toc_24">Attributes</h4>
+
+<h5 id="toc_25">file_prefix</h5>
+
+<p>The prefix added to the file name</p>
+
+<h4 id="toc_26">Methods</h4>
+
+<h5 id="toc_27">__init__(id=None, timeout=None, autosave=True, config=None)</h5>
+
+<h6 id="toc_28">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>dict</td>
+<td>config</td>
+<td>a dict of configuration settings</td>
+</tr>
+</tbody></table>
+
+<hr>
+
+<h3 id="toc_29">watson.http.session.Memory</h3>
 
 </section>
 
@@ -792,12 +981,12 @@
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/http/wsgi.html">watson.http.wsgi</a>
-	
-	
-	
-	
 	<a class="label blue" href="/watson/reference-library/http/headers.html">watson.http.headers</a>
+	
+	
+	
+	
+	<a class="label blue" href="/watson/reference-library/http/wsgi.html">watson.http.wsgi</a>
 	
 	
 	

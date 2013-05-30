@@ -75,8 +75,6 @@
 			    
 			  
 			    
-			  
-			    
 			      <li>
 			        <a href="/watson/getting-started/installation.html">
 			          Installation
@@ -144,8 +142,6 @@
 			Key Concepts
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -337,8 +333,6 @@
 			    
 			  
 			    
-			  
-			    
 			      <li>
 			        <a href="/watson/common-usage/views.html">
 			          Views
@@ -388,8 +382,6 @@
 			Advanced Topics
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -700,11 +692,6 @@
 				
 				
 				
-				
-				
-				
-				
-				
 				<li>
 					<a href="/watson/reference-library/util">watson.util</a>
 				</li>
@@ -744,7 +731,304 @@
 	</dl>
 </section>
 <section class="code">
-<p>Messages documentation</p>
+<h3 id="toc_0">create_request_from_environ(environ, session_class=None, session_options=None)</h3>
+
+<blockquote>
+<p>Create a new Request object.</p>
+</blockquote>
+
+<p>Create a new Request object based on a set of environ variables. To create a mutable version of the request you should copy() the Request object.</p>
+
+<p>If a POST variable named HTTP_REQUEST_METHOD is found, the Http Request method will be set to that method.</p>
+
+<h4 id="toc_1">Arguments</h4>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>dict</td>
+<td>environ</td>
+<td>The environ to create the request from</td>
+</tr>
+<tr>
+<td>string</td>
+<td>session_class</td>
+<td>The module to use for session storage</td>
+</tr>
+</tbody></table>
+
+<h4 id="toc_2">Usage</h4>
+
+<div class="highlight"><pre><code class="python"><span class="n">create_request_from_environ</span><span class="p">(</span><span class="n">environ</span><span class="p">,</span> <span class="s">&#39;watson.http.sessions.Memcache&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;servers&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;127.0.0.1&#39;</span><span class="p">]})</span>
+</code></pre></div>
+
+<hr>
+
+<h3 id="toc_3">Request</h3>
+
+<blockquote>
+<p>Provides a simple and usable interface for dealing with Http Requests.</p>
+</blockquote>
+
+<p>Requests are designed to be immutable and not altered after they are
+created, as such you should only set get/post/cookie etc attributes via
+the __init__.</p>
+
+<p>See:
+    - <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html">http://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html</a>
+    - <a href="http://ken.coar.org/cgi/draft-coar-cgi-v11-03.txt">http://ken.coar.org/cgi/draft-coar-cgi-v11-03.txt</a></p>
+
+<h4 id="toc_4">Properties</h4>
+
+<h5 id="toc_5">method</h5>
+
+<p>The method associated with the request.</p>
+
+<h6 id="toc_6">Returns</h6>
+
+<p>A string representation of the Http Request method</p>
+
+<h5 id="toc_7">get</h5>
+
+<p>A dict of all GET variables associated with the request.</p>
+
+<h6 id="toc_8">Returns</h6>
+
+<p>A dict of GET variables</p>
+
+<h5 id="toc_9">post</h5>
+
+<p>A dict of all POST variables associated with the request.</p>
+
+<h6 id="toc_10">Returns</h6>
+
+<p>A dict of POST variables</p>
+
+<h5 id="toc_11">files</h5>
+
+<p>A dict of all files that have been uploaded as part of a enctype=&quot;multipart/form-data&quot; request.</p>
+
+<h6 id="toc_12">Returns</h6>
+
+<p>A dict of FieldStorage objects</p>
+
+<h5 id="toc_13">server</h5>
+
+<p>A dict of all environ variables associated with the server where the request originated.</p>
+
+<h6 id="toc_14">Returns</h6>
+
+<p>A dict of environ variables</p>
+
+<h5 id="toc_15">cookies</h5>
+
+<p>A dict of all cookies from the request.</p>
+
+<h6 id="toc_16">Returns</h6>
+
+<p>A watson.http.cookies.CookieDict object</p>
+
+<h5 id="toc_17">url</h5>
+
+<p>Generates a watson.http.uri.Url object based on Request.server variables.</p>
+
+<h6 id="toc_18">Returns</h6>
+
+<p>A watson.http.uri.Url object</p>
+
+<h4 id="toc_19">Methods</h4>
+
+<h5 id="toc_20">__init__(method, get=None, post=None, files=None, headers=None, server=None, cookies=None, body=&#39;&#39;)</h5>
+
+<p>Creates a new instance of the Request object.</p>
+
+<h6 id="toc_21">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>method</td>
+<td>The Http request method</td>
+</tr>
+<tr>
+<td>dict</td>
+<td>get</td>
+<td>A watson.common.datastructures.MultiDict containing GET variables</td>
+</tr>
+<tr>
+<td>dict</td>
+<td>post</td>
+<td>A watson.common.datastructures.MultiDict containing POST variables</td>
+</tr>
+<tr>
+<td>dict</td>
+<td>files</td>
+<td>A watson.common.datastructures.MultiDict containing FieldStorage objects</td>
+</tr>
+<tr>
+<td>dict</td>
+<td>headers</td>
+<td>A watson.http.headers.HeaderDict containing valid Http headers</td>
+</tr>
+<tr>
+<td>dict</td>
+<td>server</td>
+<td>A watson.common.datastructures.MultiDict containing server variables</td>
+</tr>
+<tr>
+<td>dict</td>
+<td>cookies</td>
+<td>A watson.http.cookies.CookieDict containing watson.http.cookies.TastyMorsel objects</td>
+</tr>
+<tr>
+<td>string</td>
+<td>body</td>
+<td>The content of the request</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_22">is_xml_http_request()</h5>
+
+<p>Determine whether or not a request has originated via an XmlHttpRequest, assuming the relevant header has been set by the request.</p>
+
+<h6 id="toc_23">Returns</h6>
+
+<p>True/False</p>
+
+<h5 id="toc_24">is_secure()</h5>
+
+<p>Determine whether or not the request was made via Https.</p>
+
+<h6 id="toc_25">Returns</h6>
+
+<p>True/False</p>
+
+<h5 id="toc_26">is_method(method)</h5>
+
+<p>Determine whether or not a request was made via a specific method.</p>
+
+<h6 id="toc_27">Returns</h6>
+
+<p>True/False</p>
+
+<h6 id="toc_28">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string, list, tuple</td>
+<td>method</td>
+<td>the method or list of methods to check</td>
+</tr>
+</tbody></table>
+
+<div class="highlight"><pre><code class="python"><span class="n">request</span> <span class="o">=</span> <span class="o">...</span> <span class="c"># request made via GET</span>
+<span class="n">request</span><span class="o">.</span><span class="n">is_method</span><span class="p">(</span><span class="s">&#39;get&#39;</span><span class="p">)</span> <span class="c"># True</span>
+</code></pre></div>
+
+<h5 id="toc_29">host()</h5>
+
+<p>Determine the real host of a request.</p>
+
+<h6 id="toc_30">Returns</h6>
+
+<p>X_FORWARDED_FOR header variable if set, otherwise a watson.http.uri.Url hostname attribute.</p>
+
+<hr>
+
+<h3 id="toc_31">Response</h3>
+
+<blockquote>
+<p>Provides a simple and usable interface for dealing with Http Responses.</p>
+</blockquote>
+
+<p>See:
+    - <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html">http://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html</a></p>
+
+<h4 id="toc_32">Properties</h4>
+
+<h5 id="toc_33">status_code</h5>
+
+<p>The status code for the Response.</p>
+
+<h6 id="toc_34">Returns</h6>
+
+<p>The status code</p>
+
+<h5 id="toc_35">status_line</h5>
+
+<p>The formatted status line including the status code and message.</p>
+
+<h6 id="toc_36">Returns</h6>
+
+<p>The status line</p>
+
+<h5 id="toc_37">cookies</h5>
+
+<p>Returns the cookies associated with the Response.</p>
+
+<h5 id="toc_38">encoding</h5>
+
+<p>Retrieve the encoding for the response from the headers, defaults to UTF-8.</p>
+
+<h4 id="toc_39">Methods</h4>
+
+<h5 id="toc_40">__init__(status_code=None, headers=None, body=None, version=&#39;1.1&#39;)</h5>
+
+<h6 id="toc_41">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>int</td>
+<td>status_code</td>
+<td>an int representing the status code for the Response</td>
+</tr>
+<tr>
+<td>dict</td>
+<td>headers</td>
+<td>A watson.http.headers.HeaderDict object containing valid response headers.</td>
+</tr>
+<tr>
+<td>string</td>
+<td>body</td>
+<td>The content for the response</td>
+</tr>
+<tr>
+<td>string</td>
+<td>version</td>
+<td>The Http version for the response</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_42">start()</h5>
+
+<p>Return the status_line and headers of the response for use in a WSGI application.</p>
+
+<h5 id="toc_43">raw()</h5>
+
+<p>Return the raw encoded output for the response.</p>
 
 </section>
 
@@ -782,22 +1066,22 @@
 	<h4>See also:</h4>
 	
 	
-	<a class="label blue" href="/watson/reference-library/http/sessions.html">watson.http.sessions</a>
-	
-	
-	
-	
 	<a class="label blue" href="/watson/reference-library/http/cookies.html">watson.http.cookies</a>
 	
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/http/wsgi.html">watson.http.wsgi</a>
+	<a class="label blue" href="/watson/reference-library/http/sessions.html">watson.http.sessions</a>
 	
 	
 	
 	
 	<a class="label blue" href="/watson/reference-library/http/headers.html">watson.http.headers</a>
+	
+	
+	
+	
+	<a class="label blue" href="/watson/reference-library/http/wsgi.html">watson.http.wsgi</a>
 	
 	
 	

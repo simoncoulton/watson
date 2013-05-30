@@ -75,8 +75,6 @@
 			    
 			  
 			    
-			  
-			    
 			      <li>
 			        <a href="/watson/getting-started/installation.html">
 			          Installation
@@ -144,8 +142,6 @@
 			Key Concepts
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -337,8 +333,6 @@
 			    
 			  
 			    
-			  
-			    
 			      <li>
 			        <a href="/watson/common-usage/views.html">
 			          Views
@@ -388,8 +382,6 @@
 			Advanced Topics
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -700,11 +692,6 @@
 				
 				
 				
-				
-				
-				
-				
-				
 				<li>
 					<a href="/watson/reference-library/util">watson.util</a>
 				</li>
@@ -744,18 +731,88 @@
 	</dl>
 </section>
 <section class="code">
-<p>Application documentation</p>
+<h3 id="toc_0">Base</h3>
+
+<blockquote>
+<p>The core application structure for a Watson application.</p>
+</blockquote>
+
+<p>It makes heavy use of the IocContainer and EventDispatcher classes to handle
+the wiring and executing of methods.
+The default configuration for Watson applications can be seen at watson.mvc.config.</p>
+
+<h4 id="toc_1">Properties</h4>
+
+<h5 id="toc_2">config</h5>
+
+<p>The configuration of the application. This can either be a dict, or a python module.</p>
+
+<h5 id="toc_3">container</h5>
+
+<p>The applications IocContainer.</p>
+
+<p>If no container has been created, a new container will be created
+based on the dependencies within the application configuration.</p>
+
+<h4 id="toc_4">Methods</h4>
+
+<h5 id="toc_5">__init__(value)</h5>
+
+<p>Registers any events that are within the application configuration.</p>
+
+<h6 id="toc_6">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>mixed</td>
+<td>config</td>
+<td>See the Base.config property.</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_7">run(*args, **kwargs)</h5>
+
+<p>Called on each request.</p>
+
+<hr>
+
+<h3 id="toc_8">Http</h3>
+
+<blockquote>
+<p>An application structure suitable for use with the WSGI protocol.</p>
+</blockquote>
+
+<h4 id="toc_9">Usage</h4>
+
+<div class="highlight"><pre><code class="python"><span class="n">application</span> <span class="o">=</span> <span class="n">applications</span><span class="o">.</span><span class="n">Http</span><span class="p">({</span><span class="o">..</span><span class="p">})</span>
+<span class="n">application</span><span class="p">(</span><span class="n">environ</span><span class="p">,</span> <span class="n">start_response</span><span class="p">)</span>
+</code></pre></div>
+
+<hr>
+
+<h3 id="toc_10">Console</h3>
+
+<blockquote>
+<p>An application structure suitable for the command line.</p>
+</blockquote>
+
+<h4 id="toc_11">Usage</h4>
+
+<div class="highlight"><pre><code class="python"><span class="n">application</span> <span class="o">=</span> <span class="n">applications</span><span class="o">.</span><span class="n">Console</span><span class="p">({</span><span class="o">...</span><span class="p">})</span>
+<span class="n">application</span><span class="p">()</span>
+</code></pre></div>
 
 </section>
 
 <section>
 	
 	
-	
-		
-		
-			
-		
 	
 		
 		
@@ -822,11 +879,6 @@
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/mvc/config.html">watson.mvc.config</a>
-	
-	
-	
-	
 	<a class="label blue" href="/watson/reference-library/mvc/events.html">watson.mvc.events</a>
 	
 	
@@ -837,27 +889,7 @@
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/events/types.html">watson.events.types</a>
-	
-	
-	
-	
-	<a class="label blue" href="/watson/reference-library/events/collections.html">watson.events.collections</a>
-	
-	
-	
-	
-	<a class="label blue" href="/watson/reference-library/events/dispatcher.html">watson.events.dispatcher</a>
-	
-	
-	
-	
 	<a class="label blue" href="/watson/reference-library/mvc/exceptions.html">watson.mvc.exceptions</a>
-	
-	
-	
-	
-	<a class="label blue" href="/watson/reference-library/mvc/routing.html">watson.mvc.routing</a>
 	
 	
 	
@@ -867,11 +899,29 @@
 	
 	
 	
+	<a class="label blue" href="/watson/reference-library/events/dispatcher.html">watson.events.dispatcher</a>
+	
+	
+	
+	
+	<a class="label blue" href="/watson/reference-library/events/types.html">watson.events.types</a>
+	
+	
+	
+	
+	<a class="label blue" href="/watson/reference-library/mvc/routing.html">watson.mvc.routing</a>
+	
+	
+	
+	
+	<a class="label blue" href="/watson/reference-library/events/collections.html">watson.events.collections</a>
+	
+	
+	
+	
 
 	
 	<h4 class="key-concepts">Key Concepts:</h4>
-	
-	
 	
 	
 	

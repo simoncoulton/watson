@@ -75,8 +75,6 @@
 			    
 			  
 			    
-			  
-			    
 			      <li>
 			        <a href="/watson/getting-started/installation.html">
 			          Installation
@@ -144,8 +142,6 @@
 			Key Concepts
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -337,8 +333,6 @@
 			    
 			  
 			    
-			  
-			    
 			      <li>
 			        <a href="/watson/common-usage/views.html">
 			          Views
@@ -388,8 +382,6 @@
 			Advanced Topics
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -700,11 +692,6 @@
 				
 				
 				
-				
-				
-				
-				
-				
 				<li>
 					<a href="/watson/reference-library/util">watson.util</a>
 				</li>
@@ -744,7 +731,62 @@
 	</dl>
 </section>
 <section class="code">
-<p>Exception documentation</p>
+<h3 id="toc_0">ApplicationError</h3>
+
+<blockquote>
+<p>A general purpose application error.</p>
+</blockquote>
+
+<p>ApplicationError exceptions are used to redirect the user to relevant http status error pages. Status codes will be looked up against watson.http.STATUS_CODES</p>
+
+<h4 id="toc_1">Attributes</h4>
+
+<h5 id="toc_2">status_code</h5>
+
+<p>The http response status code association with the error. Defaults to 500.</p>
+
+<h4 id="toc_3">Methods</h4>
+
+<h5 id="toc_4"><strong>init</strong>(message, status_code=None)</h5>
+
+<h6 id="toc_5">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>message</td>
+<td>The exception message</td>
+</tr>
+<tr>
+<td>int</td>
+<td>status_code</td>
+<td>The http response status code</td>
+</tr>
+</tbody></table>
+
+<hr>
+
+<h3 id="toc_6">NotFoundError</h3>
+
+<blockquote>
+<p>404 Not Found exception.</p>
+</blockquote>
+
+<p>Extends the ApplicationError exception.</p>
+
+<hr>
+
+<h3 id="toc_7">InternalServerError</h3>
+
+<blockquote>
+<p>500 Internal Server Error exception.</p>
+</blockquote>
 
 </section>
 
@@ -797,11 +839,6 @@
 			
 		
 	
-		
-		
-			
-		
-	
 
 	
 	<h4>See also:</h4>
@@ -812,22 +849,7 @@
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/events/collections.html">watson.events.collections</a>
-	
-	
-	
-	
-	<a class="label blue" href="/watson/reference-library/mvc/applications.html">watson.mvc.applications</a>
-	
-	
-	
-	
-	<a class="label blue" href="/watson/reference-library/mvc/config.html">watson.mvc.config</a>
-	
-	
-	
-	
-	<a class="label blue" href="/watson/reference-library/events/types.html">watson.events.types</a>
+	<a class="label blue" href="/watson/reference-library/mvc/listeners.html">watson.mvc.listeners</a>
 	
 	
 	
@@ -837,12 +859,22 @@
 	
 	
 	
+	<a class="label blue" href="/watson/reference-library/mvc/views.html">watson.mvc.views</a>
+	
+	
+	
+	
 	<a class="label blue" href="/watson/reference-library/events/dispatcher.html">watson.events.dispatcher</a>
 	
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/mvc/listeners.html">watson.mvc.listeners</a>
+	<a class="label blue" href="/watson/reference-library/mvc/applications.html">watson.mvc.applications</a>
+	
+	
+	
+	
+	<a class="label blue" href="/watson/reference-library/events/types.html">watson.events.types</a>
 	
 	
 	
@@ -852,7 +884,7 @@
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/mvc/views.html">watson.mvc.views</a>
+	<a class="label blue" href="/watson/reference-library/events/collections.html">watson.events.collections</a>
 	
 	
 	
@@ -863,8 +895,6 @@
 	
 	
 	<a class="label yellow" href="/watson/key-concepts/mvc.html">Mvc</a>
-	
-	
 	
 	
 	

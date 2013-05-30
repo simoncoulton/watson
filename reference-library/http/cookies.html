@@ -75,8 +75,6 @@
 			    
 			  
 			    
-			  
-			    
 			      <li>
 			        <a href="/watson/getting-started/installation.html">
 			          Installation
@@ -144,8 +142,6 @@
 			Key Concepts
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -337,8 +333,6 @@
 			    
 			  
 			    
-			  
-			    
 			      <li>
 			        <a href="/watson/common-usage/views.html">
 			          Views
@@ -388,8 +382,6 @@
 			Advanced Topics
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -700,11 +692,6 @@
 				
 				
 				
-				
-				
-				
-				
-				
 				<li>
 					<a href="/watson/reference-library/util">watson.util</a>
 				</li>
@@ -744,7 +731,142 @@
 	</dl>
 </section>
 <section class="code">
-<p>Cookies documentation</p>
+<h3 id="toc_0">CookieDict</h3>
+
+<blockquote>
+<p>A dictionary containing cookies.</p>
+</blockquote>
+
+<p>A basic extension of the SimpleCookie class from the standard library, but designed to work better with wsgi.</p>
+
+<h4 id="toc_1">Usage</h4>
+
+<div class="highlight"><pre><code class="python"><span class="n">cd</span> <span class="o">=</span> <span class="n">CookieDict</span><span class="p">()</span>
+<span class="n">cookie</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&#39;my_cookie&#39;</span><span class="p">,</span> <span class="s">&#39;some value&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">cookie</span><span class="p">)</span>  <span class="c"># my_cookie=some value</span>
+<span class="k">print</span><span class="p">(</span><span class="n">cd</span><span class="p">[</span><span class="s">&#39;my_cookie&#39;</span><span class="p">])</span>  <span class="c"># my_cookie=some value</span>
+</code></pre></div>
+
+<h4 id="toc_2">Methods</h4>
+
+<h5 id="toc_3">add(name, value=&#39;&#39;, expires=0, path=&#39;/&#39;, domain=None, secure=False, httponly=False, comment=None)</h5>
+
+<p>Convenience method to add cookies to the dict.</p>
+
+<h6 id="toc_4">Returns</h6>
+
+<p>The morsel that was added to the CookieDict</p>
+
+<h6 id="toc_5">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>name</td>
+<td>the name of the cookie</td>
+</tr>
+<tr>
+<td>string</td>
+<td>value</td>
+<td>the value of the cookie</td>
+</tr>
+<tr>
+<td>int</td>
+<td>expires</td>
+<td>the expiration date for the cookie in seconds</td>
+</tr>
+<tr>
+<td>string</td>
+<td>path</td>
+<td>the path in which the cookie is valid</td>
+</tr>
+<tr>
+<td>string</td>
+<td>domain</td>
+<td>the domain in which the cookie is valid</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>secure</td>
+<td>only send cookies over https</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>httponly</td>
+<td>only send over http requests, not accessible via JavaScript</td>
+</tr>
+<tr>
+<td>string</td>
+<td>comment</td>
+<td>the associated comment with the cookie</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_6">delete(name)</h5>
+
+<p>Expire a cookie the next time it is sent to the browser.</p>
+
+<h6 id="toc_7">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>name</td>
+<td>the name of the cookie</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_8">expire()</h5>
+
+<p>Expire all the cookies in the dictionary</p>
+
+<h6 id="toc_9">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>name</td>
+<td>the name of the cookie</td>
+</tr>
+</tbody></table>
+
+<h5 id="toc_10">merge(cookie_dict)</h5>
+
+<p>Merges an existing cookie dict into another cookie dict.</p>
+
+<h6 id="toc_11">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>CookieDict</td>
+<td>cookie_dict</td>
+<td>The cookie dict to merge</td>
+</tr>
+</tbody></table>
 
 </section>
 

@@ -75,8 +75,6 @@
 			    
 			  
 			    
-			  
-			    
 			      <li>
 			        <a href="/watson/getting-started/installation.html">
 			          Installation
@@ -144,8 +142,6 @@
 			Key Concepts
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -337,8 +333,6 @@
 			    
 			  
 			    
-			  
-			    
 			      <li>
 			        <a href="/watson/common-usage/views.html">
 			          Views
@@ -388,8 +382,6 @@
 			Advanced Topics
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -700,11 +692,6 @@
 				
 				
 				
-				
-				
-				
-				
-				
 				<li>
 					<a href="/watson/reference-library/util">watson.util</a>
 				</li>
@@ -744,7 +731,164 @@
 	</dl>
 </section>
 <section class="code">
-<p>Controller documentation</p>
+<h3 id="toc_0">Base</h3>
+
+<blockquote>
+<p>The interface for controller classes.</p>
+</blockquote>
+
+<hr>
+
+<h3 id="toc_1">HttpMixin</h3>
+
+<blockquote>
+<p>A mixin for controllers that can contain http request and response objects.</p>
+</blockquote>
+
+<h4 id="toc_2">Properties</h4>
+
+<h5 id="toc_3">event</h5>
+
+<p>The event that was triggered that caused the execution of the controller.</p>
+
+<h5 id="toc_4">request</h5>
+
+<p>The HTTP request relating to the controller.</p>
+
+<h5 id="toc_5">response</h5>
+
+<p>The HTTP response relating to the controller.</p>
+
+<h5 id="toc_6">flash_messages</h5>
+
+<p>Retrieves all the flash messages associated with the controller.</p>
+
+<h6 id="toc_7">Usage</h6>
+
+<div class="highlight"><pre><code class="python"><span class="c"># within controller action</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">flash_messages</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&#39;Some message&#39;</span><span class="p">)</span>
+<span class="k">return</span> <span class="p">{</span>
+    <span class="s">&#39;flash_messages&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">flash_messages</span>
+<span class="p">}</span>
+
+<span class="c"># within view</span>
+<span class="p">{</span><span class="o">%</span> <span class="k">for</span> <span class="n">namespace</span><span class="p">,</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">flash_messages</span> <span class="o">%</span><span class="p">}</span>
+    <span class="p">{{</span> <span class="n">message</span> <span class="p">}}</span>
+<span class="p">{</span><span class="o">%</span> <span class="n">endfor</span> <span class="o">%</span><span class="p">}</span>
+</code></pre></div>
+
+<h4 id="toc_8">Methods</h4>
+
+<h5 id="toc_9">url(route_name, params=None)</h5>
+
+<p>Converts a route into a url.</p>
+
+<h6 id="toc_10">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>route_name</td>
+<td>The name of the route to convert</td>
+</tr>
+<tr>
+<td>dict</td>
+<td>params</td>
+<td>The params to use on the route</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_11">Returns</h6>
+
+<p>The assembled url.</p>
+
+<h5 id="toc_12">redirect(path, params=None, status_code=302, clear=False)</h5>
+
+<p>Redirecting will bypass the rendering of the view, and the body of the request will be displayed.</p>
+
+<p>Also supports Post Redirect Get (<a href="http://en.wikipedia.org/wiki/Post/Redirect/Get">http://en.wikipedia.org/wiki/Post/Redirect/Get</a>) which can allow post variables to accessed from a GET resource after a redirect (to repopulate form fields for example).</p>
+
+<h6 id="toc_13">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>path</td>
+<td>The URL or route name to redirect to</td>
+</tr>
+<tr>
+<td>dict</td>
+<td>params</td>
+<td>The params to send to the route</td>
+</tr>
+<tr>
+<td>int</td>
+<td>status_code</td>
+<td>The status code to use for the redirect</td>
+</tr>
+<tr>
+<td>bool</td>
+<td>clear</td>
+<td>Whether or not the session data should be cleared</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_14">Returns</h6>
+
+<p>A watson.http.messages.Response object.</p>
+
+<div class="highlight"><pre><code class="python"><span class="k">class</span> <span class="nc">Public</span><span class="p">(</span><span class="n">controllers</span><span class="o">.</span><span class="n">Rest</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">GET</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">redirect</span><span class="p">(</span><span class="s">&#39;http://google.com&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<h5 id="toc_15">redirect_vars()</h5>
+
+<h6 id="toc_16">Returns</h6>
+
+<p>Returns the post variables from a redirected request.</p>
+
+<h5 id="toc_17">clear_redirect_vars()</h5>
+
+<p>Clears the redirected variables.</p>
+
+<hr>
+
+<h3 id="toc_18">Action</h3>
+
+<blockquote>
+<p>A controller thats methods can be accessed with an _action suffix.</p>
+</blockquote>
+
+<div class="highlight"><pre><code class="python"><span class="k">class</span> <span class="nc">MyController</span><span class="p">(</span><span class="n">controllers</span><span class="o">.</span><span class="n">Action</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">my_func_action</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;something&#39;</span>
+</code></pre></div>
+
+<hr>
+
+<h3 id="toc_19">Rest</h3>
+
+<blockquote>
+<p>A controller thats methods can be accessed by the request method name.</p>
+</blockquote>
+
+<div class="highlight"><pre><code class="python"><span class="k">class</span> <span class="nc">MyController</span><span class="p">(</span><span class="n">controllers</span><span class="o">.</span><span class="n">Rest</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">GET</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;something&#39;</span>
+</code></pre></div>
 
 </section>
 
@@ -797,11 +941,6 @@
 			
 		
 	
-		
-		
-			
-		
-	
 
 	
 	<h4>See also:</h4>
@@ -812,12 +951,12 @@
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/events/collections.html">watson.events.collections</a>
+	<a class="label blue" href="/watson/reference-library/mvc/listeners.html">watson.mvc.listeners</a>
 	
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/mvc/config.html">watson.mvc.config</a>
+	<a class="label blue" href="/watson/reference-library/mvc/views.html">watson.mvc.views</a>
 	
 	
 	
@@ -827,7 +966,7 @@
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/events/types.html">watson.events.types</a>
+	<a class="label blue" href="/watson/reference-library/events/dispatcher.html">watson.events.dispatcher</a>
 	
 	
 	
@@ -837,12 +976,7 @@
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/events/dispatcher.html">watson.events.dispatcher</a>
-	
-	
-	
-	
-	<a class="label blue" href="/watson/reference-library/mvc/listeners.html">watson.mvc.listeners</a>
+	<a class="label blue" href="/watson/reference-library/events/types.html">watson.events.types</a>
 	
 	
 	
@@ -852,7 +986,7 @@
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/mvc/views.html">watson.mvc.views</a>
+	<a class="label blue" href="/watson/reference-library/events/collections.html">watson.events.collections</a>
 	
 	
 	
@@ -863,8 +997,6 @@
 	
 	
 	<a class="label yellow" href="/watson/key-concepts/mvc.html">Mvc</a>
-	
-	
 	
 	
 	

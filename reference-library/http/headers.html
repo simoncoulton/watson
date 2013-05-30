@@ -75,8 +75,6 @@
 			    
 			  
 			    
-			  
-			    
 			      <li>
 			        <a href="/watson/getting-started/installation.html">
 			          Installation
@@ -144,8 +142,6 @@
 			Key Concepts
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -337,8 +333,6 @@
 			    
 			  
 			    
-			  
-			    
 			      <li>
 			        <a href="/watson/common-usage/views.html">
 			          Views
@@ -388,8 +382,6 @@
 			Advanced Topics
 			<ul>
 				
-			    
-			  
 			    
 			  
 			    
@@ -700,11 +692,6 @@
 				
 				
 				
-				
-				
-				
-				
-				
 				<li>
 					<a href="/watson/reference-library/util">watson.util</a>
 				</li>
@@ -744,7 +731,166 @@
 	</dl>
 </section>
 <section class="code">
-<p>Headers documentation</p>
+<h3 id="toc_0">HeaderDict</h3>
+
+<blockquote>
+<p>A dictionary of headers and their values.</p>
+</blockquote>
+
+<p>Contains a collection of key/value pairs that define a set of headers for either a http request or response (e.g. HTTP_ACCEPT)</p>
+
+<h4 id="toc_1">Methods</h4>
+
+<h5 id="toc_2">add(field, value, replace=False, **options)</h5>
+
+<p>Adds a header to the collection.</p>
+
+<h6 id="toc_3">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>field</td>
+<td>the field name of the header</td>
+</tr>
+<tr>
+<td>mixed</td>
+<td>value</td>
+<td>the value for the header</td>
+</tr>
+<tr>
+<td>dict</td>
+<td>options</td>
+<td>any other keyword args to add to the value</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_4">Usage</h6>
+
+<div class="highlight"><pre><code class="python"><span class="c"># Content-Type: text/html; charset=utf-8</span>
+<span class="n">headers</span> <span class="o">=</span> <span class="n">HeaderCollection</span><span class="p">()</span>
+<span class="n">headers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&#39;Content-Type&#39;</span><span class="p">,</span> <span class="s">&#39;text/html&#39;</span><span class="p">,</span> <span class="n">charset</span><span class="o">=</span><span class="s">&#39;utf-8&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<h5 id="toc_5">get_option(field, option, default=None)</h5>
+
+<p>Retrieve an individual option from a header.</p>
+
+<h6 id="toc_6">Arguments</h6>
+
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>string</td>
+<td>field</td>
+<td>the header field</td>
+</tr>
+<tr>
+<td>string</td>
+<td>option</td>
+<td>the option to retrieve from the field</td>
+</tr>
+<tr>
+<td>mixed</td>
+<td>default</td>
+<td>the default value if the option does not exist</td>
+</tr>
+</tbody></table>
+
+<h6 id="toc_7">Usage</h6>
+
+<div class="highlight"><pre><code class="python"><span class="c"># Content-Type: text/html; charset=utf-8</span>
+<span class="n">headers</span> <span class="o">=</span> <span class="n">HeaderCollection</span><span class="p">()</span>
+<span class="n">headers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&#39;Content-Type&#39;</span><span class="p">,</span> <span class="s">&#39;text/html&#39;</span><span class="p">,</span> <span class="n">charset</span><span class="o">=</span><span class="s">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="n">option</span> <span class="o">=</span> <span class="n">headers</span><span class="o">.</span><span class="n">get_option</span><span class="p">(</span><span class="s">&#39;Content-Type&#39;</span><span class="p">,</span> <span class="s">&#39;charset&#39;</span><span class="p">)</span> <span class="c"># utf-8</span>
+</code></pre></div>
+
+<h5 id="toc_8"><strong>call</strong>()</h5>
+
+<p>Output in a format suitable for a wsgi callable.</p>
+
+<p>Outputs the header collection as a list of tuple pairs for use in a wsgi application.</p>
+
+<hr>
+
+<h3 id="toc_9">is_header(field)</h3>
+
+<blockquote>
+<p>Determine if a field is an acceptable http header.</p>
+</blockquote>
+
+<h4 id="toc_10">Returns</h4>
+
+<p>True/False</p>
+
+<hr>
+
+<h3 id="toc_11">http_header(field)</h3>
+
+<blockquote>
+<p>Return the correct header field name.</p>
+</blockquote>
+
+<h4 id="toc_12">Returns</h4>
+
+<p>The header name with HTTP_ removed.</p>
+
+<hr>
+
+<h3 id="toc_13">parse_to_environ_header_field(field)</h3>
+
+<blockquote>
+<p>Converts a http header field into an uppercase form.</p>
+</blockquote>
+
+<h4 id="toc_14">Usage</h4>
+
+<div class="highlight"><pre><code class="python"><span class="n">parse_from_environ_header_field</span><span class="p">(</span><span class="s">&#39;Content-Type&#39;</span><span class="p">)</span>  <span class="c"># CONTENT_TYPE</span>
+</code></pre></div>
+
+<h4 id="toc_15">Returns</h4>
+
+<p>The new header field name</p>
+
+<hr>
+
+<h3 id="toc_16">parse_from_environ_header_field(field)</h3>
+
+<blockquote>
+<p>Converts a http header field into a lowercase form.</p>
+</blockquote>
+
+<h4 id="toc_17">Usage</h4>
+
+<div class="highlight"><pre><code class="python"><span class="n">parse_from_environ_header_field</span><span class="p">(</span><span class="s">&#39;CONTENT_TYPE&#39;</span><span class="p">)</span>  <span class="c"># Content-Type</span>
+</code></pre></div>
+
+<h4 id="toc_18">Returns</h4>
+
+<p>The new header field name</p>
+
+<hr>
+
+<h3 id="toc_19">split_headers_server_vars(field)</h3>
+
+<blockquote>
+<p>Splits the environ into headers and server pairs.</p>
+</blockquote>
+
+<h4 id="toc_20">Returns</h4>
+
+<p>A tuple of dicts, headers, server and cookies in that order.</p>
 
 </section>
 
@@ -787,12 +933,12 @@
 	
 	
 	
-	<a class="label blue" href="/watson/reference-library/http/messages.html">watson.http.messages</a>
-	
-	
-	
-	
 	<a class="label blue" href="/watson/reference-library/http/sessions.html">watson.http.sessions</a>
+	
+	
+	
+	
+	<a class="label blue" href="/watson/reference-library/http/messages.html">watson.http.messages</a>
 	
 	
 	
