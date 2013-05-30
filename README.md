@@ -13,9 +13,11 @@ Branch | Status | Coverage
 Master | [![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=master)](https://travis-ci.org/simoncoulton/watson) | [![Coverage Status](https://coveralls.io/repos/simoncoulton/watson/badge.png)](https://coveralls.io/r/simoncoulton/watson)
 Develop | [![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=develop)](https://travis-ci.org/simoncoulton/watson) |
 
+[![Pypi](https://pypip.in/v/watson-framework/badge.png)](https://crate.io/packages/watson-framework/)
+
 ### Dependencies
 
-Watson currently requires the following modules to work out of box:
+Watson currently requires the following modules to work out of box (will be installed automatically):
 
 * Jinja2
 
