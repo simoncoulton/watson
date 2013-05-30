@@ -103,7 +103,7 @@ class TestResponse(object):
 
     def test_encoding(self):
         response = Response(200)
-        assert response.encoding() == 'utf-8'
+        assert response.encoding == 'utf-8'
 
     def test_encode_body(self):
         response = Response(200, body='Test')

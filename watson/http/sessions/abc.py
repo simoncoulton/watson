@@ -40,22 +40,19 @@ class StorageMixin(dict, metaclass=abc.ABCMeta):
 
     @property
     def id(self):
-        """
-        The id of the session.
+        """The id of the session.
         """
         return self._id
 
     @property
     def data(self):
-        """
-        The data associated with the session.
+        """The data associated with the session.
         """
         return self._data
 
     @property
     def cookie_params(self):
-        """
-        The cookie params used when saving the session id as a cookie.
+        """The cookie params used when saving the session id as a cookie.
         """
         if not self._cookie_params:
             self._cookie_params = {
@@ -70,8 +67,7 @@ class StorageMixin(dict, metaclass=abc.ABCMeta):
 
     @cookie_params.setter
     def cookie_params(self, value):
-        """
-        Set a dict of cookie params to be used when saving the session id
+        """Set a dict of cookie params to be used when saving the session id
         """
         self.cookie_params.update(value)
 
@@ -99,14 +95,12 @@ class StorageMixin(dict, metaclass=abc.ABCMeta):
         return sha1(str(random()).encode('utf-8')).hexdigest()[:24]
 
     def regenerate_id(self):
-        """
-        Regenerate a new id for the session.
+        """Regenerate a new id for the session.
         """
         self._id = self.generate_id()
 
     def load(self):
-        """
-        Loads the data from storage into the session. If the session data was
+        """Loads the data from storage into the session. If the session data was
         set to expire before the current time, destroy the session.
         """
         data = self._load() or ({}, None)
@@ -117,8 +111,7 @@ class StorageMixin(dict, metaclass=abc.ABCMeta):
             self._data = data[0]
 
     def save(self):
-        """
-        Save the contents of the session into storage.
+        """Save the contents of the session into storage.
         """
         try:
             timeout = int(self.timeout)
@@ -128,15 +121,13 @@ class StorageMixin(dict, metaclass=abc.ABCMeta):
             raise NotImplementedError('Unable to save the contents of the session')
 
     def destroy(self):
-        """
-        Destroy the session data from storage, but leave the actual session
+        """Destroy the session data from storage, but leave the actual session
         intact.
         """
         self._destroy()
 
     def exists(self):
-        """
-        Determine whether or not the session exists in storage.
+        """Determine whether or not the session exists in storage.
 
         Return:
             Boolean whether or not the session id exists.

@@ -1,9 +1,11 @@
 ---
-layout: concept
+layout: default
 tags: [controllers]
 title: Controllers
 area: Common Usage
 ---
+
+<section>
 
 Watson provides two different types of controllers which are called Action and Rest respectively. Each one has its own uses and there is no one size fits all solution.
 
@@ -28,7 +30,7 @@ routes = {
 from watson.mvc import controllers
 
 class Public(controllers.Action):
-    def indexAction(self):
+    def index_action(self):
         pass
 {% endhighlight %}
 
@@ -166,3 +168,4 @@ class Controller(controllers.Rest):
     def GET(self):
         raise exceptions.ApplicationError('Some horrible error', status_code=418)
 {% endhighlight %}
+</section>

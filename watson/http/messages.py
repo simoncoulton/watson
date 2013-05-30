@@ -43,6 +43,7 @@ class MessageMixin(object):
             self.headers = headers
         self.body = body or ''
 
+
 def create_request_from_environ(environ, session_class=None, session_options=None):
     """Create a new Request object.
 
@@ -182,11 +183,11 @@ class Request(MessageMixin, SessionMixin):
 
         Args:
             method: The Http request method
-            get: A watson.datastructures.MultiDict containing GET variables
-            post: A watson.datastructures.MultiDict containing POST variables
-            files: A watson.datastructures.MultiDict containing FieldStorage objects
+            get: A watson.common.datastructures.MultiDict containing GET variables
+            post: A watson.common.datastructures.MultiDict containing POST variables
+            files: A watson.common.datastructures.MultiDict containing FieldStorage objects
             headers: A watson.http.headers.HeaderDict containing valid Http headers
-            server: A watson.datastructures.MultiDict containing server variables
+            server: A watson.common.datastructures.MultiDict containing server variables
             cookies: A watson.http.cookies.CookieDict containing watson.http.cookies.TastyMorsel objects
             body: The content of the request
         """
@@ -268,8 +269,7 @@ class Request(MessageMixin, SessionMixin):
         return self.method in method
 
     def host(self):
-        """
-        Determine the real host of a request.
+        """Determine the real host of a request.
 
         Returns:
             X_FORWARDED_FOR header variable if set, otherwise a watson.http.uri.Url
@@ -279,8 +279,7 @@ class Request(MessageMixin, SessionMixin):
 
 
 class Response(MessageMixin):
-    """
-    Provides a simple and usable interface for dealing with Http Responses.
+    """Provides a simple and usable interface for dealing with Http Responses.
 
     See:
         http://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html
@@ -333,6 +332,13 @@ class Response(MessageMixin):
             cookies = CookieDict(cookies)
         self._cookies = cookies
 
+    @property
+    def encoding(self):
+        """Retrieve the encoding for the response from the headers, defaults to
+        UTF-8.
+        """
+        return self.headers.get_option('Content-Type', 'charset', 'utf-8')
+
     def __init__(self, status_code=None, headers=None, body=None, version='1.1'):
         """
         Args:
@@ -346,12 +352,6 @@ class Response(MessageMixin):
         self._headers = headers or HeaderDict()
         self.version = str(version)
 
-    def encoding(self):
-        """Retrieve the encoding for the response from the headers, defaults to
-        UTF-8.
-        """
-        return self.headers.get_option('Content-Type', 'charset', 'utf-8')
-
     def start(self):
         """Return the status_line and headers of the response for use in a WSGI
         application.
@@ -362,7 +362,7 @@ class Response(MessageMixin):
     def raw(self):
         """Return the raw encoded output for the response.
         """
-        return str(self).encode(self.encoding())
+        return str(self).encode(self.encoding)
 
     def __str__(self):
         self._prepare()
@@ -379,4 +379,4 @@ class Response(MessageMixin):
             self._prepared = True
 
     def __call__(self):
-        return self.body.encode(self.encoding())
+        return self.body.encode(self.encoding)

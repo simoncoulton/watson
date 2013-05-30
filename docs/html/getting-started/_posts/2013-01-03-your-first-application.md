@@ -117,7 +117,7 @@ All Action controller methods are suffixed with _action. For a more indepth look
 
 The presentation layer (or view) is matched based on lowercased versions of the the class name and action of the controller. For the above request the following view is rendered:
 
-<span class="sub">app/views/index/get.py</span>
+<span class="sub">app/views/index/get.html</span>
 {% highlight html %}
 <!DOCTYPE html>
 <html>

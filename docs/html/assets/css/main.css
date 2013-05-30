@@ -3,25 +3,25 @@
   font-family: 'Open Sans';
   font-style: normal;
   font-weight: 300;
-  src: local('Open Sans Light'), local('OpenSans-Light'), url(../fonts/opensans-light.woff) format('woff');
+  src: local('Open Sans Light'), local('OpenSans-Light'), url("../fonts/opensans-light.svg#OpenSansLight") format("svg"), url(../fonts/opensans-light.woff) format('woff');
 }
 @font-face {
   font-family: 'Open Sans';
   font-style: normal;
   font-weight: 400;
-  src: local('Open Sans'), local('OpenSans'), url(../fonts/opensans.woff) format('woff');
+  src: local('Open Sans'), local('OpenSans'), url("../fonts/opensans.svg#OpenSansRegular") format("svg"), url(../fonts/opensans.woff) format('woff');
 }
 @font-face {
   font-family: 'Open Sans';
   font-style: normal;
   font-weight: 600;
-  src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url(../fonts/opensans-semibold.woff) format('woff');
+  src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url("../fonts/opensans-semibold.svg#OpenSansSemibold") format("svg"), url(../fonts/opensans-semibold.woff) format('woff');
 }
 @font-face {
   font-family: 'Open Sans';
   font-style: normal;
   font-weight: 700;
-  src: local('Open Sans Bold'), local('OpenSans-Bold'), url(../fonts/opensans-bold.woff) format('woff');
+  src: local('Open Sans Bold'), local('OpenSans-Bold'), url("../fonts/opensans-bold.svg#OpenSansBold") format("svg"), url(../fonts/opensans-bold.woff) format('woff');
 }
 
 /* bootstrap */
@@ -758,7 +758,7 @@ p {
 
 .label {
 	color: #fff;
-	padding: 2px 6px;
+    padding: 2px 6px;
 	display: inline-block;
 	border-radius: 4px;
 	font-weight: bold;
@@ -803,6 +803,29 @@ section, .section-title {
 
 .main h4 {
   margin-top: 20px;
+}
+
+table {
+  width: 100%;
+  margin-bottom: 20px;
+  border-collapse: collapse;
+}
+
+table th {
+    text-align: left;
+    background: #f0f0f0;
+}
+
+table th, table td {
+    padding: 4px 8px;
+}
+
+table tr:nth-of-type(2n) td {
+    background: #f5f5f5;
+}
+
+table tr:last-of-type td {
+    border-bottom: 1px solid #f1f1f1;
 }
 
 /* media queries */

@@ -4,7 +4,3 @@ title: Validators
 package: watson.validators
 module: watson.validators
 ---
-<section>
-
-Cache Index
-</section>

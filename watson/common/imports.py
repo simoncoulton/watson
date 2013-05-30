@@ -105,28 +105,23 @@ class Resolver(abc.Finder, abc.Loader):
         Args:
             string fullname: The name of the module to load
         """
-        if fullname not in sys.modules:
+        module_name = fullname.split('.')
+        if len(module_name) > 2:
+            actual_name = module_name[2:]
+            actual_name.insert(0, '_'.join(module_name[:2]))
+        else:
+            actual_name = ['_'.join(module_name)]
+        actual_name = '.'.join(actual_name)
+        if fullname not in sys.modules and actual_name not in sys.modules:
             try:
-                # first pass attempts to load an existing module, need to drop
-                # this loader so that we don't get any recursion.
-                self.deregister()
-                import_module(fullname)
-            except:
-                # second pass attempts to load the 'fake' module.
-                module_name = fullname.split('.')
-                if len(module_name) > 2:
-                    actual_name = module_name[2:]
-                    actual_name.insert(0, '_'.join(module_name[:2]))
-                else:
-                    actual_name = ['_'.join(module_name)]
-                actual_name = '.'.join(actual_name)
-                print(actual_name, fullname)
                 import_module(actual_name)
-                sys.modules[fullname] = sys.modules[actual_name]
-                sys.modules[fullname].__original_name__ = fullname
-                del sys.modules[actual_name]
-            finally:
-                self.register()
+            except:
+                raise
+        if actual_name in sys.modules and fullname not in sys.modules:
+            sys.modules[fullname] = sys.modules[actual_name]
+            sys.modules[fullname].__original_name__ = actual_name
+            sys.modules[fullname].__name__ = fullname
+            del sys.modules[actual_name]
         return sys.modules[fullname]
 
     def module_repr(self, module):
@@ -136,9 +131,9 @@ class Resolver(abc.Finder, abc.Loader):
             string module: The name of the module
         """
         if hasattr(module, '__original_name__'):
-            return "<module '{}' from '{}' aliased by '{}'>'".format(module.__name__,
+            return "<module '{}' from '{}' aliased by '{}'>'".format(module.__original_name__,
                                                                      module.__file__,
-                                                                     module.__original_name__)
+                                                                     module.__name__)
         else:
             return "<module '{}' from '{}'>'".format(module.__name__,
                                                      module.__file__)

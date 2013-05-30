@@ -9,13 +9,15 @@ You can find a sample hello world application in the `/examples` directory and m
 #### Build Status
 
 Branch | Status | Coverage
------------- | ------------- | ------------- 
-Master | [![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=master)](https://github.com/simoncoulton/watson) | [![Coverage Status](https://coveralls.io/repos/simoncoulton/watson/badge.png)](https://coveralls.io/r/simoncoulton/watson)
-Develop | [![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=develop)](https://github.com/simoncoulton/watson) | 
+------------ | ------------- | -------------
+Master | [![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=master)](https://travis-ci.org/simoncoulton/watson) | [![Coverage Status](https://coveralls.io/repos/simoncoulton/watson/badge.png)](https://coveralls.io/r/simoncoulton/watson)
+Develop | [![Build Status](https://api.travis-ci.org/simoncoulton/watson.png?branch=develop)](https://travis-ci.org/simoncoulton/watson) |
+
+[![Pypi](https://pypip.in/v/watson-framework/badge.png)](https://crate.io/packages/watson-framework/)
 
 ### Dependencies
 
-Watson currently requires the following modules to work out of box:
+Watson currently requires the following modules to work out of box (will be installed automatically):
 
 * Jinja2
 
@@ -33,7 +35,7 @@ This is currently maintained [here][1].
 ### Running the tests
 
 1. Setup a virtualenv for Python 3.3
-2. Install Fabric `pip install fabric` 
+2. Install Fabric `pip install fabric`
 3. Install Nose `pip install nose` or Py.test `pip install pytest`
 4. Run `fab test clean`
 

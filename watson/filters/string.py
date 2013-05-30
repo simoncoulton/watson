@@ -30,7 +30,7 @@ class Upper(abc.Filter):
 
 
 class Lower(abc.Filter):
-    """Converts all characters to uppercase.
+    """Converts all characters to lowercase.
 
     Usage:
         filter = Lower()
