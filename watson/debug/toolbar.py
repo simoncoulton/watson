@@ -139,9 +139,10 @@ class Toolbar(object):
         self.renderer = renderer
         self.panels = collections.OrderedDict()
         for module, settings in config['panels'].items():
-            panel = imports.load_definition_from_string(module)(settings, renderer, application)
-            panel.register_listeners()
-            self.panels[module] = panel
+            if settings['enabled']:
+                panel = imports.load_definition_from_string(module)(settings, renderer, application)
+                panel.register_listeners()
+                self.panels[module] = panel
 
     def register_listeners(self):
         self.application.dispatcher.add(events.RENDER_VIEW, self.render, -1000)

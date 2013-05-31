@@ -11,14 +11,20 @@ from watson.mvc import events
 debug = {
     'enabled': False,
     'panels': {
-        'watson.debug.panels.request.Panel': {},
-        'watson.debug.panels.application.Panel': {},
+        'watson.debug.panels.request.Panel': {
+            'enabled': True
+        },
+        'watson.debug.panels.application.Panel': {
+            'enabled': True
+        },
         'watson.debug.panels.profile.Panel': {
-            'enabled': False,
+            'enabled': True,
             'max_results': 20,
             'sort': 'time',
         },
-        'watson.debug.panels.framework.Panel': {},
+        'watson.debug.panels.framework.Panel': {
+            'enabled': True
+        },
     }
 }
 
