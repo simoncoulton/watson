@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 import abc
 from collections import namedtuple
+import importlib
 from json import JSONEncoder
-from jinja2 import FileSystemLoader, DictLoader, ChoiceLoader, Environment
+import jinja2
+from watson.common import datastructures, imports
+from watson.di import ContainerAware
 from watson.util import xml
+
 
 Model = namedtuple('Model', 'format template data')
 
@@ -28,10 +32,25 @@ class BaseRenderer(metaclass=abc.ABCMeta):
 class Jinja2Renderer(BaseRenderer):
     _env = None
 
-    def __init__(self, config=None):
+    @property
+    def env(self):
+        return self._env
+
+    def __init__(self, config=None, application=None):
         super(Jinja2Renderer, self).__init__(config)
-        loaders = [FileSystemLoader(path) for path in self.config.get('paths')]
-        loaders.append(DictLoader({
+        self.register_loaders()
+        types = ('filters', 'globals')
+        for _type in types:
+            for module in config[_type]:
+                mod = importlib.import_module(module)
+                dic = datastructures.module_to_dict(mod, ignore_starts_with='__')
+                for name, definition in dic.items():
+                    env_type = getattr(self.env, _type)
+                    env_type[name] = definition
+
+    def register_loaders(self):
+        loaders = [jinja2.FileSystemLoader(path) for path in self.config.get('paths')]
+        loaders.append(jinja2.DictLoader({
             'base': '''<!DOCTYPE html>
                 <html>
                     <head>
@@ -277,7 +296,7 @@ class Jinja2Renderer(BaseRenderer):
                 {% endblock %}
             '''
         }))
-        self._env = Environment(loader=ChoiceLoader(loaders))
+        self._env = jinja2.Environment(loader=jinja2.ChoiceLoader(loaders))
 
     def __call__(self, view_model):
         template = self._env.get_template('{0}.{1}'.format(view_model.template, self.config['extension']))

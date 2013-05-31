@@ -10,10 +10,15 @@ from watson.mvc import events
 # Debug settings
 debug = {
     'enabled': False,
-    'profiling': {
-        'enabled': False,
-        'max_results': 20,
-        'sort': 'cumulative',
+    'panels': {
+        'watson.debug.panels.request.Panel': {},
+        'watson.debug.panels.application.Panel': {},
+        'watson.debug.panels.profile.Panel': {
+            'enabled': False,
+            'max_results': 20,
+            'sort': 'time',
+        },
+        'watson.debug.panels.framework.Panel': {},
     }
 }
 
@@ -65,7 +70,9 @@ views = {
             'name': 'jinja2_renderer',
             'config': {
                 'extension': 'html',
-                'paths': [os.path.join(os.getcwd(), 'views')]
+                'paths': [os.path.join(os.getcwd(), 'views')],
+                'filters': ['watson.support.jinja2.filters'],
+                'globals': ['watson.support.jinja2.globals']
             }
         },
         'xml': {'name': 'xml_renderer'},
@@ -89,7 +96,7 @@ session = {
 events = {
     events.EXCEPTION: [('app_exception_listener',)],
     events.INIT: [
-        ('watson.debug.profilers.ApplicationInitListener', 1, True)
+        ('watson.debug.listeners.Init', 1, True)
     ],
     events.ROUTE_MATCH: [('watson.mvc.listeners.Route',)],
     events.DISPATCH_EXECUTE: [('app_dispatch_execute_listener',)],
