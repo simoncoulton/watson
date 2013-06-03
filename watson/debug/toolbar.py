@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import collections
-from jinja2 import Template
 from watson.common import imports
 from watson.mvc import events
 
@@ -14,7 +13,7 @@ TEMPLATE = """<!-- Injected Watson Debug Toolbar -->
     z-index: 1000;
     font-family: Helvetica, Arial, sans-serif;
     font-size: 12px;
-    background: #e6e6e6;
+    background: #fff;
     color: #7b7c7e;
     border-top: 1px solid #c3c3c3;
 }
@@ -22,14 +21,13 @@ TEMPLATE = """<!-- Injected Watson Debug Toolbar -->
     background: #f2f2f2;
     padding: 8px;
     border-bottom: 1px solid #c3c3c3;
+    position: relative;
 }
 .watson-debug-toolbar__buttons a {
     color: inherit;
     text-decoration: none;
     padding: 4px 8px;
     display: inline-block;
-    /*background: #f8f8f8;
-    border: 1px solid #e9e8e8;*/
     border-radius: 4px;
 }
 .watson-debug-toolbar__buttons a span {
@@ -47,19 +45,25 @@ TEMPLATE = """<!-- Injected Watson Debug Toolbar -->
 }
 .watson-debug-toolbar__container #DebugToolbarToggle {
     display: inline-block;
-    height: 16px;
-    width: 16px;
-    background: #fff;
-    text-indent: -9999px;
+    height: 12px;
+    width: 5px;
+    background: #7b7c7e;
+    border-radius: 14px;
+    color: #fff;
+    padding-left: 7px;
+    line-height: 0.9em;
+    position: absolute;
+    right: 10px;
+    top: 8px;
 }
+.watson-debug-toolbar__container #DebugToolbarToggle:hover {
+    background: #353535;
+}
+
 .watson-debug-toolbar__panel {
     height: 200px;
-    padding: 10px;
     display: none;
     overflow: scroll;
-}
-.watson-debug-toolbar__container .watson-debug-toolbar__buttons span {
-    display: none;
 }
 .watson-debug-toolbar__container.collapsed .watson-debug-toolbar__panel {
     display: none;
@@ -67,32 +71,46 @@ TEMPLATE = """<!-- Injected Watson Debug Toolbar -->
 .watson-debug-toolbar__container .watson-debug-toolbar__panel.active {
     display: block;
 }
-.watson-debug-toolbar__container.collapsed .watson-debug-toolbar__buttons span {
-    display: inline-block;
-}
-table {
+.watson-debug-toolbar__panel table {
     width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
 }
-table td {
+.watson-debug-toolbar__panel table th {
+    padding: 8px 4px;
+    border-right: 1px solid #f1f1f1;
+    background: #7b7c7e;
+    color: #cccbcb;
+}
+.watson-debug-toolbar__panel table td {
     font-family: inherit;
+    background: #fff;
+    padding: 4px;
+    border-right: 1px solid #f3f3f3;
 }
-dt {
+.watson-debug-toolbar__panel table tr:nth-of-type(2n) td {
+    background: #f7f7f7;
+}
+.watson-debug-toolbar__panel dt {
     font-weight: bold;
     font-size: 1.1em;
     float: left;
     width: 160px;
     clear: both;
+    padding: 4px 6px;
+    color: #353535;
 }
-dd {
+.watson-debug-toolbar__panel dd {
     color: inherit;
     margin-bottom: 4px;
     margin-left: 160px;
+    padding: 4px 6px;
 }
 </style>
 <div class="watson-debug-toolbar__container collapsed">
     <div class="watson-debug-toolbar__inner">
         <div class="watson-debug-toolbar__buttons">
-            <!--<a href="javascript:;" id="DebugToolbarToggle">Toggle</a>-->
+            <a href="javascript:;" id="DebugToolbarToggle">x</a>
             {% for module, panel in panels|dictsort %}
             <a href="javascript:;" data-panel="{{ panel.title }}">{{ panel.title }} <span class="watson-debug-toolbar__key-stat">{{ panel.render_key_stat() }}</span></a>
             {% endfor %}
@@ -108,11 +126,8 @@ dd {
 <script type="text/javascript">
     var toolbar = $('.watson-debug-toolbar__container'), toggle = $('#DebugToolbarToggle'), buttons = toolbar.find('.watson-debug-toolbar__buttons a[id!="DebugToolbarToggle"]'), panels = toolbar.find('.watson-debug-toolbar__panel');
     toggle.on('click', function() {
-        toolbar.toggleClass('collapsed');
-        if (toolbar.hasClass('collapsed')) {
-            panels.removeClass('active');
-            buttons.removeClass('active');
-        }
+        panels.removeClass('active');
+        buttons.removeClass('active');
     });
     buttons.on('click', function() {
         buttons.removeClass('active');

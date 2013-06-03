@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
-from jinja2 import Template
 from watson.debug import abc, profile
 
-TEMPLATE = """Rendered: {{ total_time }}
-Function Calls: {{ function_calls }}
-Primative Calls: {{ primative_calls }}
-<style>
+TEMPLATE = """<style>
 .watson-debug-toolbar__panel__profile {
     width: 100%;
 }
