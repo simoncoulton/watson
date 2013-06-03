@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Filter functions for Jinja2 templates
 from watson.common import imports
 
 

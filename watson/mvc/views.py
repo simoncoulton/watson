@@ -4,6 +4,7 @@ from collections import namedtuple
 import importlib
 from json import JSONEncoder
 import jinja2
+import types
 from watson.common import datastructures, imports
 from watson.di import ContainerAware
 from watson.util import xml
@@ -39,14 +40,18 @@ class Jinja2Renderer(BaseRenderer):
     def __init__(self, config=None, application=None):
         super(Jinja2Renderer, self).__init__(config)
         self.register_loaders()
-        types = ('filters', 'globals')
-        for _type in types:
+        _types = ('filters', 'globals')
+        for _type in _types:
             for module in config[_type]:
                 mod = importlib.import_module(module)
                 dic = datastructures.module_to_dict(mod, ignore_starts_with='__')
                 for name, definition in dic.items():
+                    obj = '{0}.{1}'.format(module, name)
                     env_type = getattr(self.env, _type)
-                    env_type[name] = definition
+                    if isinstance(definition, types.FunctionType):
+                        env_type[name] = definition
+                    else:
+                        env_type[name] = application.container.get(obj)
 
     def register_loaders(self):
         loaders = [jinja2.FileSystemLoader(path) for path in self.config.get('paths')]
