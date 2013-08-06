@@ -95,9 +95,15 @@ class TestRoute(object):
         route = Route(name='test', path='/search[/:keyword]')
         assert route.assemble(keyword='test') == '/search/test'
 
+    def test_assemble_segment_not_required(self):
+        route = Route(name='test', path='/search[/:keyword]')
+        assert route.assemble() == '/search'
+        route2 = Route(name='test', path='/search[/:keyword]')
+        assert route2.assemble(keyword='test') == '/search/test'
+
     @raises(KeyError)
     def test_assemble_segment_route_missing_param(self):
-        route = Route(name='test', path='/search/:keyword')
+        route = Route(name='test', path='/search/:keyword', requires={'keyword': '.*'})
         route.assemble()
 
 

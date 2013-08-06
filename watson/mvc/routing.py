@@ -199,18 +199,22 @@ class Route(dict):
         params = collections.ChainMap(self.get('defaults', {}), kwargs or {})
         return ''.join(self.__build_path(self.segments, params))
 
-    def __build_path(self, segments, params):
+    def __build_path(self, segments, params, optional=False):
         # Used to assemble a route
         path = []
         for segment in segments:
+            is_optional = segment[0] == 'optional'
             if isinstance(segment[1], list):
-                path.append(self.__build_path(segment[1], params))
+                path.append(self.__build_path(segment[1], params, is_optional))
             else:
                 value = segment[1]
                 if segment[0] == 'param':
                     value = params.get(value)
                     if value:
                         path.append(str(value))
+                    elif (segment[1] not in self.get('requires', ())):
+                        remove_segments = len(segments) - 1
+                        path = path[0:-remove_segments]
                     else:
                         raise KeyError('Missing {0} in params.'.format(segment[1]))
                 else:
