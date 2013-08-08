@@ -90,7 +90,7 @@ class SetterInjection(Base):
 
 
 class AttributeInjection(Base):
-    """Responsibile for injecting required values into attributes.
+    """Responsible for injecting required values into attributes.
 
     Args:
         watson.events.types.Event event: The event dispatched from the container.

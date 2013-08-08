@@ -35,7 +35,14 @@ class DispatchExecute(Base):
         route_match = event.params['route_match']
         try:
             controller_class = route_match.params['controller']
-            event.params['container'].add(controller_class, controller_class, 'prototype')
+            container = event.params['container']
+            if controller_class not in container.config['definitions']:
+                container.add(controller_class, controller_class, 'prototype')
+            else:
+                controller_definition = container.config['definitions'][controller_class]
+                controller_definition['type'] = 'prototype'
+                controller_definition['item'] = controller_class
+
             controller = event.params['container'].get(controller_class)
         except Exception as exc:
             raise InternalServerError('Controller not found for route: {0}'.format(route_match.route.name)) from exc

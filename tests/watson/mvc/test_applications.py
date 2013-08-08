@@ -90,7 +90,7 @@ class TestConsoleApplication(object):
             'commands': ['tests.watson.mvc.support.SampleStringCommand',
                          SampleNonStringCommand]
         })
-        assert len(application.config['commands']) == 2
+        assert len(application.config['commands']) == 6
 
     def test_execute_command(self):
         application = applications.Console({

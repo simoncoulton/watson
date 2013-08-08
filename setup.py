@@ -10,7 +10,7 @@ with open('LICENSE') as f:
 
 reqs = ''
 with ignored(IOError, OSError):
-    reqs = open(os.path.join(os.path.dirname(__file__), 'requirements.txt')).read()
+    reqs = open(os.path.join(os.path.dirname(__file__), 'requirements.txt')).read().split("\n")[0:-1]
 
 setup(
     name='watson-framework',

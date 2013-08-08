@@ -21,7 +21,9 @@ def dict_deep_update(d1, d2):
     result = deepcopy(d1)
     for k, v in d2.items():
         if k in result and isinstance(result[k], dict):
-                result[k] = dict_deep_update(result[k], v)
+            result[k] = dict_deep_update(result[k], v)
+        elif k in result and isinstance(result[k], (list, tuple)) and isinstance(v, (list, tuple)):
+            result[k] = result[k] + v
         else:
             result[k] = deepcopy(v)
     return result
@@ -38,7 +40,8 @@ def module_to_dict(module, ignore_starts_with=''):
         a_dict['variable']
 
     Args:
-        string ignore_starts_with: Ignore all module keys that begin with this value.
+        string ignore_starts_with: Ignore all module keys that begin with
+        this value.
 
     Return:
         dict
