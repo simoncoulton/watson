@@ -60,7 +60,12 @@ class DispatchExecute(Base):
         controller.event = event
         controller.request = event.params['request']
         try:
-            model_data = controller.execute(**route_match.params)
+            # strip out any controller/action keys
+            execute_params = route_match.params.copy()
+            del execute_params['controller']
+            if 'action' in execute_params:
+                del execute_params['action']
+            model_data = controller.execute(**execute_params)
             short_circuit = False
             if isinstance(model_data, str):
                 model_data = {'content': model_data}
