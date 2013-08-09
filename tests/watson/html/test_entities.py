@@ -3,6 +3,7 @@ from watson.html.entities import encode, decode
 
 
 class TestEncode(object):
+
     def test_html_chars(self):
         string = '<div><p>some element</p></div>'
         expected = '&lt;div&gt;&lt;p&gt;some element&lt;/p&gt;&lt;/div&gt;'

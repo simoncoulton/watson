@@ -5,6 +5,7 @@ from tests.watson.util.support import sample_app, sample_environ, sample_start_r
 
 
 class TestStaticFileMiddleware(object):
+
     def test_create(self):
         mw = StaticFileMiddleware(sample_app, os.path.dirname(__file__))
         assert mw.app == sample_app

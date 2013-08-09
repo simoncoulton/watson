@@ -4,6 +4,7 @@ from watson.mvc.exceptions import ApplicationError, NotFoundError, InternalServe
 
 
 class TestExceptions(object):
+
     def test_application_error(self):
         error = ApplicationError('Error', status_code=301)
         assert error.status_code == 301
@@ -21,6 +22,7 @@ class TestExceptions(object):
 
 
 class TestExceptionHandler(object):
+
     def test_create(self):
         handler = ExceptionHandler({'test': 'blah'})
         assert handler.config['test'] == 'blah'
@@ -32,7 +34,7 @@ class TestExceptionHandler(object):
             raise exc
         except ApplicationError:
             model = handler(sys.exc_info(), {'test': 'blah'})
-            assert model['debug'] == True
+            assert model['debug']
             assert model['type'] == 'watson.mvc.exceptions.ApplicationError'
             assert model['test'] == 'blah'
 

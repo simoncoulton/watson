@@ -7,9 +7,11 @@ from tests.watson.events.support import SampleDispatcherAware
 
 
 class TestEventDispatcher(object):
+
     def test_create_dispatcher(self):
         dispatcher = EventDispatcher()
-        assert repr(dispatcher) == '<watson.events.dispatcher.EventDispatcher events:0>'
+        assert repr(
+            dispatcher) == '<watson.events.dispatcher.EventDispatcher events:0>'
 
     def test_add_listener(self):
         dispatcher = EventDispatcher()
@@ -81,6 +83,7 @@ class TestEventDispatcher(object):
 
 
 class TestEventDispatcherAware(object):
+
     def test_is_aware(self):
         sample = SampleDispatcherAware()
         assert isinstance(sample, EventDispatcherAware)

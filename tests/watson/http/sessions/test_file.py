@@ -3,6 +3,7 @@ from watson.http import sessions
 
 
 class TestFile(object):
+
     def test_create(self):
         session = sessions.File(id=123, timeout=30, autosave=False)
         session['test'] = 'blah'

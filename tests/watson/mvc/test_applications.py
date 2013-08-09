@@ -8,12 +8,14 @@ from tests.watson.mvc import sample_config
 
 
 class TestBaseApplication(object):
+
     @raises(TypeError)
     def test_call(self):
         applications.Base()
 
 
 class TestHttpApplication(object):
+
     def test_create(self):
         application = applications.Http()
         assert isinstance(application.container, IocContainer)
@@ -35,9 +37,17 @@ class TestHttpApplication(object):
                 'templates': {
                     'watson/mvc/test_applications/testcontroller/post': 'blank'
                 }
+            },
+            'debug': {
+                'enabled': True
             }
         })
-        response = application(sample_environ(PATH_INFO='/', REQUEST_METHOD='POST', HTTP_ACCEPT='application/json'), start_response)
+        response = application(
+            sample_environ(PATH_INFO='/',
+                           REQUEST_METHOD='POST',
+                           HTTP_ACCEPT='application/json'),
+            start_response)
+        print(response)
         assert response == [b'{"content": "Posted Hello World!"}']
 
     def test_raise_exception_event_not_found(self):
@@ -65,14 +75,16 @@ class TestHttpApplication(object):
                 'home': {
                     'path': '/',
                     'defaults': {
-                        'controller': 'tests.watson.mvc.support.SampleActionController',
+                        'controller':
+                            'tests.watson.mvc.support.SampleActionController',
                         'action': 'blah_syntax_error'
                     }
                 }
             },
             'views': {
                 'templates': {
-                    'watson/mvc/test_applications/testcontroller/blah_syntax_error': 'blank'
+                    'watson/mvc/test_applications/testcontroller/blah_syntax_error':
+                    'blank'
                 }
             }
         })
@@ -81,6 +93,7 @@ class TestHttpApplication(object):
 
 
 class TestConsoleApplication(object):
+
     def test_create(self):
         application = applications.Console()
         assert isinstance(application.container, IocContainer)

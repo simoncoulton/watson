@@ -4,13 +4,16 @@ from watson.events import collections
 
 
 class TestListenerCollection(object):
+
     def test_create_listener(self):
-        assert repr(collections.Listener()) == '<watson.events.collections.Listener callbacks:0>'
+        assert repr(collections.Listener()
+                    ) == '<watson.events.collections.Listener callbacks:0>'
 
     def test_add_callback(self):
         listener_collection = collections.Listener()
         listener_collection.add(lambda x: x, priority=1)
-        assert repr(listener_collection) == '<watson.events.collections.Listener callbacks:1>'
+        assert repr(
+            listener_collection) == '<watson.events.collections.Listener callbacks:1>'
 
     @raises(TypeError)
     def test_add_invalid_callback(self):
@@ -48,10 +51,12 @@ class TestListenerCollection(object):
 
 
 class TestResultCollection(object):
+
     def test_create_result(self):
         collection = collections.Result()
         collection.append('result')
-        assert repr(collection) == '<watson.events.collections.Result results:1>'
+        assert repr(
+            collection) == '<watson.events.collections.Result results:1>'
 
     def test_first_last(self):
         collection = collections.Result()
@@ -63,5 +68,5 @@ class TestResultCollection(object):
 
     def test_first_last_not_exists(self):
         collection = collections.Result()
-        assert collection.first() == None
-        assert collection.last() == None
+        assert collection.first() is None
+        assert collection.last() is None

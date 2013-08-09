@@ -10,6 +10,7 @@ from tests.watson.http.support import sample_environ
 
 
 class TestRequest(object):
+
     def test_create(self):
         request = Request('get')
         assert request.method == 'GET'
@@ -26,13 +27,15 @@ class TestRequest(object):
 
     def test_create_put_from_environ(self):
         environ = sample_environ(REQUEST_METHOD='POST')
-        environ['wsgi.input'] = BufferedReader(BytesIO(b'HTTP_REQUEST_METHOD=PUT'))
+        environ['wsgi.input'] = BufferedReader(
+            BytesIO(b'HTTP_REQUEST_METHOD=PUT'))
         request = create_request_from_environ(environ)
         assert request.post['HTTP_REQUEST_METHOD'] == 'PUT'
         assert request.is_method('PUT')
 
     def test_get_vars(self):
-        environ = sample_environ(QUERY_STRING='blah=something&someget=test&arr[]=a&arr[]=b')
+        environ = sample_environ(
+            QUERY_STRING='blah=something&someget=test&arr[]=a&arr[]=b')
         request = create_request_from_environ(environ)
         assert request.get['blah'] == 'something'
 
@@ -45,7 +48,8 @@ class TestRequest(object):
         environ = sample_environ(HTTPS='HTTPS')
         environ['wsgi.url_scheme'] = 'https'
         request = create_request_from_environ(environ)
-        assert str(request) == 'GET https://127.0.0.1:80/ HTTP/1.1\r\nHost: 127.0.0.1\r\nHttps: HTTPS\r\n\r\n'
+        assert str(
+            request) == 'GET https://127.0.0.1:80/ HTTP/1.1\r\nHost: 127.0.0.1\r\nHttps: HTTPS\r\n\r\n'
         assert request.is_secure()
 
     def test_host(self):
@@ -65,7 +69,8 @@ class TestRequest(object):
 
     def test_session(self):
         environ = sample_environ(HTTP_COOKIE='watson.session=123456;')
-        request = create_request_from_environ(environ, 'watson.http.sessions.Memory')
+        request = create_request_from_environ(
+            environ, 'watson.http.sessions.Memory')
         assert request.session.id == '123456'
         assert isinstance(request.session, sessions.Memory)
 
@@ -76,7 +81,8 @@ class TestRequest(object):
     def test_create_mutable(self):
         environ = sample_environ()
         environ['REQUEST_METHOD'] = 'POST'
-        environ['wsgi.input'] = BufferedReader(BytesIO(b'HTTP_REQUEST_METHOD=PUT'))
+        environ['wsgi.input'] = BufferedReader(
+            BytesIO(b'HTTP_REQUEST_METHOD=PUT'))
         request = create_request_from_environ(environ)
         new_request = copy(request)
         assert isinstance(request.post, ImmutableMultiDict)
@@ -84,10 +90,12 @@ class TestRequest(object):
 
     def test_repr(self):
         environ = sample_environ()
-        assert repr(create_request_from_environ(environ)) == '<watson.http.messages.Request method:GET url:http://127.0.0.1/>'
+        assert repr(create_request_from_environ(environ)
+                    ) == '<watson.http.messages.Request method:GET url:http://127.0.0.1/>'
 
 
 class TestResponse(object):
+
     def test_create(self):
         response = Response(200, body='This is the body')
         assert response.body == 'This is the body'
@@ -118,7 +126,8 @@ class TestResponse(object):
     def test_set_cookie(self):
         response = Response(200, body='Test')
         response.cookies.add('test', 'value')
-        assert str(response) == "HTTP/1.1 200 OK\r\nContent-Length: 4\r\nSet-Cookie: test=value; Path=/\r\n\r\nTest"
+        assert str(
+            response) == "HTTP/1.1 200 OK\r\nContent-Length: 4\r\nSet-Cookie: test=value; Path=/\r\n\r\nTest"
 
     def test_set_new_cookie(self):
         response = Response(200)

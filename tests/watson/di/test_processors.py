@@ -12,12 +12,13 @@ def sample_event(target):
     }
     return Event('Sample',
                  params={
-                 'definition': definition
+                     'definition': definition
                  },
                  target=definition)
 
 
 class TestConstructorInjection(object):
+
     def test_inject_value_dict(self):
         processor = processors.ConstructorInjection()
         processor.container = IocContainer()
@@ -66,11 +67,13 @@ class TestConstructorInjection(object):
 
 
 class TestSetterInjection(object):
+
     def test_set_from_dict(self):
         processor = processors.SetterInjection()
         processor.container = IocContainer()
         event = sample_event('tests.watson.di.support.SampleDependencyAware')
-        event.params['definition']['setter'] = {'basic_dict_setter': {'kw1': 'one', 'kw2': 'two'}}
+        event.params['definition']['setter'] = {
+            'basic_dict_setter': {'kw1': 'one', 'kw2': 'two'}}
         event.target = SampleDependencyAware()
         processor(event)
         assert event.target.kw1 == 'one'
@@ -96,17 +99,20 @@ class TestSetterInjection(object):
 
 
 class TestAttributeInjection(object):
+
     def test_inject_property(self):
         processor = processors.AttributeInjection()
         processor.container = IocContainer()
         event = sample_event('tests.watson.di.support.SampleDependencyAware')
-        event.params['definition']['property'] = {'basic_property': 'test value'}
+        event.params['definition']['property'] = {
+            'basic_property': 'test value'}
         event.target = SampleDependencyAware()
         processor(event)
         assert event.target.basic_property == 'test value'
 
 
 class TestContainerAwareInjection(object):
+
     def test_inject_container(self):
         container = IocContainer()
         processor = processors.ContainerAware()

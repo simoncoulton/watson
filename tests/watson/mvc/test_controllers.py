@@ -10,12 +10,14 @@ from tests.watson.mvc.support import SampleActionController, SampleRestControlle
 
 
 class TestNotImplementedController(object):
+
     @raises(TypeError)
     def test_execute_invalid(self):
         controllers.Base()
 
 
 class TestBaseHttpController(object):
+
     def test_request_response(self):
         base = controllers.HttpMixin()
         base.request = Request('GET')
@@ -83,8 +85,10 @@ class TestBaseHttpController(object):
         base = controllers.HttpMixin()
         router = Router({'test': {'path': '/test'}})
         environ = sample_environ(PATH_INFO='/', REQUEST_METHOD='POST')
-        environ['wsgi.input'] = BufferedReader(BytesIO(b'post_var_one=test&post_var_two=blah'))
-        base.request = create_request_from_environ(environ, 'watson.http.sessions.Memory')
+        environ['wsgi.input'] = BufferedReader(
+            BytesIO(b'post_var_one=test&post_var_two=blah'))
+        base.request = create_request_from_environ(
+            environ, 'watson.http.sessions.Memory')
         base.container = Mock()
         base.container.get.return_value = router
         response = base.redirect('test')
@@ -107,9 +111,11 @@ class TestBaseHttpController(object):
 
 
 class TestActionController(object):
+
     def test_repr(self):
         controller = SampleActionController()
-        assert repr(controller) == '<tests.watson.mvc.support.SampleActionController>'
+        assert repr(
+            controller) == '<tests.watson.mvc.support.SampleActionController>'
 
     def test_execute_result(self):
         controller = SampleActionController()
@@ -118,10 +124,12 @@ class TestActionController(object):
 
     def test_method_template(self):
         controller = SampleActionController()
-        assert controller.get_execute_method_path(action='something') == ['sampleactioncontroller', 'something']
+        assert controller.get_execute_method_path(
+            action='something') == ['sampleactioncontroller', 'something']
 
 
 class TestRestController(object):
+
     def test_execute_result(self):
         controller = SampleRestController()
         controller.request = Request('GET')
@@ -131,15 +139,18 @@ class TestRestController(object):
     def test_method_template(self):
         controller = SampleRestController()
         controller.request = Request('GET')
-        assert controller.get_execute_method_path() == ['samplerestcontroller', 'get']
+        assert controller.get_execute_method_path() == [
+            'samplerestcontroller', 'get']
 
 
 class TestFlashMessageContainer(object):
+
     def test_create(self):
         session_data = {}
         container = controllers.FlashMessagesContainer(session_data)
         assert len(container) == 0
-        assert repr(container) == '<watson.mvc.controllers.FlashMessagesContainer messages: 0>'
+        assert repr(
+            container) == '<watson.mvc.controllers.FlashMessagesContainer messages: 0>'
 
     def test_add_messages(self):
         session_data = {}
@@ -153,4 +164,3 @@ class TestFlashMessageContainer(object):
         session_data = {'flash_messages': existing_container}
         new_container = controllers.FlashMessagesContainer(session_data)
         assert len(new_container) == 1
-

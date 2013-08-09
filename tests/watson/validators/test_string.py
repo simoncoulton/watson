@@ -4,6 +4,7 @@ from watson.validators.string import Length, Required, RegEx
 
 
 class TestLength(object):
+
     @raises(ValueError)
     def test_invalid_min_greater_than_max(self):
         Length(min=10, max=9)
@@ -36,6 +37,7 @@ class TestLength(object):
 
 
 class TestRequired(object):
+
     def test_has_value(self):
         validator = Required()
         assert validator('Test')
@@ -47,6 +49,7 @@ class TestRequired(object):
 
 
 class TestRegex(object):
+
     def test_match_regex(self):
         validator = RegEx('Test')
         validator('Test')

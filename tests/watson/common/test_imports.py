@@ -7,18 +7,25 @@ import tests.watson.common
 
 
 class TestImports(object):
+
     def test_qualified_name(self):
-        assert 'tests.watson.common.test_imports.TestImports' == get_qualified_name(self)
-        assert 'tests.watson.common.support.some_func' == get_qualified_name(some_func)
+        assert 'tests.watson.common.test_imports.TestImports' == get_qualified_name(
+            self)
+        assert 'tests.watson.common.support.some_func' == get_qualified_name(
+            some_func)
 
     def test_load_definition_from_string(self):
-        assert isinstance(load_definition_from_string('watson.http.MIME_TYPES'), dict)
+        assert isinstance(
+            load_definition_from_string(
+                'watson.http.MIME_TYPES'),
+            dict)
 
     def test_load_invalid_definition(self):
         assert None == load_definition_from_string('invalid.module.Class')
 
 
 class TestResolver(object):
+
     def test_resolver_registration(self):
         resolver = Resolver('test')
         assert resolver in sys.meta_path
@@ -44,7 +51,9 @@ class TestResolver(object):
         sys.modules['testing_something'] = module
         loaded = resolver.load_module('testing.something')
         assert module == loaded
-        assert resolver.module_repr(loaded).endswith("aliased by 'testing.something'>'")
+        assert resolver.module_repr(
+            loaded).endswith(
+            "aliased by 'testing.something'>'")
 
     def test_load_nested_packages(self):
         resolver = Resolver('testing')
@@ -53,7 +62,8 @@ class TestResolver(object):
         sys.modules['nested_testing.something.else'] = module
         loaded = resolver.load_module('nested.testing.something.else')
         assert module == loaded
-        assert resolver.module_repr(loaded).endswith("aliased by 'nested.testing.something.else'>'")
+        assert resolver.module_repr(loaded).endswith(
+            "aliased by 'nested.testing.something.else'>'")
 
     def test_load_module(self):
         resolver = Resolver('testing')
@@ -62,4 +72,5 @@ class TestResolver(object):
         sys.modules['testing'] = module
         loaded = resolver.load_module('testing')
         assert module == loaded
-        assert resolver.module_repr(loaded) == "<module 'testing' from 'testing.py'>'"
+        assert resolver.module_repr(
+            loaded) == "<module 'testing' from 'testing.py'>'"

@@ -4,6 +4,7 @@ from watson.http.uri import Url
 
 
 class TestUrl(object):
+
     def test_create_from_string(self):
         url = Url('http://simon:test@www.google.com:80/path/path2?q=test#frag')
         assert url.scheme == 'http'
@@ -19,7 +20,8 @@ class TestUrl(object):
         assert url.netloc == 'simon:test@www.google.com:80'
 
     def test_create_from_parse_result(self):
-        parsed_url = urlparse('http://simon:test@www.google.com:80/path/path2?q=test#frag')
+        parsed_url = urlparse(
+            'http://simon:test@www.google.com:80/path/path2?q=test#frag')
         url = Url(parsed_url)
         assert url.scheme == 'http'
         assert url.hostname == 'www.google.com'

@@ -3,9 +3,11 @@ from watson.common.decorators import cached_property
 
 
 class TestCachedDecorator(object):
+
     def test_cached(self):
 
         class MyClass(object):
+
             @cached_property
             def expensive_prop(self):
                 return 'This is an expensive call'

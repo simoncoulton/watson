@@ -11,7 +11,14 @@ def sample_environ(**kwargs):
     environ.update(kwargs)
     return environ
 
-form_user_mapping = {'first_name': ('personal', 'first_name'), 'email': ('personal', 'contact', 'email')}
+form_user_mapping = {
+    'first_name': (
+        'personal',
+        'first_name'),
+    'email': (
+        'personal',
+        'contact',
+        'email')}
 
 
 class LoginForm(Form):
@@ -66,4 +73,7 @@ class User(object):
             self.password = password
 
     def __repr__(self):
-        return '<User username:{0} password:{1}>'.format(self.username, self.password)
+        return (
+            '<User username:{0} password:{1}>'.format(
+                self.username, self.password)
+        )

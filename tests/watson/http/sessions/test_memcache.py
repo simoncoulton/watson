@@ -6,6 +6,7 @@ from watson.http import sessions
 
 
 class TestMemcacheStorage(object):
+
     def setup(self):
         self.mock_memcache = Mock()
 

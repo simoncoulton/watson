@@ -4,6 +4,7 @@ from watson.validators.numeric import Range
 
 
 class TestRange(object):
+
     @raises(ValueError)
     def test_does_not_meet_range(self):
         validator = Range(1, 10)

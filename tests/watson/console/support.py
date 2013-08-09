@@ -58,7 +58,8 @@ class SampleArgumentsWithOptionsCommand(command.Base):
     name = 'runargsoptions'
     help = 'Arguments/Options command!'
     arguments = [
-        (('-f', '--filename',), {'help': 'Use filename with command', 'required': False}),
+        (('-f', '--filename',),
+         {'help': 'Use filename with command', 'required': False}),
         {'dest': 'argument1', 'help': 'the argument that needs to be passed'},
         {'dest': 'argument2', 'help': 'the second argument'},
     ]

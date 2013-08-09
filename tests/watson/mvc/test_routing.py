@@ -6,11 +6,13 @@ from tests.watson.mvc.support import sample_environ
 
 
 class TestRoute(object):
+
     def test_create_route(self):
         route = Route(name='home', path='/')
         assert route.path == '/'
         assert route.name == 'home'
-        assert repr(route) == '<watson.mvc.routing.Route name:home path:/ match:\/$>'
+        assert repr(
+            route) == '<watson.mvc.routing.Route name:home path:/ match:\/$>'
 
     def test_create_route_regex(self):
         route = Route(name='home', path='/', regex='.*')
@@ -18,25 +20,36 @@ class TestRoute(object):
 
     def test_static_match(self):
         route = Route(name='home', path='/')
-        invalid_request = create_request_from_environ(sample_environ(PATH_INFO='/test'))
-        valid_request = create_request_from_environ(sample_environ(PATH_INFO='/'))
+        invalid_request = create_request_from_environ(
+            sample_environ(PATH_INFO='/test'))
+        valid_request = create_request_from_environ(
+            sample_environ(PATH_INFO='/'))
         assert not route.match(invalid_request).matched
         assert route.match(valid_request).matched
 
     def test_optional_segment_match(self):
         route = Route(name="search", path='/search[/:keyword]')
-        invalid_request = create_request_from_environ(sample_environ(PATH_INFO='/searching'))
-        valid_request = create_request_from_environ(sample_environ(PATH_INFO='/search'))
-        valid_request_with_param = create_request_from_environ(sample_environ(PATH_INFO='/search/test'))
+        invalid_request = create_request_from_environ(
+            sample_environ(PATH_INFO='/searching'))
+        valid_request = create_request_from_environ(
+            sample_environ(PATH_INFO='/search'))
+        valid_request_with_param = create_request_from_environ(
+            sample_environ(PATH_INFO='/search/test'))
         assert not route.match(invalid_request).matched
         assert route.match(valid_request).matched
         assert route.match(valid_request_with_param).matched
 
     def test_optional_segment_with_defaults(self):
-        route = Route(name="search", path='/search[/:keyword]', defaults={'keyword': 'blah'})
-        invalid_request = create_request_from_environ(sample_environ(PATH_INFO='/searching'))
-        valid_request = create_request_from_environ(sample_environ(PATH_INFO='/search'))
-        valid_request_with_param = create_request_from_environ(sample_environ(PATH_INFO='/search/test'))
+        route = Route(
+            name="search",
+            path='/search[/:keyword]',
+            defaults={'keyword': 'blah'})
+        invalid_request = create_request_from_environ(
+            sample_environ(PATH_INFO='/searching'))
+        valid_request = create_request_from_environ(
+            sample_environ(PATH_INFO='/search'))
+        valid_request_with_param = create_request_from_environ(
+            sample_environ(PATH_INFO='/search/test'))
         valid_request_with_default = route.match(valid_request)
         assert not route.match(invalid_request).matched
         assert valid_request_with_default.matched
@@ -44,17 +57,25 @@ class TestRoute(object):
         assert route.match(valid_request_with_param).matched
 
     def test_optional_segment_with_required(self):
-        route = Route(name="search", path='/search[/:keyword]', requires={'keyword': 'blah'})
-        valid_request = create_request_from_environ(sample_environ(PATH_INFO='/search/blah'))
-        invalid_request = create_request_from_environ(sample_environ(PATH_INFO='/search/test'))
+        route = Route(
+            name="search",
+            path='/search[/:keyword]',
+            requires={'keyword': 'blah'})
+        valid_request = create_request_from_environ(
+            sample_environ(PATH_INFO='/search/blah'))
+        invalid_request = create_request_from_environ(
+            sample_environ(PATH_INFO='/search/test'))
         assert not route.match(invalid_request).matched
         assert route.match(valid_request).matched
 
     def test_mandatory_segment_match(self):
         route = Route("search", path='/search/:keyword')
-        invalid_request = create_request_from_environ(sample_environ(PATH_INFO='/searching'))
-        valid_request_no_param = create_request_from_environ(sample_environ(PATH_INFO='/search'))
-        valid_request_with_param = create_request_from_environ(sample_environ(PATH_INFO='/search/test'))
+        invalid_request = create_request_from_environ(
+            sample_environ(PATH_INFO='/searching'))
+        valid_request_no_param = create_request_from_environ(
+            sample_environ(PATH_INFO='/search'))
+        valid_request_with_param = create_request_from_environ(
+            sample_environ(PATH_INFO='/search/test'))
         assert not route.match(invalid_request).matched
         assert not route.match(valid_request_no_param).matched
         assert route.match(valid_request_with_param).matched
@@ -64,25 +85,37 @@ class TestRoute(object):
         Route(name='mismatch', path='/search:keyword]')
 
     def test_format_match(self):
-        valid_request = create_request_from_environ(sample_environ(PATH_INFO='/dump', HTTP_ACCEPT='application/json'))
-        invalid_request = create_request_from_environ(sample_environ(PATH_INFO='/dump', HTTP_ACCEPT='application/xml'))
-        valid_request_segment = create_request_from_environ(sample_environ(PATH_INFO='/dump.json'))
+        valid_request = create_request_from_environ(
+            sample_environ(PATH_INFO='/dump',
+                           HTTP_ACCEPT='application/json'))
+        invalid_request = create_request_from_environ(
+            sample_environ(PATH_INFO='/dump', HTTP_ACCEPT='application/xml'))
+        valid_request_segment = create_request_from_environ(
+            sample_environ(PATH_INFO='/dump.json'))
         route = Route(name='json', path='/dump', requires={'format': 'json'})
-        route_format = Route(name='json', path='/dump.:format', requires={'format': 'json'})
+        route_format = Route(
+            name='json',
+            path='/dump.:format',
+            requires={'format': 'json'})
         assert route.match(valid_request).matched
         assert not route.match(invalid_request).matched
         assert route_format.match(valid_request_segment).matched
 
     def test_accept_method_match(self):
-        valid_request = create_request_from_environ(sample_environ(PATH_INFO='/test', REQUEST_METHOD='POST'))
-        invalid_request = create_request_from_environ(sample_environ(PATH_INFO='/test', REQUEST_METHOD='GET'))
+        valid_request = create_request_from_environ(
+            sample_environ(PATH_INFO='/test', REQUEST_METHOD='POST'))
+        invalid_request = create_request_from_environ(
+            sample_environ(PATH_INFO='/test', REQUEST_METHOD='GET'))
         route = Route(name='test', path='/test', accepts=('POST',))
         assert route.match(valid_request).matched
         assert not route.match(invalid_request).matched
 
     def test_subdomain_match(self):
-        valid_request = create_request_from_environ(sample_environ(PATH_INFO='/test', SERVER_NAME='clients.test.com'))
-        invalid_request = create_request_from_environ(sample_environ(PATH_INFO='/test', SERVER_NAME='clients2.test.com'))
+        valid_request = create_request_from_environ(
+            sample_environ(PATH_INFO='/test',
+                           SERVER_NAME='clients.test.com'))
+        invalid_request = create_request_from_environ(
+            sample_environ(PATH_INFO='/test', SERVER_NAME='clients2.test.com'))
         route = Route(name='test', path='/test', subdomain='clients')
         assert route.match(valid_request).matched
         assert not route.match(invalid_request).matched
@@ -103,11 +136,15 @@ class TestRoute(object):
 
     @raises(KeyError)
     def test_assemble_segment_route_missing_param(self):
-        route = Route(name='test', path='/search/:keyword', requires={'keyword': '.*'})
+        route = Route(
+            name='test',
+            path='/search/:keyword',
+            requires={'keyword': '.*'})
         route.assemble()
 
 
 class TestRouter(object):
+
     def test_create_from_dict(self):
         router = Router({
             'home': {

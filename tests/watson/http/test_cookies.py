@@ -3,16 +3,25 @@ from watson.http.cookies import CookieDict
 
 
 class TestCookieDict(object):
+
     def test_add(self):
         cd = CookieDict()
-        cd.add(name='test', value='something', expires=60, path='/home', domain='test.com', secure=True, httponly=True, comment='Blah')
+        cd.add(
+            name='test',
+            value='something',
+            expires=60,
+            path='/home',
+            domain='test.com',
+            secure=True,
+            httponly=True,
+            comment='Blah')
         cookie = cd['test']
         assert cookie.value == 'something'
         assert cookie['expires'] == 60
         assert cookie['path'] == '/home'
         assert cookie['domain'] == 'test.com'
-        assert cookie['secure'] == True
-        assert cookie['httponly'] == True
+        assert cookie['secure']
+        assert cookie['httponly']
 
     def test_delete(self):
         cd = CookieDict()

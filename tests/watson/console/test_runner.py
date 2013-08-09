@@ -5,12 +5,14 @@ from tests.watson.console.support import SampleNonStringCommand
 
 
 class TestConsoleError(object):
+
     def test_instance(self):
         exc = ConsoleError()
         assert isinstance(exc, KeyError)
 
 
 class TestRunner:
+
     def test_create(self):
         runner = Runner(['test.py'], commands=[
             'tests.watson.console.support.SampleStringCommand',
@@ -22,7 +24,9 @@ class TestRunner:
     def test_add_commands(self):
         runner = Runner()
         assert len(runner.commands) == 0
-        runner.add_commands([SampleNonStringCommand, 'tests.watson.console.support.SampleStringCommand'])
+        runner.add_commands(
+            [SampleNonStringCommand,
+             'tests.watson.console.support.SampleStringCommand'])
         assert len(runner.commands) == 2
         assert not runner.get_command('test')
 

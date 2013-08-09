@@ -5,12 +5,14 @@ from watson.di.container import IocContainer
 
 
 class AClass(object):
+
     @cache
     def run(self):
         return 'test'
 
 
 class SampleClass(object):
+
     def __init__(self):
         self.container = IocContainer({
             'definitions': {

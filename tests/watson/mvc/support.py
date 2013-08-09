@@ -19,6 +19,7 @@ def sample_environ(**kwargs):
 
 
 class SampleActionController(controllers.Action):
+
     def something_action(self, **kwargs):
         return 'something_action'
 
@@ -30,20 +31,26 @@ class SampleActionController(controllers.Action):
 
 
 class ShortCircuitedController(controllers.Rest):
+
     def GET(self):
         return Response(body='testing')
 
 
 class SampleRestController(controllers.Rest):
+
     def GET(self):
         return 'GET'
 
 
 def sample_view_model():
-    return Model(format='html', template=None, data={"test": {"nodes": {"node": ["Testing", "Another node"]}}})
+    return (
+        Model(
+            format='html', template=None, data={"test": {"nodes": {"node": ["Testing", "Another node"]}}})
+    )
 
 
 class TestController(controllers.Rest):
+
     def GET(self):
         return 'Hello World!'
 

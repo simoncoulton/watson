@@ -6,6 +6,7 @@ from watson.cache.storage import BaseStorage, Memory, File, Memcached
 
 
 class TestBaseStorage(object):
+
     def test_create(self):
         bs = BaseStorage()
         assert repr(bs) == '<watson.cache.storage.BaseStorage>'
@@ -52,6 +53,7 @@ class TestBaseStorage(object):
 
 
 class TestMemory(object):
+
     def test_create(self):
         cache = Memory()
         assert repr(cache) == '<watson.cache.storage.Memory>'
@@ -96,6 +98,7 @@ class TestMemory(object):
 
 
 class TestMemcache(object):
+
     def setup(self):
         self.mock_memcache = Mock()
 
@@ -186,9 +189,11 @@ class TestMemcache(object):
 
 
 class TestFile(object):
+
     def test_create(self):
         cache = File()
-        assert repr(cache) == '<watson.cache.storage.File dir:{0}>'.format(gettempdir())
+        assert repr(cache) == '<watson.cache.storage.File dir:{0}>'.format(
+            gettempdir())
 
     def test_create_custom_config(self):
         cache = File({'dir': '/tmp'})

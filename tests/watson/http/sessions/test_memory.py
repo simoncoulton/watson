@@ -3,6 +3,7 @@ from watson.http import sessions
 
 
 class TestMemoryStorage(object):
+
     def test_create(self):
         session = sessions.Memory(id=123, timeout=30, autosave=False)
         session['test'] = 'blah'

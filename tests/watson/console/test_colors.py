@@ -3,6 +3,7 @@ from watson.console.colors import header, ok_blue, ok_green, warning, fail
 
 
 class TestColors(object):
+
     def test_header(self):
         assert header('test') == '\033[95mtest\033[0m'
         assert header('test', terminate=False) == '\033[95mtest'

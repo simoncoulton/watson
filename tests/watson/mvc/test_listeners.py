@@ -11,18 +11,23 @@ from tests.watson.mvc.support import sample_environ
 
 
 class TestBaseListener(object):
+
     @raises(TypeError)
     def test_missing_call(self):
         listeners.Base()
 
 
 class TestRouteListener(object):
+
     def create_event(self, **kwargs):
         router = Router({'home': {'path': '/'}})
         environ = {}
         util.setup_testing_defaults(environ)
         environ.update(**kwargs)
-        event = Event('TestEvent', params={'router': router, 'request': create_request_from_environ(environ)})
+        event = Event(
+            'TestEvent',
+            params={'router': router,
+                    'request': create_request_from_environ(environ)})
         return event
 
     def test_response(self):
@@ -37,6 +42,7 @@ class TestRouteListener(object):
 
 
 class TestDispatchExecuteListener(object):
+
     @raises(InternalServerError)
     def test_execute(self):
         route = Route('test', path='/')
@@ -47,9 +53,19 @@ class TestDispatchExecuteListener(object):
 
     def test_short_circuit(self):
         environ = sample_environ()
-        route = Route('test', path='/', defaults={'controller': 'tests.watson.mvc.support.ShortCircuitedController'})
-        match = RouteMatch(route, {'controller': 'tests.watson.mvc.support.ShortCircuitedController'}, True)
-        event = Event('something', params={'route_match': match, 'container': IocContainer(), 'request': create_request_from_environ(environ)})
+        route = Route(
+            'test',
+            path='/',
+            defaults={'controller': 'tests.watson.mvc.support.ShortCircuitedController'})
+        match = RouteMatch(
+            route,
+            {'controller': 'tests.watson.mvc.support.ShortCircuitedController'},
+            True)
+        event = Event(
+            'something',
+            params={'route_match': match,
+                    'container': IocContainer(),
+                    'request': create_request_from_environ(environ)})
         listener = listeners.DispatchExecute({'404': 'page/404'})
         response = listener(event)
         assert isinstance(response, Response)

@@ -5,18 +5,21 @@ from tests.watson.http.support import sample_environ
 
 
 class TestWsgiModule(object):
+
     def test_get_form_vars(self):
-        environ = sample_environ(QUERY_STRING='test=test', REQUEST_METHOD='PUT')
+        environ = sample_environ(
+            QUERY_STRING='test=test',
+            REQUEST_METHOD='PUT')
         get, post, files = get_form_vars(environ)
         assert get['test'] == 'test'
         assert environ['CONTENT_TYPE'] == 'application/x-www-form-urlencoded'
 
     def test_get_form_vars_with_file(self):
         environ = sample_environ(
-                    REQUEST_METHOD='POST',
-                    CONTENT_TYPE='multipart/form-data; boundary=---------------------------721837373350705526688164684',
-                    CONTENT_LENGTH='558'
-                )
+            REQUEST_METHOD='POST',
+            CONTENT_TYPE='multipart/form-data; boundary=---------------------------721837373350705526688164684',
+            CONTENT_LENGTH='558'
+        )
         postdata = """-----------------------------721837373350705526688164684
 Content-Disposition: form-data; name="id"
 

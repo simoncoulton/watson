@@ -7,11 +7,13 @@ from tests.watson.form.support import LoginForm, UploadForm, User, form_user_map
 
 
 class TestForm(object):
+
     def test_form_create(self):
         form = Form('test')
         assert len(form) == 0
         assert len(form.fields) == 0
-        assert repr(form) == '<watson.form.forms.Form name:test method:post action:/ fields:0>'
+        assert repr(
+            form) == '<watson.form.forms.Form name:test method:post action:/ fields:0>'
         form2 = LoginForm('test')
         assert len(form2) == 5
 
@@ -23,7 +25,8 @@ class TestForm(object):
 
     def test_form_start_tag(self):
         form = Form('test')
-        assert form.open() == '<form action="/" enctype="application/x-www-form-urlencoded" method="post" name="test">'
+        assert form.open(
+        ) == '<form action="/" enctype="application/x-www-form-urlencoded" method="post" name="test">'
 
     def test_form_end_tag(self):
         form = Form('test')
@@ -31,10 +34,18 @@ class TestForm(object):
 
     def test_set_data_on_form(self):
         form = LoginForm('test')
-        post_data = {'username': 'simon', 'password': 'test', 'first_name': None, 'last_name': None, 'email': None}
+        post_data = {
+            'username': 'simon',
+            'password': 'test',
+            'first_name': None,
+            'last_name': None,
+            'email': None}
         form.data = post_data
         assert form.data == post_data
-        request = Request('GET', post={'first_name': 'data'}, files={'file': 'something'})
+        request = Request(
+            'GET',
+            post={'first_name': 'data'},
+            files={'file': 'something'})
         form.data = request
         assert form.data['first_name'] == 'data'
 
@@ -53,7 +64,10 @@ class TestForm(object):
 
     def test_hydrate_form_to_object_with_mapping(self):
         form = LoginForm('test')
-        form.data = {'username': 'simon', 'password': 'test', 'email': 'simon.coulton@gmail.com'}
+        form.data = {
+            'username': 'simon',
+            'password': 'test',
+            'email': 'simon.coulton@gmail.com'}
         user = User()
         form.bind(user, form_user_mapping, hydrate=False)
         form.is_valid()
@@ -101,7 +115,12 @@ class TestForm(object):
     def test_setting_raw_data(self):
         form = LoginForm('test')
         data = {'username': 'simon'}
-        expected_data = {'first_name': None, 'last_name': None, 'password': None, 'username': 'simon', 'email': None}
+        expected_data = {
+            'first_name': None,
+            'last_name': None,
+            'password': None,
+            'username': 'simon',
+            'email': None}
         form.data = data
         assert form.username.value == 'simon'
         assert form.data == expected_data
@@ -114,7 +133,11 @@ class TestForm(object):
         form.is_valid()
         assert form.username.value == 'simon'
         assert form.username.original_value == 'simon '
-        assert form.errors == {'password': {'messages': ['Value is required'], 'label': 'password'}}
+        assert form.errors == {
+            'password': {
+                'messages': [
+                    'Value is required'],
+                'label': 'password'}}
 
     def test_render_entire_form(self):
         form = LoginForm('test')
@@ -124,24 +147,32 @@ class TestForm(object):
     def test_custom_method(self):
         form = LoginForm('test', method='PUT')
         assert form.http_request_method.value == 'PUT'
-        assert form.close() == '<input name="http_request_method" type="hidden" value="PUT" /></form>'
+        assert form.close(
+        ) == '<input name="http_request_method" type="hidden" value="PUT" /></form>'
 
 
 class TestMultiPartForm(object):
+
     def test_multi_part(self):
         form = Multipart('test')
         assert form.enctype == 'multipart/form-data'
 
     def test_form_start_tag(self):
         form = Multipart('test')
-        assert form.open() == '<form action="/" enctype="multipart/form-data" method="post" name="test">'
+        assert form.open(
+        ) == '<form action="/" enctype="multipart/form-data" method="post" name="test">'
 
 
 class TestFormProcessingCsrfRequest(object):
+
     def setup(self):
-        environ = sample_environ(HTTP_COOKIE='watson.session=123456;', REQUEST_METHOD='POST')
-        environ['wsgi.input'] = BufferedReader(BytesIO(b'form_csrf_token=123456&test=blah'))
-        self.request = create_request_from_environ(environ, 'watson.http.sessions.Memory')
+        environ = sample_environ(
+            HTTP_COOKIE='watson.session=123456;',
+            REQUEST_METHOD='POST')
+        environ['wsgi.input'] = BufferedReader(
+            BytesIO(b'form_csrf_token=123456&test=blah'))
+        self.request = create_request_from_environ(
+            environ, 'watson.http.sessions.Memory')
 
     def teardown(self):
         self.request.session.destroy()

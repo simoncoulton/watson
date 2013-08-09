@@ -6,6 +6,7 @@ from copy import copy, deepcopy
 
 
 class TestImmutableDict(object):
+
     def test_create(self):
         d = ImmutableDict({'test': 'blah', 'something': '2'})
         assert d.__len__() == 2
@@ -40,6 +41,7 @@ class TestImmutableDict(object):
 
 
 class TestImmutableMultiDict(object):
+
     def test_create(self):
         d = ImmutableMultiDict({'test': 'blah', 'something': '2'})
         assert d.__len__() == 2
@@ -70,6 +72,7 @@ class TestImmutableMultiDict(object):
 
 
 class TestMultiDict(object):
+
     def test_add_key(self):
         d = MultiDict({'test': 'blah', 'something': '2'})
         d['test'] = 'something'
@@ -79,6 +82,7 @@ class TestMultiDict(object):
 
 
 class TestFunctions(object):
+
     def test_dict_deep_update(self):
         d1 = {'a': {'b': 3}}
         d2 = {'a': {'b': 4}}

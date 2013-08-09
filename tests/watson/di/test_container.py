@@ -5,9 +5,11 @@ from tests.watson.di.support import SampleDependency
 
 
 class TestIoc(object):
+
     def test_create_container(self):
         container = IocContainer()
-        assert repr(container) == '<watson.di.container.IocContainer: 0 param(s), 0 definition(s)>'
+        assert repr(
+            container) == '<watson.di.container.IocContainer: 0 param(s), 0 definition(s)>'
         assert container.params == {}
         assert container.definitions == {}
 
@@ -23,7 +25,8 @@ class TestIoc(object):
                     'type': 'singleton',
                 },
                 'test3': {
-                    'item': 'tests.watson.di.support.sample_dependency_with_args',
+                    'item':
+                    'tests.watson.di.support.sample_dependency_with_args',
                     'type': 'singleton',
                     'init': {
                         'arg': 'some arg'

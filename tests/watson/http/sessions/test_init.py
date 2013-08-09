@@ -6,6 +6,7 @@ from tests.watson.http.support import sample_environ
 
 
 class TestSessionMixin(object):
+
     def test_session_from_request(self):
         environ = sample_environ(HTTP_COOKIE='watson.session=12345')
         request = create_request_from_environ(environ)

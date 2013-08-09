@@ -3,6 +3,7 @@ from watson.http.headers import HeaderDict, parse_to_environ_header_field, parse
 
 
 class TestHeaders(object):
+
     def test_add_header(self):
         d = HeaderDict()
         d.add('CONTENT_TYPE', 'text/html')
@@ -31,12 +32,15 @@ class TestHeaders(object):
     def test_tuple_pairs_multiple(self):
         d = HeaderDict({'Content-Type': 'text/html'})
         d.add('Content-Type', 'text/xml')
-        assert d() == [('Content-Type', 'text/html'), ('Content-Type', 'text/xml')]
+        assert d() == [
+            ('Content-Type', 'text/html'), ('Content-Type', 'text/xml')]
 
 
 class TestModuleFunctions(object):
+
     def test_parse_to_environ(self):
         assert parse_to_environ_header_field('Content-Type') == 'CONTENT_TYPE'
 
     def test_parse_from_environ(self):
-        assert parse_from_environ_header_field('CONTENT_TYPE') == 'Content-Type'
+        assert parse_from_environ_header_field(
+            'CONTENT_TYPE') == 'Content-Type'

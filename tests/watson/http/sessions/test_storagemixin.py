@@ -4,13 +4,15 @@ from watson.http.sessions import StorageMixin
 
 
 class TestStorageMixin(object):
+
     def test_create(self):
         session = StorageMixin(id=123, timeout=30, autosave=False)
         session['test'] = 'blah'
         assert session.timeout == 30
         assert session.autosave is False
         assert session.id == 123
-        assert repr(session) == '<watson.http.sessions.abc.StorageMixin id:123>'
+        assert repr(
+            session) == '<watson.http.sessions.abc.StorageMixin id:123>'
         assert session['test'] == 'blah'
         assert session.get('test') == 'blah'
 

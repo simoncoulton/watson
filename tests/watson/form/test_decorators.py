@@ -7,11 +7,13 @@ from tests.watson.form.support import UnprotectedForm, sample_environ
 
 
 class TestHasCsrf(object):
+
     def setup(self):
         self.protected_form = has_csrf(UnprotectedForm)
         environ = sample_environ(REQUEST_METHOD='POST')
         environ['wsgi.input'] = BufferedReader(BytesIO(b'test=blah'))
-        self.request = create_request_from_environ(environ, 'watson.http.sessions.Memory')
+        self.request = create_request_from_environ(
+            environ, 'watson.http.sessions.Memory')
 
     def test_add_csrf_field_to_form(self):
         assert not hasattr(UnprotectedForm, 'csrf_token')
@@ -24,7 +26,9 @@ class TestHasCsrf(object):
     def test_create_token(self):
         form = self.protected_form('test', session=self.request.session)
         assert 'test_csrf_token' in self.request.session
-        assert form.data['csrf_token'] == self.request.session['test_csrf_token']
+        assert form.data[
+            'csrf_token'] == self.request.session[
+            'test_csrf_token']
 
     def test_use_existing_token(self):
         self.request.session['test_csrf_token'] = '12345'
