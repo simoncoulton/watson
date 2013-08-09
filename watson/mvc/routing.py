@@ -212,7 +212,9 @@ class Route(dict):
         # Used to assemble a route
         path = []
         for segment in segments:
-            is_optional = segment[0] == 'optional'
+            is_optional = optional
+            if not optional:
+                is_optional = segment[0] == 'optional'
             if isinstance(segment[1], list):
                 path.append(self.__build_path(segment[1], params, is_optional))
             else:
@@ -221,7 +223,7 @@ class Route(dict):
                     value = params.get(value)
                     if value:
                         path.append(str(value))
-                    elif (segment[1] not in self.get('requires', ())):
+                    elif segment[1] not in self.get('requires', ()) or is_optional:
                         remove_segments = len(segments) - 1
                         path = path[0:-remove_segments]
                     else:
