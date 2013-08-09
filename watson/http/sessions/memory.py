@@ -3,6 +3,7 @@ from watson.http.sessions.abc import StorageMixin
 
 
 class Storage(StorageMixin):
+
     """A ram based storage adapter for session data.
     """
     storage = {}

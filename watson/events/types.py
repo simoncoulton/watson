@@ -3,6 +3,7 @@ from watson.common.imports import get_qualified_name
 
 
 class Event(object):
+
     """A base event that can be subclassed for use with an EventDispatcher.
 
     Usage:

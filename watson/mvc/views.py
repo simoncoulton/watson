@@ -14,6 +14,7 @@ Model = namedtuple('Model', 'format template data')
 
 
 class BaseRenderer(metaclass=abc.ABCMeta):
+
     @property
     def config(self):
         return self._config
@@ -27,7 +28,8 @@ class BaseRenderer(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def __call__(self, view_model):
-        raise NotImplementedError('You must implement __call__')  # pragma: no cover
+        # pragma: no cover
+        raise NotImplementedError('You must implement __call__')
 
 
 class Jinja2Renderer(BaseRenderer):
@@ -44,7 +46,8 @@ class Jinja2Renderer(BaseRenderer):
         for _type in _types:
             for module in config[_type]:
                 mod = importlib.import_module(module)
-                dic = datastructures.module_to_dict(mod, ignore_starts_with='__')
+                dic = datastructures.module_to_dict(
+                    mod, ignore_starts_with='__')
                 for name, definition in dic.items():
                     obj = '{0}.{1}'.format(module, name)
                     env_type = getattr(self.env, _type)
@@ -54,7 +57,8 @@ class Jinja2Renderer(BaseRenderer):
                         env_type[name] = application.container.get(obj)
 
     def register_loaders(self):
-        loaders = [jinja2.FileSystemLoader(path) for path in self.config.get('paths')]
+        loaders = [jinja2.FileSystemLoader(path)
+                   for path in self.config.get('paths')]
         loaders.append(jinja2.DictLoader({
             'base': '''<!DOCTYPE html>
                 <html>
@@ -304,16 +308,20 @@ class Jinja2Renderer(BaseRenderer):
         self._env = jinja2.Environment(loader=jinja2.ChoiceLoader(loaders))
 
     def __call__(self, view_model):
-        template = self._env.get_template('{0}.{1}'.format(view_model.template, self.config['extension']))
+        template = self._env.get_template(
+            '{0}.{1}'.format(view_model.template,
+                             self.config['extension']))
         return template.render(view_model.data)
 
 
 class XmlRenderer(BaseRenderer):
+
     def __call__(self, view_model):
         _xml = xml.from_dict(view_model.data)
         return xml.to_string(_xml, xml_declaration=True)
 
 
 class JsonRenderer(BaseRenderer):
+
     def __call__(self, view_model):
         return JSONEncoder().encode(view_model.data)

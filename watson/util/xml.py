@@ -13,7 +13,8 @@ def to_string(xml, encoding='utf-8', xml_declaration=False):
         string encoding: the encoding used for the xml.
         boolean xml_declaration: whether or not to include the xml declaration.
     """
-    declaration = '<?xml version="1.0" encoding="{encoding}" ?>'.format(encoding=encoding)
+    declaration = '<?xml version="1.0" encoding="{encoding}" ?>'.format(
+        encoding=encoding)
     string = tostring(xml).decode(encoding)
     return '{0}{1}'.format(declaration if xml_declaration else '', string)
 

@@ -45,6 +45,7 @@ def get_qualified_name(obj):
 
 
 class Resolver(abc.Finder, abc.Loader):
+
     """Allows the ability to inject other modules into an existing package.
 
     Redirects modules so they can be loaded under the same namespace, which is
@@ -75,6 +76,7 @@ class Resolver(abc.Finder, abc.Loader):
         >>> python script.py
         # called
     """
+
     def __init__(self, *modules):
         """Initializes the Resolver.
 

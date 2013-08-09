@@ -7,6 +7,7 @@ with ignored(ImportError):
 
 
 class Storage(StorageMixin):
+
     """A memcache based storage adapter for session data.
     """
     client = None

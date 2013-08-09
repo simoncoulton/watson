@@ -77,13 +77,13 @@ STATUS_CODES = {
 }
 
 REQUEST_METHODS = ('OPTIONS',
-                    'GET',
-                    'HEAD',
-                    'POST',
-                    'PUT',
-                    'DELETE',
-                    'TRACE',
-                    'CONNECT')
+                   'GET',
+                   'HEAD',
+                   'POST',
+                   'PUT',
+                   'DELETE',
+                   'TRACE',
+                   'CONNECT')
 
 MIME_TYPES = {
     'txt': ('text/plain',),

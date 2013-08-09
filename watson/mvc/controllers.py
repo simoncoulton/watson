@@ -10,22 +10,27 @@ from watson.common.contextmanagers import ignored
 
 
 class Base(ContainerAware, metaclass=abc.ABCMeta):
+
     """The interface for controller classes.
     """
     @abc.abstractmethod
     def execute(self, **kwargs):
-        raise NotImplementedError('You must implement execute')  # pragma: no cover
+        raise NotImplementedError(
+            'You must implement execute')  # pragma: no cover
 
     @abc.abstractmethod
     def get_execute_method_path(self, **kwargs):
-        raise NotImplementedError('You must implement get_execute_method_path')  # pragma: no cover
+        raise NotImplementedError(
+            'You must implement get_execute_method_path')  # pragma: no cover
 
     def __repr__(self):
         return '<{0}>'.format(get_qualified_name(self))
 
 
 class HttpMixin(object):
-    """A mixin for controllers that can contain http request and response objects.
+
+    """A mixin for controllers that can contain http request and response
+    objects.
 
     Attributes:
         _request: The request made that has triggered the controller
@@ -53,10 +58,12 @@ class HttpMixin(object):
             watson.events.types.Event event: The triggered event.
 
         Raises:
-            TypeError if the event type is not a subclass of watson.events.types.Event
+            TypeError if the event type is not a subclass of
+            watson.events.types.Event
         """
         if not isinstance(event, Event):
-            raise TypeError('Invalid request type, expected watson.events.types.Event')
+            raise TypeError(
+                'Invalid request type, expected watson.events.types.Event')
         self._event = event
 
     @property
@@ -73,13 +80,16 @@ class HttpMixin(object):
         """Set the request object.
 
         Args:
-            watson.http.messages.Request request: The request associated with the controller.
+            watson.http.messages.Request request: The request associated with
+            the controller.
 
         Raises:
-            TypeError if the request type is not of watson.http.messages.Request
+            TypeError if the request type is not of
+            watson.http.messages.Request
         """
         if not isinstance(request, Request):
-            raise TypeError('Invalid request type, expected watson.http.messages.Request')
+            raise TypeError(
+                'Invalid request type, expected watson.http.messages.Request')
         self._request = request
 
     @property
@@ -100,13 +110,16 @@ class HttpMixin(object):
         """Set the request object.
 
         Args:
-            watson.http.messages.Response response: The response associated with the controller.
+            watson.http.messages.Response response: The response associated
+            with the controller.
 
         Raises:
-            TypeError if the request type is not of watson.http.messages.Response
+            TypeError if the request type is not of
+            watson.http.messages.Response
         """
         if not isinstance(response, Response):
-            raise TypeError('Invalid response type, expected watson.http.messages.Response')
+            raise TypeError(
+                'Invalid response type, expected watson.http.messages.Response')
         self._response = response
 
     def url(self, route_name, params=None):
@@ -187,11 +200,13 @@ class HttpMixin(object):
             A watson.mvc.controllers.FlashMessagesContainer object.
         """
         if not hasattr(self, '_flash_messages_container'):
-            self._flash_messages_container = FlashMessagesContainer(self.request.session)
+            self._flash_messages_container = FlashMessagesContainer(
+                self.request.session)
         return self._flash_messages_container
 
 
 class FlashMessagesContainer(object):
+
     """Contains all the flash messages associated with a controller.
 
     Flash messages persist across requests until they are displayed to the user.
@@ -261,10 +276,13 @@ class FlashMessagesContainer(object):
         return len(self.messages)
 
     def __repr__(self):
-        return '<{0} messages: {1}>'.format(get_qualified_name(self), len(self))
+        return (
+            '<{0} messages: {1}>'.format(get_qualified_name(self), len(self))
+        )
 
 
 class Action(Base, HttpMixin):
+
     """A controller thats methods can be accessed with an _action suffix.
 
     Usage:
@@ -272,6 +290,7 @@ class Action(Base, HttpMixin):
             def my_func_action(self):
                 return 'something'
     """
+
     def execute(self, **kwargs):
         method = getattr(self, kwargs.get('action', 'index') + '_action')
         try:
@@ -286,6 +305,7 @@ class Action(Base, HttpMixin):
 
 
 class Rest(Base, HttpMixin):
+
     """A controller thats methods can be accessed by the request method name.
 
     Usage:
@@ -293,6 +313,7 @@ class Rest(Base, HttpMixin):
             def GET(self):
                 return 'something'
     """
+
     def execute(self, **kwargs):
         method = getattr(self, self.request.method)
         try:

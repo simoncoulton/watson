@@ -11,6 +11,7 @@ with ignored(ImportError):
 
 
 class BaseStorage(object):
+
     """Base class for all cache storage classes.
 
     Cache storage classes are designed to act similar to a dict, however get and
@@ -111,17 +112,20 @@ class BaseStorage(object):
 
 
 class Memory(BaseStorage):
+
     """A cache storage mechanism for storing items in memory.
 
     Memory cache storage will maintain the cache while the application is being
     run. This is usually best used in instances when you don't want to keep
     the cached items after the application has finished running.
     """
+
     def __init__(self):
         self._cache = {}
 
     def __setitem__(self, key, value, timeout=0):
-        expires = datetime.now() + timedelta(seconds=int(timeout)) if timeout else None
+        expires = datetime.now() + timedelta(
+            seconds=int(timeout)) if timeout else None
         self._cache.__setitem__(key, (value, expires))
 
     def __getitem__(self, key, default=None):
@@ -153,12 +157,14 @@ class Memory(BaseStorage):
 
 
 class File(BaseStorage):
+
     """A cache storage mechanism for storing items on the local filesystem.
 
     File cache storage will persist the data to the filesystem in whichever
     directory has been specified in the configuration options. If no
     directory is specified then the system temporary folder will be used.
     """
+
     def __init__(self, config=None):
         """
         Initializes the cache.
@@ -176,7 +182,8 @@ class File(BaseStorage):
         self.config = collections.ChainMap(config or {}, settings)
 
     def __setitem__(self, key, value, timeout=0):
-        expires = datetime.now() + timedelta(seconds=int(timeout)) if timeout else None
+        expires = datetime.now() + timedelta(
+            seconds=int(timeout)) if timeout else None
         with open(self.__file_path(key), 'wb') as file:
             with ignored(Exception):
                 pickle.dump((value, expires), file, pickle.HIGHEST_PROTOCOL)
@@ -227,13 +234,23 @@ class File(BaseStorage):
         return os.path.isfile(self.__cache_file(file))
 
     def __file_path(self, key):
-        return os.path.join(self.config['dir'], '{0}-{1}'.format(self.config['prefix'], key))
+        return (
+            os.path.join(
+                self.config['dir'],
+                '{0}-{1}'.format(self.config['prefix'],
+                                 key))
+        )
 
     def __repr__(self):
-        return '<{0} dir:{1}>'.format(get_qualified_name(self), self.config['dir'])
+        return (
+            '<{0} dir:{1}>'.format(
+                get_qualified_name(self),
+                self.config['dir'])
+        )
 
 
 class Memcached(BaseStorage):
+
     """A cache storage mechanism for storing items in memcached.
 
     Memcached cache storage will utilize python3-memcached to maintain the cache

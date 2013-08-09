@@ -6,6 +6,7 @@ import stat
 
 
 class StaticFileMiddleware(object):
+
     """
     A WSGI compatibile Middleware class that allows content to be retrieved
     from the directory that the __main__ is called from.

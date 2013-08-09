@@ -8,6 +8,7 @@ from watson.console import colors, styles
 
 
 class Runner(object):
+
     """A command line runner that allows new commands to be added and run on
     demand.
 
@@ -142,21 +143,25 @@ class Runner(object):
                 command.parsed_args = parser.parse_args(self._argv)
                 return command()
             except ConsoleError as exc:
-                sys.stderr.write(colors.fail('Error: {0}\n'.format(str(exc).strip("'"))))
+                sys.stderr.write(
+                    colors.fail('Error: {0}\n'.format(str(exc).strip("'"))))
 
     def __call__(self):
         return self.execute()
 
 
 class ConsoleError(KeyError):
+
     """An error that should be raised from within the command.
     """
     pass
 
 
 class ArgumentParser(argparse.ArgumentParser):
+
     def parse_known_args(self, args=None, namespace=None):
-        args, argv = super(ArgumentParser, self).parse_known_args(args, namespace)
+        args, argv = super(
+            ArgumentParser, self).parse_known_args(args, namespace)
         return args, []
 
     def add_arguments(self, arguments_list):

@@ -7,6 +7,7 @@ from watson.http.sessions.abc import StorageMixin
 
 
 class Storage(StorageMixin):
+
     """A file based storage adapter for session data.
 
     By default it will store data in the systems temp directory, however this
@@ -36,7 +37,11 @@ class Storage(StorageMixin):
     def _save(self, expires):
         with open(self.__file_path(), 'wb') as file:
             with ignored(Exception):
-                pickle.dump((self.data, expires), file, pickle.HIGHEST_PROTOCOL)
+                pickle.dump(
+                    (self.data,
+                     expires),
+                    file,
+                    pickle.HIGHEST_PROTOCOL)
 
     def _load(self):
         try:
@@ -51,4 +56,10 @@ class Storage(StorageMixin):
             os.unlink(self.__file_path())
 
     def __file_path(self):
-        return os.path.join(self.storage, '{0}-{1}'.format(self.file_prefix, self.id))
+        return (
+            os.path.join(
+                self.storage,
+                '{0}-{1}'.format(
+                    self.file_prefix,
+                    self.id))
+        )

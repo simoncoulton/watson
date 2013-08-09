@@ -72,7 +72,8 @@ def restart_with_reloader(script_dir=None):
         if not script_dir:
             script = os.path.abspath(__main__.__file__)
         else:
-            script = os.path.abspath(os.path.join(script_dir, __main__.__file__))
+            script = os.path.abspath(
+                os.path.join(script_dir, __main__.__file__))
         args = [sys.executable, script]
         sys_argv = sys.argv[:]
         if len(sys_argv) > 1:

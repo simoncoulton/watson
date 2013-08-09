@@ -6,6 +6,7 @@ ListenerDefinition = namedtuple('Listener', 'callback priority only_once')
 
 
 class Listener(list):
+
     """A list of listeners to be used in an EventDispatcher.
 
     A Listener Collection is a list of callbacks that are to be triggered
@@ -29,7 +30,10 @@ class Listener(list):
         if not hasattr(callback, '__call__'):
             name = get_qualified_name(callback)
             raise TypeError('Callback {0} must be callable.'.format(name))
-        self.append(ListenerDefinition(callback, int(priority), bool(only_once)))
+        self.append(
+            ListenerDefinition(callback,
+                               int(priority),
+                               bool(only_once)))
         self.require_sort = True
         return self
 
@@ -54,10 +58,13 @@ class Listener(list):
         return [listener for listener in self if listener.callback == callback]
 
     def __repr__(self):
-        return '<{0} callbacks:{1}>'.format(get_qualified_name(self), len(self))
+        return (
+            '<{0} callbacks:{1}>'.format(get_qualified_name(self), len(self))
+        )
 
 
 class Result(list):
+
     """A list of responses from a EventDispatcher.trigger call.
 
     A result collection contains all the resulting output from an event that has

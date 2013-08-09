@@ -3,6 +3,7 @@ from http.cookies import SimpleCookie, Morsel
 
 
 class CookieDict(SimpleCookie):
+
     """A dictionary containing cookies.
 
     A basic extension of the SimpleCookie class from the standard library, but
@@ -16,7 +17,8 @@ class CookieDict(SimpleCookie):
     """
     modified = False
 
-    def add(self, name, value='', expires=0, path='/', domain=None, secure=False,
+    def add(
+        self, name, value='', expires=0, path='/', domain=None, secure=False,
             httponly=False, comment=None):
         """Convenience method to add cookies to the dict.
 
@@ -72,7 +74,15 @@ class CookieDict(SimpleCookie):
             CookieDict cookie_dict: The cookie dict to merge
         """
         for cookie, morsel in cookie_dict.items():
-            self.add(cookie, morsel.value, morsel['expires'], morsel['path'], morsel['domain'], morsel['secure'], morsel['httponly'], morsel['comment'])
+            self.add(
+                cookie,
+                morsel.value,
+                morsel['expires'],
+                morsel['path'],
+                morsel['domain'],
+                morsel['secure'],
+                morsel['httponly'],
+                morsel['comment'])
 
     def __set(self, key, real_value, coded_value):
         self.modified = True
@@ -83,7 +93,8 @@ class CookieDict(SimpleCookie):
     _BaseCookie__set = __set
 
     def output(self, attrs=None):
-        # Override the output so we don't put Set-Cookie in front of each cookie.
+        # Override the output so we don't put Set-Cookie in front of each
+        # cookie.
         result = []
         for key, value in sorted(self.items()):
             result.append(value.output(attrs))
@@ -97,6 +108,7 @@ class CookieDict(SimpleCookie):
 
 
 class TastyMorsel(Morsel):
+
     def output(self, attrs=None):
         # Remove the default value for the header in the outputted string
         # we only want the Set-Cookie header field in the headers module

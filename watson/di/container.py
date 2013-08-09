@@ -26,6 +26,7 @@ DEFAULTS = {
 
 
 class IocContainer(EventDispatcherAware):
+
     """A simple dependency injection container that can store and retrieve
     dependencies for an application.
 
@@ -98,7 +99,9 @@ class IocContainer(EventDispatcherAware):
         self.__instantiated = {}
         for event, listeners in self.config['processors'].items():
             for processor in listeners:
-                self.attach_processor(event, load_definition_from_string(processor)())
+                self.attach_processor(
+                    event,
+                    load_definition_from_string(processor)())
 
     def get(self, name):
         """Retrieve a dependency from the container.
@@ -157,10 +160,16 @@ class IocContainer(EventDispatcherAware):
             'definition': definition,
             'dependency': name
         }
-        pre_process_event = Event(name=PRE_EVENT, target=definition, params=params)
+        pre_process_event = Event(
+            name=PRE_EVENT,
+            target=definition,
+            params=params)
         result = self.dispatcher.trigger(pre_process_event)
         dependency = result.last()
-        post_process_event = Event(name=POST_EVENT, target=dependency, params=params)
+        post_process_event = Event(
+            name=POST_EVENT,
+            target=dependency,
+            params=params)
         self.dispatcher.trigger(post_process_event)
         return dependency
 
@@ -175,12 +184,13 @@ class IocContainer(EventDispatcherAware):
             watson.di.processors.BaseProcessor processor: The processor to attach.
         """
         if not isinstance(processor, processors.Base):
-            raise TypeError('Processor must be of type {0}'.format(processors.Base))
+            raise TypeError(
+                'Processor must be of type {0}'.format(processors.Base))
         processor.container = self
         self.dispatcher.add(event, processor)
 
     def __repr__(self):
         return ('<{0}: {1} param(s), '
                 '{2} definition(s)>').format(
-                    get_qualified_name(self), len(self.config['params']),
-                    len(self.config['definitions']))
+            get_qualified_name(self), len(self.config['params']),
+            len(self.config['definitions']))

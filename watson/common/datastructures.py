@@ -55,6 +55,7 @@ def module_to_dict(module, ignore_starts_with=''):
 
 
 class MultiDict(OrderedDict):
+
     """A dictionary type that can contain multiple items for a single key.
 
     Dictionary type that will create a list of values if more than one item is
@@ -114,17 +115,23 @@ class ImmutableMixin:
 
 
 class ImmutableDict(dict, ImmutableMixin):
+
     """Creates an immutable dict.
 
     While not truly immutable (_mutable can be changed), it works effectively.
     """
+
     def __init__(self, *args):
         super(ImmutableDict, self).__init__(*args)
         self.make_immutable()
 
     def __setitem__(self, key, value, replace=False):
         self._is_immutable()  # pragma: no cover
-        super(ImmutableDict, self).__setitem__(key, value, replace)  # pragma: no cover
+        super(
+            ImmutableDict,
+            self).__setitem__(key,
+                              value,
+                              replace)  # pragma: no cover
 
     def __delitem__(self, key):
         self._is_immutable()
@@ -162,7 +169,12 @@ class ImmutableDict(dict, ImmutableMixin):
 
     def setdefault(self, key, default=None):
         self._is_immutable()  # pragma: no cover
-        return super(ImmutableDict, self).setdefault(key, default)  # pragma: no cover
+        return (
+            super(
+                ImmutableDict,
+                self).setdefault(key,
+                                 default)  # pragma: no cover
+        )
 
     def update(self, *args):
         self._is_immutable()  # pragma: no cover
@@ -170,15 +182,21 @@ class ImmutableDict(dict, ImmutableMixin):
 
 
 class ImmutableMultiDict(MultiDict, ImmutableMixin):
+
     """Creates an immuatable MultiDict.
     """
+
     def __init__(self, *args):
         super(ImmutableMultiDict, self).__init__(*args)
         self.make_immutable()
 
     def __setitem__(self, key, value, replace=False):
         self._is_immutable()  # pragma: no cover
-        super(ImmutableMultiDict, self).__setitem__(key, value, replace)  # pragma: no cover
+        super(
+            ImmutableMultiDict,
+            self).__setitem__(key,
+                              value,
+                              replace)  # pragma: no cover
 
     def __delitem__(self, key):
         self._is_immutable()  # pragma: no cover
@@ -197,7 +215,10 @@ class ImmutableMultiDict(MultiDict, ImmutableMixin):
 
     def appendlist(self, key, value):
         self._is_immutable()  # pragma: no cover
-        super(ImmutableMultiDict, self).appendlist(key, value)  # pragma: no cover
+        super(
+            ImmutableMultiDict,
+            self).appendlist(key,
+                             value)  # pragma: no cover
 
     def clear(self):
         self._is_immutable()  # pragma: no cover
@@ -208,7 +229,9 @@ class ImmutableMultiDict(MultiDict, ImmutableMixin):
 
     def pop(self, key, *args):
         self._is_immutable()  # pragma: no cover
-        return super(ImmutableMultiDict, self).pop(key, *args)  # pragma: no cover
+        return (
+            super(ImmutableMultiDict, self).pop(key, *args)  # pragma: no cover
+        )
 
     def popitem(self):
         self._is_immutable()  # pragma: no cover
@@ -216,7 +239,12 @@ class ImmutableMultiDict(MultiDict, ImmutableMixin):
 
     def setdefault(self, key, default=None):
         self._is_immutable()  # pragma: no cover
-        return super(ImmutableMultiDict, self).setdefault(key, default)  # pragma: no cover
+        return (
+            super(
+                ImmutableMultiDict,
+                self).setdefault(key,
+                                 default)  # pragma: no cover
+        )
 
     def update(self, *args):
         self._is_immutable()  # pragma: no cover

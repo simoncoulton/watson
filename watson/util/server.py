@@ -4,7 +4,8 @@ from watson.util.middleware import StaticFileMiddleware
 from watson.util.reloader import main
 
 
-def make_dev_server(app, host='127.0.0.1', port=8000, do_reload=True, script_dir=None, public_dir=None):
+def make_dev_server(app, host='127.0.0.1', port=8000,
+                    do_reload=True, script_dir=None, public_dir=None):
     """
     A simple local development server utilizing the existing simple_server
     module, but allows for serving of static files.
@@ -37,6 +38,7 @@ def make_dev_server(app, host='127.0.0.1', port=8000, do_reload=True, script_dir
 
 
 def __run_server(app, host, port):
-    print('Serving application at http://{0}:{1} in your favorite browser...'.format(host, port))
+    print(
+        'Serving application at http://{0}:{1} in your favorite browser...'.format(host, port))
     httpd = make_server(host, port, app)
     httpd.serve_forever()

@@ -7,6 +7,7 @@ from watson import di
 
 
 class Base(di.ContainerAware, metaclass=abc.ABCMeta):
+
     """The base processor that all other processors should extend.
 
     When a processor is called from the container the following parameters are
@@ -24,6 +25,7 @@ class Base(di.ContainerAware, metaclass=abc.ABCMeta):
 
 
 class ConstructorInjection(Base):
+
     """Responsible for initializing the dependency.
 
     Responsible for initializing the dependency and injecting any required
@@ -35,6 +37,7 @@ class ConstructorInjection(Base):
     Returns:
         mixed: The dependency
     """
+
     def __call__(self, event):
         item = event.target['item']
         instantiated = False
@@ -49,7 +52,8 @@ class ConstructorInjection(Base):
                 raw = load_definition_from_string(item)
         if not instantiated:
             if not raw:
-                raise NameError('Cannot initialize dependency {0}, the module may not exist.'.format(item))
+                raise NameError(
+                    'Cannot initialize dependency {0}, the module may not exist.'.format(item))
             args, kwargs = [], {}
             if isinstance(raw, FunctionType):
                 kwargs['container'] = self.container
@@ -65,6 +69,7 @@ class ConstructorInjection(Base):
 
 
 class SetterInjection(Base):
+
     """Responsible for injecting required values into setter methods.
 
     Args:
@@ -73,16 +78,21 @@ class SetterInjection(Base):
     Returns:
         mixed: The dependency
     """
+
     def __call__(self, event):
         item = event.target
         definition = event.params['definition']
         for setter, args in definition.get('setter', {}).items():
             method = getattr(item, setter)
             if isinstance(args, dict):
-                kwargs = {arg: get_param_from_container(value, self.container) for arg, value in args.items()}
+                kwargs = {arg: get_param_from_container(
+                          value,
+                          self.container) for arg,
+                          value in args.items()}
                 method(**kwargs)
             elif isinstance(args, list):
-                args = [get_param_from_container(arg, self.container) for arg in args]
+                args = [get_param_from_container(arg, self.container)
+                        for arg in args]
                 method(*args)
             else:
                 method(get_param_from_container(args, self.container))
@@ -90,6 +100,7 @@ class SetterInjection(Base):
 
 
 class AttributeInjection(Base):
+
     """Responsible for injecting required values into attributes.
 
     Args:
@@ -98,14 +109,21 @@ class AttributeInjection(Base):
     Returns:
         mixed: The dependency
     """
+
     def __call__(self, event):
         item = event.target
         for prop, value in event.params['definition'].get('property', {}).items():
-            setattr(item, prop, get_param_from_container(value, self.container))
+            setattr(
+                item,
+                prop,
+                get_param_from_container(
+                    value,
+                    self.container))
         return item
 
 
 class ContainerAware(Base):
+
     """Injects the container into a dependency.
 
     Responsible for injecting the container in any class that extends
@@ -117,6 +135,7 @@ class ContainerAware(Base):
     Returns:
         mixed: The dependency
     """
+
     def __call__(self, event):
         item = event.target
         if isinstance(item, di.ContainerAware):

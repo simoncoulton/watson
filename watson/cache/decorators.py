@@ -10,7 +10,8 @@ def cache(func=None, timeout=0, key=None):
 
     Attempts to retrieve a value from the cache. If the wrapped function
     does not have an attribute of container (see watson.di.container), from
-    which to retrieve the cache type then it will default to cache.storage.Memory.
+    which to retrieve the cache type then it will default to
+    cache.storage.Memory.
 
     Args:
         callable func: the function that is being wrapped
@@ -36,11 +37,17 @@ def cache(func=None, timeout=0, key=None):
             if not hasattr(self, 'container'):
                 cache_instance = DEFAULT_CACHE_TYPE()
             else:
-                cache_config = self.container.get('application.config')['cache']
+                cache_config = self.container.get(
+                    'application.config')['cache']
                 cache_instance = self.container.get(cache_config['type'])
             key_name = key if key else get_qualified_name(func)
             if key_name not in cache_instance:
-                cache_instance.set(key_name, func(self, *args, **kwargs), timeout)
+                cache_instance.set(
+                    key_name,
+                    func(self,
+                         *args,
+                         **kwargs),
+                    timeout)
             return cache_instance[key_name]
         return wrapper
     if func:

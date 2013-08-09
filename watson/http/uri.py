@@ -4,6 +4,7 @@ from urllib.parse import urlparse, ParseResult
 
 
 class Url(object):
+
     """An object based representation of a Url.
     """
     @property
@@ -83,7 +84,8 @@ class Url(object):
             if 'scheme' not in url:
                 url['scheme'] = 'http'
             if 'username' in url:
-                url['netloc'] = '{0}:{1}@{2}'.format(url.pop('username'), url.pop('password', ''), url['netloc'])
+                url['netloc'] = '{0}:{1}@{2}'.format(
+                    url.pop('username'), url.pop('password', ''), url['netloc'])
             if 'params' not in url:
                 url['params'] = None
             if 'fragment' not in url:

@@ -4,6 +4,7 @@ from watson.events import collections, types
 
 
 class EventDispatcher(object):
+
     """Register and trigger events that will be executed by callables.
 
     The EventDispatcher allows user defined events to be specified. Any
@@ -85,7 +86,9 @@ class EventDispatcher(object):
     def has(self, event, callback=None):
         """Return whether or not a callback is found for a particular event.
         """
-        return callback in self.events[event] if event in self.events else False
+        return (
+            callback in self.events[event] if event in self.events else False
+        )
 
     def trigger(self, event):
         """Fire an event and return a list of results from all listeners.
@@ -117,10 +120,15 @@ class EventDispatcher(object):
         return results
 
     def __repr__(self):
-        return '<{0} events:{1}>'.format(get_qualified_name(self), len(self.events))
+        return (
+            '<{0} events:{1}>'.format(
+                get_qualified_name(self),
+                len(self.events))
+        )
 
 
 class EventDispatcherAware(object):
+
     """Provides an interface for event dispatchers to be injected.
     """
     _dispatcher = None

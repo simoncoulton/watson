@@ -31,23 +31,33 @@ debug = {
 # IocContainer settings
 dependencies = {
     'definitions': {
-        'shared_event_dispatcher': {'item': 'watson.events.dispatcher.EventDispatcher'},
+        'shared_event_dispatcher':
+        {'item': 'watson.events.dispatcher.EventDispatcher'},
         'router': {
             'item': 'watson.mvc.routing.Router',
-            'init': [lambda container: container.get('application.config').get('routes', {})]
+            'init':
+            [lambda container: container.get(
+             'application.config').get('routes',
+                                       {})]
         },
         'profiler': {
             'item': 'watson.debug.profilers.Profiler',
-            'init': [lambda container: container.get('application.config')['debug']['profiling']]
+            'init':
+            [lambda container: container.get(
+             'application.config')['debug']['profiling']]
         },
         'exception_handler': {
             'item': 'watson.mvc.exceptions.ExceptionHandler',
-            'init': [lambda container: container.get('application.config').get('debug', {})]
+            'init':
+            [lambda container: container.get(
+             'application.config').get('debug',
+                                       {})]
         },
         'jinja2_renderer': {
             'item': 'watson.mvc.views.Jinja2Renderer',
             'init': [
-                lambda container: container.get('application.config')['views']['renderers']['default'].get('config', {}),
+                lambda container: container.get('application.config')[
+                    'views']['renderers']['default'].get('config', {}),
                 lambda container: container.get('application')
             ]
         },
@@ -55,18 +65,23 @@ dependencies = {
         'xml_renderer': {'item': 'watson.mvc.views.XmlRenderer'},
         'app_dispatch_execute_listener': {
             'item': 'watson.mvc.listeners.DispatchExecute',
-            'init': [lambda container: container.get('application.config')['views']['templates']]
+            'init':
+            [lambda container: container.get(
+             'application.config')['views']['templates']]
         },
         'app_exception_listener': {
             'item': 'watson.mvc.listeners.Exception_',
             'init': [
                 lambda container: container.get('exception_handler'),
-                lambda container: container.get('application.config')['views']['templates']
+                lambda container: container.get(
+                    'application.config')['views']['templates']
             ]
         },
         'app_render_listener': {
             'item': 'watson.mvc.listeners.Render',
-            'init': [lambda container: container.get('application.config')['views']]
+            'init':
+            [lambda container: container.get(
+             'application.config')['views']]
         }
     }
 }

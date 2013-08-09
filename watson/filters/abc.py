@@ -3,6 +3,7 @@ import abc
 
 
 class Filter(metaclass=abc.ABCMeta):
+
     """All filters must extend the BaseFilter or be callable.
     """
     @abc.abstractmethod

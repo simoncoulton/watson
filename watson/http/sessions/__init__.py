@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# TODO: MemcachedStorage, DbStorageMixin, MySqlStorage, MongoStorage, RedisStorage
+# TODO: MemcachedStorage, DbStorageMixin, MySqlStorage, MongoStorage,
+# RedisStorage
 from watson.common.imports import load_definition_from_string
 from watson.http.sessions.abc import StorageMixin, COOKIE_KEY
 from watson.http.sessions.file import Storage as File
@@ -11,6 +12,7 @@ __all__ = ['StorageMixin', 'File', 'Memory', 'Memcache', 'SessionMixin']
 
 
 class SessionMixin(object):
+
     """Provides a mixin for Request objects to utilize sessions.
     """
     _session_class = 'watson.http.sessions.File'
@@ -28,7 +30,10 @@ class SessionMixin(object):
                 self._session_options = {}
             storage = load_definition_from_string(self._session_class)
             session_cookie = self.cookies[COOKIE_KEY]
-            self._session = storage(id=session_cookie.value, **self._session_options) if session_cookie else storage(**self._session_options)
+            self._session = storage(
+                id=session_cookie.value,
+                **self._session_options) if session_cookie else storage(
+                **self._session_options)
         return self._session
 
     def session_to_cookie(self):
@@ -36,5 +41,8 @@ class SessionMixin(object):
         if not session_cookie or (session_cookie and self.session.id != session_cookie.value):
             if self.is_secure():
                 self.session.cookie_params['secure'] = True
-            self.cookies.add(COOKIE_KEY, value=self.session.id, **self.session.cookie_params)
+            self.cookies.add(
+                COOKIE_KEY,
+                value=self.session.id,
+                **self.session.cookie_params)
             self.cookies[COOKIE_KEY] = self.session.id

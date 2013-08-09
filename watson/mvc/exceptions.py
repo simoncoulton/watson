@@ -6,6 +6,7 @@ from watson.common.imports import get_qualified_name
 
 
 class ApplicationError(Exception):
+
     """A general purpose application error.
 
     ApplicationError exceptions are used to redirect the user to relevant
@@ -23,26 +24,31 @@ class ApplicationError(Exception):
 
 
 class NotFoundError(ApplicationError):
+
     """404 Not Found exception.
     """
     status_code = 404
 
 
 class InternalServerError(ApplicationError):
+
     """500 Internal Server Error exception.
     """
     status_code = 500
 
 
 class ExceptionHandler(object):
+
     """Processes an exception and formats a stack trace.
     """
+
     def __init__(self, config=None):
         self.config = config or {}
         # TODO implement config for emailing to admin
 
     def __call__(self, exc_info, params):
-        code, message, cause_message, frames, type = self.__process_exception(exc_info)
+        code, message, cause_message, frames, type = self.__process_exception(
+            exc_info)
         return collections.ChainMap(params, {
             'code': code,
             'message': message,

@@ -12,6 +12,7 @@ from watson.http.sessions import SessionMixin
 
 
 class MessageMixin(object):
+
     """Base mixin for all Http Message objects.
     """
     _headers = None
@@ -44,7 +45,8 @@ class MessageMixin(object):
         self.body = body or ''
 
 
-def create_request_from_environ(environ, session_class=None, session_options=None):
+def create_request_from_environ(
+        environ, session_class=None, session_options=None):
     """Create a new Request object.
 
     Create a new Request object based on a set of environ variables. To create
@@ -59,15 +61,17 @@ def create_request_from_environ(environ, session_class=None, session_options=Non
         method = post.get('HTTP_REQUEST_METHOD')
     else:
         method = server['REQUEST_METHOD']
-    request = Request(method, ImmutableMultiDict(get), ImmutableMultiDict(post),
-                      ImmutableMultiDict(files), ImmutableMultiDict(headers),
-                      ImmutableMultiDict(server), cookies)
+    request = Request(
+        method, ImmutableMultiDict(get), ImmutableMultiDict(post),
+        ImmutableMultiDict(files), ImmutableMultiDict(headers),
+        ImmutableMultiDict(server), cookies)
     if session_class:
         request.define_session(session_class, session_options or {})
     return request
 
 
 class Request(MessageMixin, SessionMixin):
+
     """
     Provides a simple and usable interface for dealing with Http Requests.
     Requests are designed to be immutable and not altered after they are
@@ -235,7 +239,12 @@ class Request(MessageMixin, SessionMixin):
         Returns:
             Boolean
         """
-        return self.headers.get('X-Requested-With', '').lower() == 'xmlhttprequest'
+        return (
+            self.headers.get(
+                'X-Requested-With',
+                '').lower(
+        ) == 'xmlhttprequest'
+        )
 
     def is_secure(self):
         """
@@ -275,10 +284,14 @@ class Request(MessageMixin, SessionMixin):
             X_FORWARDED_FOR header variable if set, otherwise a watson.http.uri.Url
             hostname attribute.
         """
-        return self.url.hostname if 'X-Forwarded-For' not in self.headers else self.headers.get('X-Forwarded-For')
+        return (
+            self.url.hostname if 'X-Forwarded-For' not in self.headers else self.headers.get(
+    'X-Forwarded-For')
+        )
 
 
 class Response(MessageMixin):
+
     """Provides a simple and usable interface for dealing with Http Responses.
 
     See:
@@ -314,7 +327,11 @@ class Response(MessageMixin):
     def status_line(self):
         """The formatted status line including the status code and message.
         """
-        return '{0} {1}'.format(self.status_code, STATUS_CODES.get(self.status_code))
+        return (
+            '{0} {1}'.format(
+    self.status_code,
+     STATUS_CODES.get(self.status_code))
+        )
 
     @property
     def cookies(self):
@@ -339,7 +356,8 @@ class Response(MessageMixin):
         """
         return self.headers.get_option('Content-Type', 'charset', 'utf-8')
 
-    def __init__(self, status_code=None, headers=None, body=None, version='1.1'):
+    def __init__(self, status_code=None,
+                 headers=None, body=None, version='1.1'):
         """
         Args:
             status_code: an int representing the status code for the Response
@@ -373,7 +391,10 @@ class Response(MessageMixin):
 
     def _prepare(self):
         if not self._prepared:
-            self.headers.add('Content-Length', self.body.__len__(), replace=True)
+            self.headers.add(
+    'Content-Length',
+     self.body.__len__(),
+     replace=True)
             for cookie, morsel in self.cookies.items():
                 self.headers.add('Set-Cookie', str(morsel))
             self._prepared = True

@@ -3,6 +3,7 @@ import collections
 
 
 class TagMixin(object):
+
     """Simple tag mixin used for all html tags.
 
     All keyword arguments that get passed to __init__ will be converted into

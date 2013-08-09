@@ -3,6 +3,7 @@ import abc
 
 
 class Validator(metaclass=abc.ABCMeta):
+
     """All validators must extend the BaseValidator or be callable.
 
     Exceptions raised by validators must be of type ValueError.

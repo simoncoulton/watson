@@ -24,7 +24,8 @@ def has_csrf(cls):
     class CsrfProtectedForm(cls):
         csrf_token = fields.Csrf()
 
-        def __init__(self, name, method='post', action=None, detect_multipart=True, session=None, **kwargs):
+        def __init__(self, name, method='post', action=None,
+                     detect_multipart=True, session=None, **kwargs):
             """Inititalize the form and set some default attributes.
 
             Args:
@@ -35,8 +36,16 @@ def has_csrf(cls):
                 watson.http.session.StorageMixin session: the session in which to store the token
             """
             if not session:
-                raise ValueError('A session must be assigned to the form for validation.')
-            super(CsrfProtectedForm, self).__init__(name, method, action, detect_multipart, **kwargs)
+                raise ValueError(
+                    'A session must be assigned to the form for validation.')
+            super(
+                CsrfProtectedForm,
+                self).__init__(
+                name,
+                method,
+                action,
+                detect_multipart,
+                **kwargs)
             token_name = '{0}_csrf_token'.format(self.name)
             if token_name not in session or not session.get(token_name):
                 token = '{0}{1}{2}'.format(token_name, uuid4().hex, session.id)
@@ -81,6 +90,13 @@ def has_csrf(cls):
 
             Automatically renders the csrf field within the form.
             """
-            return '{0}{1}'.format(self.csrf_token, super(CsrfProtectedForm, self).close())
+            return (
+                '{0}{1}'.format(
+                    self.csrf_token,
+                    super(
+                        CsrfProtectedForm,
+                        self).close(
+            ))
+            )
 
     return CsrfProtectedForm

@@ -11,6 +11,7 @@ COOKIE_KEY = 'watson.session'
 
 
 class StorageMixin(dict, metaclass=abc.ABCMeta):
+
     """The base mixin for all session storage adapters.
 
     By default, if no id is specified when the session is created a new
@@ -115,10 +116,13 @@ class StorageMixin(dict, metaclass=abc.ABCMeta):
         """
         try:
             timeout = int(self.timeout)
-            expires = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
+            expires = datetime.datetime.now(
+            ) + datetime.timedelta(
+                seconds=timeout)
             self._save(expires)
         except:
-            raise NotImplementedError('Unable to save the contents of the session')
+            raise NotImplementedError(
+                'Unable to save the contents of the session')
 
     def destroy(self):
         """Destroy the session data from storage, but leave the actual session

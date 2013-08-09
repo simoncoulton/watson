@@ -140,7 +140,7 @@ class Profile(controllers.Rest):
         db.commit()
 {% endhighlight %}
 
-We can also take this a step further and remove the container itself as being a hardcoded dependency. We do this by adding the controller itself to the dependency definitions, and injecting the dependency either as a property, setter, or through the constructor. We can get access to the container itself (for retrieving dependencies or configurtion) via lambdas.
+We can also take this a step further and remove the container itself as being a hardcoded dependency. We do this by adding the controller itself to the dependency definitions, and injecting the dependency either as a property, setter, or through the constructor. We can get access to the container itself (for retrieving dependencies or configurtion) via lambdas, or just by the same name as the definition. Note that you can also omit the 'item' key if you are configuring a controller.
 
 <span class="sub">app_name/config/config.py</span>
 {% highlight python %}
@@ -159,10 +159,9 @@ dependencies = {
             }
         },
         'app_name.controllers.user.Profile': {
-            'item': 'app_name.controllers.user.Profile',
             'property': {
-                'db_read': lambda container: container.get('db_read'),
-                'db_write': lambda container: container.get('db_write')
+                'db_read': db_read,
+                'db_write': db_write
             }
         }
     }

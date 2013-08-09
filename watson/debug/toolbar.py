@@ -155,7 +155,8 @@ class Toolbar(object):
         self.panels = collections.OrderedDict()
         for module, settings in config['panels'].items():
             if settings['enabled']:
-                panel = imports.load_definition_from_string(module)(settings, renderer, application)
+                panel = imports.load_definition_from_string(
+                    module)(settings, renderer, application)
                 panel.register_listeners()
                 self.panels[module] = panel
 
@@ -167,7 +168,9 @@ class Toolbar(object):
         """
         for module, panel in self.panels.items():
             panel.event = event
-        response, view_model = event.params['response'], event.params['view_model']
+        response, view_model = event.params[
+            'response'], event.params['view_model']
         if view_model.format == 'html':
-            html_body = ''.join((self.renderer.env.from_string(TEMPLATE).render(panels=self.panels), self.replace_tag))
+            html_body = ''.join(
+                (self.renderer.env.from_string(TEMPLATE).render(panels=self.panels), self.replace_tag))
             response.body = response.body.replace(self.replace_tag, html_body)

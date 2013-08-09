@@ -5,8 +5,10 @@ from watson.html.entities import encode
 
 
 class Trim(abc.Filter):
+
     """Strips whitespace from value.
     """
+
     def __call__(self, value):
         """Executes the filter.
 
@@ -19,34 +21,40 @@ class Trim(abc.Filter):
 
 
 class Upper(abc.Filter):
+
     """Converts all characters to uppercase.
 
     Usage:
         filter = Upper()
         filter('abcd')  # ABCD
     """
+
     def __call__(self, value):
         return str(value).upper()
 
 
 class Lower(abc.Filter):
+
     """Converts all characters to lowercase.
 
     Usage:
         filter = Lower()
         filter('ABCD')  # abcd
     """
+
     def __call__(self, value):
         return str(value).lower()
 
 
 class RegEx(abc.Filter):
+
     """Uses regular expressions to replace values.
 
     Usage:
         filter = RegEx('ing', replacement='ed')
         filter('Stopping')  # Stopped
     """
+
     def __init__(self, regex, replacement='', flags=0):
         """Initializes the filter.
 
@@ -70,17 +78,20 @@ class RegEx(abc.Filter):
 
 
 class Numbers(RegEx):
+
     """Strips all characters except for numbers.
 
     Usage:
         filter = Numbers()
         filter('abcd1234')  # 1234
     """
+
     def __init__(self, regex='[^0-9]', replacement='', flags=0):
         super(Numbers, self).__init__(regex, replacement, flags)
 
 
 class StripTags(RegEx):
+
     """Strips all html tags.
 
     Thanks to django for the regex used below.
@@ -89,16 +100,20 @@ class StripTags(RegEx):
         filter = StripTags()
         filter('test<div>blah</div>')  # testblah
     """
-    def __init__(self, regex=r'</?\S([^=]*=(\s*"[^"]*"|\s*\'[^\']*\'|\S*)|[^>])*?>', flags=re.IGNORECASE):
+
+    def __init__(
+        self, regex=r'</?\S([^=]*=(\s*"[^"]*"|\s*\'[^\']*\'|\S*)|[^>])*?>', flags=re.IGNORECASE):
         super(StripTags, self).__init__(regex, '', flags)
 
 
 class HtmlEntities(abc.Filter):
+
     """Encodes all html entities.
 
     Usage:
         filter = HtmlEntities()
         filter('<div>test</div>')  # &lt;div&gt;test&lt;/div&gt;
     """
+
     def __call__(self, value):
         return encode(str(value))

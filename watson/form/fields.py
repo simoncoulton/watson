@@ -7,6 +7,7 @@ from watson import validators
 
 
 class Label(TagMixin):
+
     """A <label> tag which can be automatically included with fields.
 
     Attributes:
@@ -31,6 +32,7 @@ class Label(TagMixin):
 
 
 class FieldMixin(TagMixin):
+
     """A mixin that can be used as a base to simplify the creation of fields.
 
     Attributes:
@@ -48,7 +50,8 @@ class FieldMixin(TagMixin):
     _value = None
     _original_value = None
 
-    def __init__(self, name=None, value=None, label=None, label_attrs=None, **kwargs):
+    def __init__(self, name=None, value=None,
+                 label=None, label_attrs=None, **kwargs):
         """Initializes the field with a specific name.
         """
         self.count = next(FieldMixin._counter)
@@ -137,7 +140,8 @@ class FieldMixin(TagMixin):
     def render_with_label(self):
         """Render the field with the label attached.
         """
-        raise NotImplementedError('The render method has not been implemented')  # pragma: no cover
+        # pragma: no cover
+        raise NotImplementedError('The render method has not been implemented')
 
     def __str__(self):
         return self.render()
@@ -147,6 +151,7 @@ class FieldMixin(TagMixin):
 
 
 class Input(FieldMixin):
+
     """Creates an <input> field.
 
     Custom input types can be created by sending type='type' through the
@@ -178,6 +183,7 @@ class Input(FieldMixin):
 
 
 class GroupInputMixin(Input):
+
     """A mixin for form elements that are used in a group.
 
     Related form elements are wrapped in a fieldset, with a common legend.
@@ -221,7 +227,10 @@ class GroupInputMixin(Input):
             if self.value and value == self.value:
                 attributes['checked'] = 'checked'
             flat_attributes = flatten_attributes(attributes)
-            element = self.__render_input(element_id, flat_attributes, label_text)
+            element = self.__render_input(
+                element_id,
+                flat_attributes,
+                label_text)
             elements.append(element)
         return ''.join(elements)
 
@@ -241,8 +250,19 @@ class GroupInputMixin(Input):
         flat_attrs = flatten_attributes(attrs)
         if self.wrapped:
             if self.label_position == 'left':
-                return self.label.html.format(flat_attrs, output.format(label_text, element))
-            return self.label.html.format(flat_attrs, output.format(element, label_text))
+                return (
+                    self.label.html.format(
+                        flat_attrs,
+                        output.format(
+                            label_text,
+                            element))
+                )
+            return (
+                self.label.html.format(
+                    flat_attrs,
+                    output.format(element,
+                                  label_text))
+            )
         else:
             label = self.label.html.format(flat_attrs, label_text)
             if self.label_position == 'left':
@@ -251,6 +271,7 @@ class GroupInputMixin(Input):
 
 
 class Radio(GroupInputMixin):
+
     """Creates a radio input.
 
     Usage:
@@ -267,6 +288,7 @@ class Radio(GroupInputMixin):
         str(field)
         <label for="test"><input type="radio" name="test" values="1" />My Radio</label>
     """
+
     def __init__(self, name=None, values=None, value=None, **kwargs):
         """Initializes the radio.
 
@@ -279,10 +301,18 @@ class Radio(GroupInputMixin):
             tuple|list values: the values to be used
             mixed value: the value for the field
         """
-        super(Radio, self).__init__(name, values, value, type='radio', **kwargs)
+        super(
+            Radio,
+            self).__init__(
+            name,
+            values,
+            value,
+            type='radio',
+            **kwargs)
 
 
 class Checkbox(GroupInputMixin):
+
     """Creates a checkbox input.
 
     Usage:
@@ -299,6 +329,7 @@ class Checkbox(GroupInputMixin):
         str(field)=None
         <label for="test"><input type="checkbox" name="test" value="1" />My Checkbox</label>
     """
+
     def __init__(self, name=None, values=None, value=None, **kwargs):
         """Initializes the checkbox.
 
@@ -311,10 +342,18 @@ class Checkbox(GroupInputMixin):
             tuple|list values: the values to be used
             mixed value: the value for the field
         """
-        super(Checkbox, self).__init__(name, values, value, type='checkbox', **kwargs)
+        super(
+            Checkbox,
+            self).__init__(
+            name,
+            values,
+            value,
+            type='checkbox',
+            **kwargs)
 
 
 class Button(Input):
+
     """Creates a button, can be used instead of Input(type="button").
     """
     html = '<button {0}>{1}</button>'
@@ -323,13 +362,16 @@ class Button(Input):
         attributes = self.attributes.copy()
         if self.value:
             attributes['value'] = str(self.value)
-        return self.html.format(flatten_attributes(attributes), self.label.text)
+        return (
+            self.html.format(flatten_attributes(attributes), self.label.text)
+        )
 
     def render_with_label(self):
         return self.render()
 
 
 class Submit(Input):
+
     """Creates a submit input.
 
     Attributes:
@@ -347,7 +389,11 @@ class Submit(Input):
     def render(self):
         if self.button_mode:
             attributes = self.attributes.copy()
-            return self.html.format(flatten_attributes(attributes), self.label.text)
+            return (
+                self.html.format(
+                    flatten_attributes(attributes),
+                    self.label.text)
+            )
         return super(Submit, self).render()
 
     def render_with_label(self):
@@ -355,6 +401,7 @@ class Submit(Input):
 
 
 class Textarea(Input):
+
     """Creates a textarea field.
     """
     html = '<textarea {0}>{1}</textarea>'
@@ -366,6 +413,7 @@ class Textarea(Input):
 
 
 class Select(FieldMixin):
+
     """Creates a select field.
 
     Attributes:
@@ -379,7 +427,8 @@ class Select(FieldMixin):
     optgroup_html = '<optgroup label="{0}">{1}</optgroup>'
     options = None
 
-    def __init__(self, name=None, options=None, value=None, multiple=False, **kwargs):
+    def __init__(self, name=None, options=None,
+                 value=None, multiple=False, **kwargs):
         """Initializes the select field.
 
         If the options passed through are a dict, and the value of each key is
@@ -412,7 +461,11 @@ class Select(FieldMixin):
 
     def render(self):
         attributes = self.attributes.copy()
-        return self.html.format(flatten_attributes(attributes), self._options_render())
+        return (
+            self.html.format(
+                flatten_attributes(attributes),
+                self._options_render())
+        )
 
     def render_with_label(self):
         return ''.join((self.label.render(self), self.render()))
@@ -423,7 +476,9 @@ class Select(FieldMixin):
             options = []
             for label, value in self.options.items():
                 if isinstance(value, (tuple, list)):
-                    options.append(self.optgroup_html.format(label, self.__render_options(value)))
+                    options.append(
+                        self.optgroup_html.format(label,
+                                                  self.__render_options(value)))
                 else:
                     options.append(self.__render_option(label, value))
             return ''.join(options)
@@ -431,7 +486,9 @@ class Select(FieldMixin):
             return self.__render_options(self.options)
 
     def __render_options(self, options):
-        return ''.join([self.__render_option(value, value) for value in options])
+        return (
+            ''.join([self.__render_option(value, value) for value in options])
+        )
 
     def __render_option(self, label, value):
         # internal method to render an individual option
@@ -450,48 +507,68 @@ class Select(FieldMixin):
 
 
 class Text(Input):
+
     """Creates an <input type="text" /> element.
     """
+
     def __init__(self, name=None, value=None, **kwargs):
         super(Text, self).__init__(name, value, type='text', **kwargs)
 
 
 class Date(Input):
+
     """Creates an <input type="date" /> element.
     """
+
     def __init__(self, name=None, value=None, **kwargs):
         super(Date, self).__init__(name, value, type='date', **kwargs)
 
 
 class Email(Input):
+
     """Creates an <input type="email" /> element.
     """
+
     def __init__(self, name=None, value=None, **kwargs):
         super(Email, self).__init__(name, value, type='email', **kwargs)
 
 
 class Hidden(Input):
+
     """Creates an <input type="hidden" /> element.
     """
+
     def __init__(self, name=None, value=None, **kwargs):
         super(Hidden, self).__init__(name, value, type='hidden', **kwargs)
 
 
 class Csrf(Input):
+
     """Creates an <input type="hidden" /> element for use in csrf protection.
     """
+
     def __init__(self, name='csrf_token', value=None, **kwargs):
-        super(Csrf, self).__init__(name, value, type='hidden', label='Cross-Site Request Forgery', required=True, **kwargs)
+        super(
+            Csrf,
+            self).__init__(name,
+                           value,
+                           type='hidden',
+                           label='Cross-Site Request Forgery',
+                           required=True,
+                           **kwargs)
         self.validators.append(validators.Csrf())
 
 
 class Password(Input):
+
     """Creates an <input type="password" /> element.
     """
+
     def __init__(self, name=None, value=None, **kwargs):
         super(Password, self).__init__(name, value, type='password', **kwargs)
 
 
 class File(Input):
+
     def __init__(self, name=None, value=None, **kwargs):
         super(File, self).__init__(name, value, type='file', **kwargs)

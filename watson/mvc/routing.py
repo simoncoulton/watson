@@ -6,6 +6,7 @@ from watson.common.imports import get_qualified_name
 
 
 class Router(object):
+
     """Responsible for maintaining a list of routes.
 
     Attributes:
@@ -54,7 +55,8 @@ class Router(object):
         if route_name in self:
             return self.routes[route_name].assemble(**kwargs)
         else:
-            raise KeyError('No route named {0} can be found.'.format(route_name))
+            raise KeyError(
+                'No route named {0} can be found.'.format(route_name))
 
     def add_route(self, route):
         """Adds an instantiated route to the router.
@@ -97,13 +99,18 @@ class Router(object):
             yield name, route
 
     def __repr__(self):
-        return '<{0} routes:{1}>'.format(get_qualified_name(self), len(self.routes))
+        return (
+            '<{0} routes:{1}>'.format(
+                get_qualified_name(self),
+                len(self.routes))
+        )
 
 
 RouteMatch = collections.namedtuple('RouteMatch', 'route params matched')
 
 
 class Route(dict):
+
     """A route is designed to validate a request against a specific path.
 
     Attributes:
@@ -148,7 +155,8 @@ class Route(dict):
         if 'regex' in kwargs:
             self.regex = re.compile(kwargs['regex'])
         if not self.regex:
-            self.regex, self.segments = self.__create_regex_from_segment_path(self['path'], self.get('requires', {}))
+            self.regex, self.segments = self.__create_regex_from_segment_path(
+                self['path'], self.get('requires', {}))
         if 'format' in self.get('requires', ()):
             self['format'] = re.compile(self['requires']['format'])
 
@@ -182,7 +190,8 @@ class Route(dict):
         if matched:
             matches = self.regex.match(request.url.path)
             if matches:
-                params.update((k, v) for k, v in matches.groupdict().items() if v is not None)
+                params.update((k, v)
+                              for k, v in matches.groupdict().items() if v is not None)
             else:
                 matched = False
         return RouteMatch(self, params, matched)
@@ -216,7 +225,8 @@ class Route(dict):
                         remove_segments = len(segments) - 1
                         path = path[0:-remove_segments]
                     else:
-                        raise KeyError('Missing {0} in params.'.format(segment[1]))
+                        raise KeyError(
+                            'Missing {0} in params.'.format(segment[1]))
                 else:
                     path.append(segment[1])
         return ''.join(path)
@@ -257,7 +267,8 @@ class Route(dict):
                 if total_depths <= depth:
                     depth_segments.append([])
                 depth_segments[current_depth].append(('optional', []))
-                depth_segments[depth] = depth_segments[current_depth][len(depth_segments[current_depth]) - 1][1]
+                depth_segments[depth] = depth_segments[current_depth][
+                    len(depth_segments[current_depth]) - 1][1]
             elif token == ']':
                 del depth_segments[depth]
                 depth -= 1
@@ -266,7 +277,10 @@ class Route(dict):
             else:
                 break
         del depth_segments
-        return re.compile(self.__convert_hierarchy_to_regex(segments, requires)), segments
+        return (
+            re.compile(
+                self.__convert_hierarchy_to_regex(segments, requires)), segments
+        )
 
     def __convert_hierarchy_to_regex(self, hierarchy, requires):
         _regex = []
@@ -283,4 +297,10 @@ class Route(dict):
         return ''.join(_regex)
 
     def __repr__(self):
-        return '<{0} name:{1} path:{2} match:{3}>'.format(get_qualified_name(self), self.name, self.path, self.regex.pattern)
+        return (
+            '<{0} name:{1} path:{2} match:{3}>'.format(
+                get_qualified_name(self),
+                self.name,
+                self.path,
+                self.regex.pattern)
+        )

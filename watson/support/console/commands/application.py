@@ -20,7 +20,8 @@ class CreateApplication(command.Base, ContainerAware):
         {'dest': 'project_name', 'help': 'The name of the project to create.'},
         {'dest': 'app_name', 'help': 'The name of the application to create.'},
         (('-d', '--dir'), {'help': 'The directory to create the project in.'}),
-        (('-o', '--override'), {'action': 'store_const', 'help': 'Override any existing project in the path.', 'const': 1}),
+        (('-o', '--override'),
+         {'action': 'store_const', 'help': 'Override any existing project in the path.', 'const': 1}),
     ]
 
     def execute(self):
@@ -58,17 +59,26 @@ class CreateApplication(command.Base, ContainerAware):
             (os.path.join(basepath, app_name, '__init__.py'), BLANK_PY_TEMPLATE),
             (os.path.join(basepath, app_name, 'app.py'), APP_PY_TEMPLATE),
             (os.path.join(basepath, app_name, 'config', '__init__.py'), BLANK_PY_TEMPLATE),
-            (os.path.join(basepath, app_name, 'config', 'prod.py.dist'), PROD_CONFIG_PY_TEMPLATE),
-            (os.path.join(basepath, app_name, 'config', 'dev.py.dist'), DEV_CONFIG_PY_TEMPLATE),
-            (os.path.join(basepath, app_name, 'config', 'config.py'), DEV_CONFIG_PY_TEMPLATE),
-            (os.path.join(basepath, app_name, 'config', 'routes.py'), ROUTES_PY_TEMPLATE),
-            (os.path.join(basepath, app_name, 'controllers', '__init__.py'), SAMPLE_CONTROLLER_INIT_TEMPLATE),
-            (os.path.join(basepath, app_name, 'controllers', 'index.py'), SAMPLE_CONTROLLER_TEMPLATE),
-            (os.path.join(basepath, app_name, 'views', 'index', 'get.html'), SAMPLE_VIEW_TEMPLATE),
+            (os.path.join(basepath, app_name, 'config', 'prod.py.dist'),
+             PROD_CONFIG_PY_TEMPLATE),
+            (os.path.join(basepath, app_name, 'config', 'dev.py.dist'),
+             DEV_CONFIG_PY_TEMPLATE),
+            (os.path.join(basepath, app_name, 'config', 'config.py'),
+             DEV_CONFIG_PY_TEMPLATE),
+            (os.path.join(basepath, app_name, 'config', 'routes.py'),
+             ROUTES_PY_TEMPLATE),
+            (os.path.join(basepath, app_name, 'controllers', '__init__.py'),
+             SAMPLE_CONTROLLER_INIT_TEMPLATE),
+            (os.path.join(basepath, app_name, 'controllers', 'index.py'),
+             SAMPLE_CONTROLLER_TEMPLATE),
+            (os.path.join(basepath, app_name, 'views', 'index', 'get.html'),
+             SAMPLE_VIEW_TEMPLATE),
             (os.path.join(basepath, 'tests', '__init__.py'), BLANK_PY_TEMPLATE),
             (os.path.join(basepath, 'tests', app_name, '__init__.py'), BLANK_PY_TEMPLATE),
-            (os.path.join(basepath, 'tests', app_name, 'controllers', '__init__.py'), BLANK_PY_TEMPLATE),
-            (os.path.join(basepath, 'tests', app_name, 'controllers', 'test_index.py'), SAMPLE_TEST_SUITE),
+            (os.path.join(basepath, 'tests', app_name,
+             'controllers', '__init__.py'), BLANK_PY_TEMPLATE),
+            (os.path.join(basepath, 'tests', app_name,
+             'controllers', 'test_index.py'), SAMPLE_TEST_SUITE),
             (os.path.join(basepath, 'console.py'), CONSOLE_TEMPLATE),
         ]
         for path in paths:
@@ -76,14 +86,19 @@ class CreateApplication(command.Base, ContainerAware):
                 os.mkdir(path)
             except:
                 if not self.parsed_args.override:
-                    raise ConsoleError('Project already exists at {0}'.format(basepath))
+                    raise ConsoleError(
+                        'Project already exists at {0}'.format(basepath))
         for filename, contents in files:
             try:
                 with open(filename, 'w', encoding='utf-8') as file:
-                    file.write(Template(contents).safe_substitute(app_name=app_name))
+                    file.write(
+                        Template(
+                            contents).safe_substitute(
+                                app_name=app_name))
             except:
                 if not self.parsed_args.override:
-                    raise ConsoleError('File {0} already exists.'.format(filename))
+                    raise ConsoleError(
+                        'File {0} already exists.'.format(filename))
         st = os.stat(files[-1][0])
         os.chmod(files[-1][0], st.st_mode | stat.S_IEXEC)
 
@@ -94,9 +109,14 @@ class RunDevelopmentServer(command.Base, ContainerAware):
 
     def execute(self):
         from __main__ import APP_MODULE, APP_DIR, SCRIPT_DIR, PUBLIC_DIR
-        app = load_definition_from_string('{0}.app.application'.format(APP_MODULE))
+        app = load_definition_from_string(
+    '{0}.app.application'.format(APP_MODULE))
         os.chdir(APP_DIR)
-        make_dev_server(app, do_reload=True, script_dir=SCRIPT_DIR, public_dir=PUBLIC_DIR)
+        make_dev_server(
+    app,
+     do_reload=True,
+     script_dir=SCRIPT_DIR,
+     public_dir=PUBLIC_DIR)
 
 
 class RunTests(command.Base, ContainerAware):
@@ -121,7 +141,8 @@ class RunTests(command.Base, ContainerAware):
             if test_runner:
                 sys.modules[test_runner].main(cli_args.split(' '))
             else:
-                raise ConsoleError("You must install either 'nose' or 'py.test' to run the unit tests.")
+                raise ConsoleError(
+                    "You must install either 'nose' or 'py.test' to run the unit tests.")
         except:
             _no_application_error()
 
@@ -130,9 +151,12 @@ class Routes(command.Base, ContainerAware):
     name = 'routes'
     help = 'Aids in the debugging of routes associated.'
     arguments = [
-        (('-u', '--url'), {'help': 'Validate the specified url against the router.', 'required': False}),
-        (('-m', '--method'), {'help': 'The http request method.', 'required': False}),
-        (('-f', '--format'), {'help': 'The http request format.', 'required': False}),
+        (('-u', '--url'),
+         {'help': 'Validate the specified url against the router.', 'required': False}),
+        (('-m', '--method'),
+         {'help': 'The http request method.', 'required': False}),
+        (('-f', '--format'),
+         {'help': 'The http request format.', 'required': False}),
         (('-s', '--server'), {'help': 'The hostname.', 'required': False}),
     ]
 
@@ -140,7 +164,8 @@ class Routes(command.Base, ContainerAware):
         try:
             router = self.container.get('router')
             if not router.routes:
-                raise ConsoleError('There are no routes associated with the application.')
+                raise ConsoleError(
+                    'There are no routes associated with the application.')
             if self.parsed_args.url:
                 environ = {}
                 util.setup_testing_defaults(environ)
@@ -153,13 +178,20 @@ class Routes(command.Base, ContainerAware):
                 request = create_request_from_environ(environ)
                 matches = router.matches(request)
                 if matches:
-                    sys.stdout.write(colors.header('Displaying {0} matching routes for the application:\n'.format(len(matches))))
+                    sys.stdout.write(
+                        colors.header('Displaying {0} matching routes for the application:\n'.format(len(matches))))
                     for match in matches:
-                        sys.stdout.write('{0}\t\t\{1}\t\t{2}\n'.format(colors.ok_green(match.route.name), match.route.path, match.route.regex.pattern))
+                        sys.stdout.write(
+    '{0}\t\t\{1}\t\t{2}\n'.format(
+        colors.ok_green(
+            match.route.name),
+             match.route.path,
+             match.route.regex.pattern))
                 else:
                     raise ConsoleError('There are no matching routes.')
             else:
-                sys.stdout.write(colors.header('Displaying {0} routes for the application:\n'.format(len(router))))
+                sys.stdout.write(
+                    colors.header('Displaying {0} routes for the application:\n'.format(len(router))))
                 for name, route in router:
                     sys.stdout.write('{0}\t\t{1}\n'.format(name, route.path))
         except ConsoleError:
@@ -169,7 +201,8 @@ class Routes(command.Base, ContainerAware):
 
 
 def _no_application_error():
-    raise ConsoleError('No watson application can be found, are you sure you\'re in the correct directory?')
+    raise ConsoleError(
+    'No watson application can be found, are you sure you\'re in the correct directory?')
 
 
 BLANK_PY_TEMPLATE = """# -*- coding: utf-8 -*-

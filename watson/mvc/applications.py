@@ -17,6 +17,7 @@ from watson.support.console import commands as DefaultConsoleCommands
 
 
 class Base(ContainerAware, EventDispatcherAware, metaclass=abc.ABCMeta):
+
     """The core application structure for a Watson application.
 
     It makes heavy use of the IocContainer and EventDispatcher classes to handle
@@ -46,7 +47,8 @@ class Base(ContainerAware, EventDispatcherAware, metaclass=abc.ABCMeta):
             conf = module_to_dict(config, '__')
         else:
             conf = config or {}
-        self._config = dict_deep_update(module_to_dict(DefaultConfig, '__'), conf)
+        self._config = dict_deep_update(
+            module_to_dict(DefaultConfig, '__'), conf)
         self.container.add('application.config', self.config)
 
     @property
@@ -96,7 +98,11 @@ class Base(ContainerAware, EventDispatcherAware, metaclass=abc.ABCMeta):
                     once_only = callback_priority_pair.once_only
                 except:
                     once_only = False
-                self.dispatcher.add(event, self.container.get(callback_priority_pair[0]), priority, once_only)
+                self.dispatcher.add(
+                    event,
+                    self.container.get(callback_priority_pair[0]),
+                    priority,
+                    once_only)
         self.dispatcher.trigger(Event(events.INIT, target=self))
         super(Base, self).__init__()
 
@@ -105,10 +111,12 @@ class Base(ContainerAware, EventDispatcherAware, metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def run(self):
-        raise NotImplementedError('You must implement __call__')  # pragma: no cover
+        # pragma: no cover
+        raise NotImplementedError('You must implement __call__')
 
 
 class Http(Base):
+
     """An application structure suitable for use with the WSGI protocol.
 
     For more information regarding creating an application consult the documentation.
@@ -117,6 +125,7 @@ class Http(Base):
         application = applications.Http({..})
         application(environ, start_response)
     """
+
     def run(self, environ, start_response):
         request = create_request_from_environ(environ,
                                               self.config['session']['class'],
@@ -129,7 +138,8 @@ class Http(Base):
             route_match = route_result.first()
         except ApplicationError as exc:
             route_match = None
-            response, view_model = self.__raise_exception_event(exception=exc, request=request)
+            response, view_model = self.__raise_exception_event(
+                exception=exc, request=request)
         if route_match:
             try:
                 dispatch_event = Event(events.DISPATCH_EXECUTE, target=self, params={
@@ -141,13 +151,21 @@ class Http(Base):
                 response = dispatch_event.params['controller_class'].response
                 view_model = dispatch_result.first()
             except ApplicationError as exc:
-                response, view_model = self.__raise_exception_event(exception=exc, request=request, route_match=route_match)
+                response, view_model = self.__raise_exception_event(
+                    exception=exc, request=request, route_match=route_match)
         if not isinstance(view_model, Response):
             try:
-                self.__render(request=request, response=response, view_model=view_model)
+                self.__render(
+                    request=request,
+                    response=response,
+                    view_model=view_model)
             except ApplicationError as exc:
-                response, view_model = self.__raise_exception_event(exception=exc, request=request, route_match=route_match)
-                self.__render(request=request, response=response, view_model=view_model)
+                response, view_model = self.__raise_exception_event(
+                    exception=exc, request=request, route_match=route_match)
+                self.__render(
+                    request=request,
+                    response=response,
+                    view_model=view_model)
         start_response(*response.start())
         return [response()]
 
@@ -157,7 +175,9 @@ class Http(Base):
     def __raise_exception_event(self, **kwargs):
         exception_event = Event(events.EXCEPTION, target=self, params=kwargs)
         exception_result = self.dispatcher.trigger(exception_event)
-        return Response(kwargs['exception'].status_code), exception_result.first()
+        return (
+            Response(kwargs['exception'].status_code), exception_result.first()
+        )
 
     def __render(self, **kwargs):
         kwargs['container'] = self.container
@@ -167,6 +187,7 @@ class Http(Base):
 
 
 class Console(Base):
+
     """An application structure suitable for the command line.
 
     For more information regarding creating an application consult the documentation.

@@ -10,6 +10,7 @@ from watson.common.imports import get_qualified_name
 
 
 class Form(TagMixin):
+
     """<form> management.
 
     The implementation of the form gives the ability to define the fields
@@ -40,7 +41,8 @@ class Form(TagMixin):
     _bound_object = None
     _bound_object_mapping = None
 
-    def __init__(self, name=None, method='post', action=None, detect_multipart=True, **kwargs):
+    def __init__(self, name=None, method='post',
+                 action=None, detect_multipart=True, **kwargs):
         """Inititalize the form and set some default attributes.
 
         Args:
@@ -54,7 +56,8 @@ class Form(TagMixin):
             'name': name or self.__class__.__name__,
             'method': method,
             'action': action or '/',
-            'enctype': kwargs.get('enctype', 'application/x-www-form-urlencoded')
+            'enctype':
+            kwargs.get('enctype', 'application/x-www-form-urlencoded')
         }, kwargs)
         if self.method not in ('get', 'post'):
             self.attributes['method'] = 'post'
@@ -260,7 +263,12 @@ class Form(TagMixin):
         fields = ['<{0}>{1}</{0}>'.format(with_tag,
                                           field.render_with_label() if with_label else str(field))
                   for field_name, field in self.fields.items()]
-        return html.format(open=self.open(), close=self.close(False), fields=''.join(fields))
+        return (
+            html.format(
+                open=self.open(),
+                close=self.close(False),
+                fields=''.join(fields))
+        )
 
     # convenience methods
 
@@ -293,7 +301,8 @@ class Form(TagMixin):
                     try:
                         current_obj = getattr(current_obj, name)
                     except:
-                        raise AttributeError('Mapping for object does not match object structure.')
+                        raise AttributeError(
+                            'Mapping for object does not match object structure.')
             if hasattr(current_obj, attr):
                 self.fields[field_name].value = getattr(current_obj, attr)
 
@@ -309,7 +318,8 @@ class Form(TagMixin):
                     try:
                         current_obj = getattr(current_obj, name)
                     except:
-                        raise AttributeError('Mapping for object does not match object structure.')
+                        raise AttributeError(
+                            'Mapping for object does not match object structure.')
             if hasattr(current_obj, attr):
                 setattr(current_obj, attr, value)
 
@@ -328,11 +338,13 @@ class Form(TagMixin):
 
 
 class Multipart(Form):
+
     """Convenience class for forms that should be multipart/form-data.
 
     By default, the Form class will automatically detect whether or not
     a field is of type file, and convert it to multipart.
     """
+
     def __init__(self, name, method='post', action=None, **kwargs):
         kwargs['enctype'] = 'multipart/form-data'
         super(Multipart, self).__init__(name, method, action, **kwargs)
