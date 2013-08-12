@@ -25,7 +25,7 @@ class Panel(abc.Panel):
 
     @property
     def controller(self):
-        return self.route_match.params['controller'] if self.route_match else ''
+        return self.route_match.route.options['controller'] if self.route_match else ''
 
     @property
     def template(self):
