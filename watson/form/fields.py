@@ -195,6 +195,9 @@ class GroupInputMixin(Input):
 
     def __init__(self, name=None, values=None, value=None, **kwargs):
         super(GroupInputMixin, self).__init__(name, value, **kwargs)
+        if 'label_position' in kwargs:
+            self.label_position = kwargs['label_position']
+            del kwargs['label_position']
         if not values:
             values = value
         try:

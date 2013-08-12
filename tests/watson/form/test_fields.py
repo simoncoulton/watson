@@ -252,6 +252,10 @@ class TestCheckboxInputField(object):
         assert field.value is None
         assert field.name == 'test'
 
+    def test_label_position(self):
+        field = fields.Checkbox(label_position='right')
+        assert field.label_position == 'right'
+
     def test_render_checkbox_attrs(self):
         field = fields.Checkbox(
             name='test', label='My Checkbox Group', values=(('Test', 1), ('Testing', 2)))
