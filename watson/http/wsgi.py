@@ -19,8 +19,8 @@ def get_form_vars(environ):
     field_storage = FieldStorage(fp=environ['wsgi.input'], environ=environ,
                                  keep_blank_values=True)
     get = MultiDict()
-    for name, value in parse_qsl(environ.get('QUERY_STRING')):
-        get[name] = value
+    for name, value in parse_qsl(environ.get('QUERY_STRING'), keep_blank_values=True):
+        get[name] = value if value else True
     return _process_field_storage(field_storage, get=get)
 
 
