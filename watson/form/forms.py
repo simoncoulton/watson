@@ -61,7 +61,11 @@ class Form(TagMixin):
         }, kwargs)
         if self.method not in ('get', 'post'):
             self.attributes['method'] = 'post'
-            setattr(self, 'http_request_method', Hidden(value=method.upper()))
+            setattr(
+                self,
+                'http_request_method',
+                Hidden(name='HTTP_REQUEST_METHOD',
+                       value=method.upper()))
         for field_name, field in self.fields.items():
             if detect_multipart and isinstance(field, File):
                 self.attributes['enctype'] = 'multipart/form-data'
