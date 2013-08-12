@@ -148,7 +148,7 @@ class TestForm(object):
         form = LoginForm('test', method='PUT')
         assert form.http_request_method.value == 'PUT'
         assert form.close(
-        ) == '<input name="http_request_method" type="hidden" value="PUT" /></form>'
+        ) == '<input name="HTTP_REQUEST_METHOD" type="hidden" value="PUT" /></form>'
 
 
 class TestMultiPartForm(object):
