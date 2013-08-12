@@ -227,10 +227,15 @@ class Form(TagMixin):
 
     # rendering methods
 
-    def open(self):
+    def open(self, **kwargs):
         """Render the start tag of the form.
+
+        Any addition kwargs will be used within the attributes.
         """
-        return '<form {0}>'.format(flatten_attributes(self.attributes))
+        attrs = self.attributes.copy()
+        if kwargs:
+            attrs.update(kwargs)
+        return '<form {0}>'.format(flatten_attributes(attrs))
 
     def close(self, include_http_request=True):
         """Render the end tag of the form.
