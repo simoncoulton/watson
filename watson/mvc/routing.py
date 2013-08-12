@@ -35,7 +35,7 @@ class Router(object):
         matches = []
         for name, route in self.routes.items():
             route_match = route.match(request)
-            if route_match.matched:
+            if route_match:
                 matches.append(route_match)
         return matches
 
@@ -106,12 +106,23 @@ class Router(object):
         )
 
 
-RouteMatch = collections.namedtuple('RouteMatch', 'route params matched')
+# oute: The matched route
+# params: The parameters that have been matched
+RouteMatch = collections.namedtuple('RouteMatch', 'route params')
 
 
 class Route(dict):
 
     """A route is designed to validate a request against a specific path.
+
+    An example route definition could be:
+    'users': {
+        'path': '/users[/:id]',
+        'options': {
+            'controller': 'my.first.Controller',
+            'action': 'list'
+        }
+    }
 
     Attributes:
         SRE_Pattern regex: The regular expression to match, generated from the path
@@ -131,6 +142,12 @@ class Route(dict):
         """Convenience method to return the path of the route.
         """
         return self['path']
+
+    @property
+    def options(self):
+        """Convenience method to return the options of the route.
+        """
+        return self['options']
 
     def __init__(self, name, path, *args, **kwargs):
         """Initializes a new route.
@@ -169,12 +186,14 @@ class Route(dict):
         Returns:
             A RouteMatch namedtuple containing the keys route, params, matched.
         """
-        matched = True
+        # matched = True
         params = self.get('defaults', {}).copy()
         if request.method not in self.get('accepts', REQUEST_METHODS):
-            matched = False
+            # matched = False
+            return None
         if 'subdomain' in self and request.url.subdomain != self.get('subdomain'):
-            matched = False
+            # matched = False
+            return None
         accept_format = request.headers.get('Accept')
         formats = None
         if accept_format:
@@ -186,15 +205,17 @@ class Route(dict):
             if self['format'].match(formats[0]):
                 params['format'] = formats[0]
             else:
-                matched = False
-        if matched:
-            matches = self.regex.match(request.url.path)
-            if matches:
-                params.update((k, v)
-                              for k, v in matches.groupdict().items() if v is not None)
-            else:
-                matched = False
-        return RouteMatch(self, params, matched)
+                # matched = False
+                return None
+        # if matched:
+        matches = self.regex.match(request.url.path)
+        if matches:
+            params.update((k, v)
+                          for k, v in matches.groupdict().items() if v is not None)
+        else:
+            return None
+                # matched = False
+        return RouteMatch(self, params)
 
     def assemble(self, **kwargs):
         """Converts the route into a path.

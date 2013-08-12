@@ -46,7 +46,7 @@ class TestDispatchExecuteListener(object):
     @raises(InternalServerError)
     def test_execute(self):
         route = Route('test', path='/')
-        match = RouteMatch(route, {}, True)
+        match = RouteMatch(route, {})
         event = Event('something', params={'route_match': match})
         listener = listeners.DispatchExecute({'404': 'page/404'})
         listener(event)
@@ -56,11 +56,10 @@ class TestDispatchExecuteListener(object):
         route = Route(
             'test',
             path='/',
-            defaults={'controller': 'tests.watson.mvc.support.ShortCircuitedController'})
+            options={'controller': 'tests.watson.mvc.support.ShortCircuitedController'})
         match = RouteMatch(
             route,
-            {'controller': 'tests.watson.mvc.support.ShortCircuitedController'},
-            True)
+            {'controller': 'tests.watson.mvc.support.ShortCircuitedController'})
         event = Event(
             'something',
             params={'route_match': match,

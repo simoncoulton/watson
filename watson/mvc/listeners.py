@@ -41,7 +41,7 @@ class DispatchExecute(Base):
     def __call__(self, event):
         route_match = event.params['route_match']
         try:
-            controller_class = route_match.params['controller']
+            controller_class = route_match.route.options['controller']
             container = event.params['container']
             if controller_class not in container.config['definitions']:
                 container.add(controller_class, controller_class, 'prototype')
@@ -60,11 +60,7 @@ class DispatchExecute(Base):
         controller.event = event
         controller.request = event.params['request']
         try:
-            # strip out any controller/action keys
-            execute_params = route_match.params.copy()
-            del execute_params['controller']
-            if 'action' in execute_params:
-                del execute_params['action']
+            execute_params = route_match.params
             model_data = controller.execute(**execute_params)
             short_circuit = False
             if isinstance(model_data, str):

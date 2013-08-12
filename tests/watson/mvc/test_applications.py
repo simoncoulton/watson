@@ -28,7 +28,7 @@ class TestHttpApplication(object):
             'routes': {
                 'home': {
                     'path': '/',
-                    'defaults': {
+                    'options': {
                         'controller': 'tests.watson.mvc.support.TestController'
                     }
                 }
@@ -60,7 +60,7 @@ class TestHttpApplication(object):
             'routes': {
                 'home': {
                     'path': '/',
-                    'defaults': {
+                    'options': {
                         'controller': 'tests.watson.mvc.support.TestController'
                     }
                 }
@@ -74,7 +74,7 @@ class TestHttpApplication(object):
             'routes': {
                 'home': {
                     'path': '/',
-                    'defaults': {
+                    'options': {
                         'controller':
                             'tests.watson.mvc.support.SampleActionController',
                         'action': 'blah_syntax_error'

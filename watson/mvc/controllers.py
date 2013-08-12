@@ -328,7 +328,7 @@ class Rest(Base, HttpMixin):
         method = getattr(self, self.request.method)
         try:
             result = method(**kwargs)
-        except TypeError:
+        except TypeError as exc:
             result = method()
         return result
 

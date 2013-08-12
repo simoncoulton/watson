@@ -13,7 +13,7 @@ class Init(ContainerAware):
         app = event.target
         if isinstance(app, applications.Http):
             debug_config = app.config['debug']
-            if debug_config['enabled']:
+            if debug_config['enabled'] and debug_config.get('toolbar'):
                 toolbar = Toolbar(
                     app.config['debug'],
                     app,
