@@ -49,7 +49,8 @@ class DispatchExecute(Base):
                 controller_definition = container.config[
                     'definitions'][controller_class]
                 controller_definition['type'] = 'prototype'
-                controller_definition['item'] = controller_class
+                if 'item' not in controller_definition:
+                    controller_definition['item'] = controller_class
 
             controller = event.params['container'].get(controller_class)
         except Exception as exc:
