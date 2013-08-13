@@ -130,7 +130,7 @@ class HttpMixin(object):
                 'Invalid response type, expected watson.http.messages.Response')
         self._response = response
 
-    def url(self, route_name, params=None):
+    def url(self, route_name, **params):
         """Converts a route into a url.
 
         Args:
@@ -171,7 +171,7 @@ class HttpMixin(object):
         if clear:
             self.clear_redirect_vars()
         try:
-            url = self.url(path, params)
+            url = self.url(path, **params or {})
         except KeyError:
             url = path
         self.response.headers.add('location', url, replace=True)
