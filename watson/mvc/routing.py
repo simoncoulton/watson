@@ -226,7 +226,7 @@ class Route(dict):
             route = Route('search', path='/search/:keyword')
             route.assemble(keyword='test')  # /search/test
         """
-        params = collections.ChainMap(self.get('defaults', {}), kwargs or {})
+        params = collections.ChainMap(kwargs or {}, self.get('defaults', {}))
         return ''.join(self.__build_path(self.segments, params))
 
     def __build_path(self, segments, params, optional=False):

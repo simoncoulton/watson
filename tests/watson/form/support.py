@@ -59,6 +59,12 @@ class Personal(object):
         self.contact = Contact()
 
 
+class SampleFormValidator(object):
+    def __call__(self, form):
+        if form.username.value != 'Simon':
+            raise ValueError('Username does not match.')
+
+
 class User(object):
     id = None
     username = None

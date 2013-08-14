@@ -3,7 +3,7 @@ from io import BytesIO, BufferedReader
 from nose.tools import raises
 from watson.form import Form, Multipart
 from watson.http.messages import create_request_from_environ, Request
-from tests.watson.form.support import LoginForm, UploadForm, User, form_user_mapping, Contact, Other, sample_environ, ProtectedForm
+from tests.watson.form.support import LoginForm, UploadForm, User, form_user_mapping, Contact, Other, sample_environ, ProtectedForm, SampleFormValidator
 
 
 class TestForm(object):
@@ -139,6 +139,19 @@ class TestForm(object):
                     'Value is required'],
                 'label': 'password'}}
 
+    def test_validate_form_success(self):
+        form = LoginForm(validators=[SampleFormValidator()])
+        form.data = {'username': 'Simon', 'password': 'Test'}
+        valid = form.is_valid()
+        assert valid
+
+    def test_validate_form_invalid(self):
+        form = LoginForm(validators=[SampleFormValidator()])
+        form.data = {'username': 'Simone', 'password': 'test'}
+        valid = form.is_valid()
+        assert not valid
+        assert form.errors == {'form': {'messages': ['Username does not match.'], 'label': 'Form'}}
+
     def test_render_entire_form(self):
         form = LoginForm('test')
         rendered_form = str(form)
@@ -161,6 +174,7 @@ class TestMultiPartForm(object):
         form = Multipart('test')
         assert form.open(
         ) == '<form action="/" enctype="multipart/form-data" method="post" name="test">'
+        assert form.open(action='/put') == '<form action="/put" enctype="multipart/form-data" method="post" name="test">'
 
 
 class TestFormProcessingCsrfRequest(object):

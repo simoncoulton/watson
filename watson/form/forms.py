@@ -35,6 +35,8 @@ class Form(TagMixin):
         dict attributes: A list of all attributes on the <form>.
     """
     attributes = None
+    validators = None
+    _form_errors = None
     _valid = False
     _validated = False
     _ignored_attributes = ('fields', '_fields', 'data', 'raw_data', 'errors')
@@ -42,7 +44,7 @@ class Form(TagMixin):
     _bound_object_mapping = None
 
     def __init__(self, name=None, method='post',
-                 action=None, detect_multipart=True, **kwargs):
+                 action=None, detect_multipart=True, validators=None, **kwargs):
         """Inititalize the form and set some default attributes.
 
         Args:
@@ -51,6 +53,7 @@ class Form(TagMixin):
             string action: the url to submit the form to
             boolean detect_multipart: automatically set multipart/form-data
         """
+        self.validators = validators or []
         method = method.lower()
         self.attributes = collections.ChainMap({
             'name': name or self.__class__.__name__,
@@ -80,6 +83,10 @@ class Form(TagMixin):
     @property
     def validated(self):
         return self._validated
+
+    @property
+    def bound_object(self):
+        return self._bound_object
 
     @cached_property
     def fields(self):
@@ -117,6 +124,8 @@ class Form(TagMixin):
             if error_list:
                 errors[field_name] = {'messages': field.errors,
                                       'label': field.label.text}
+        if self._form_errors:
+            errors['form'] = {'messages': self._form_errors, 'label': 'Form'}
         return errors
 
     @cached_property
@@ -200,7 +209,7 @@ class Form(TagMixin):
         This is called automatically when data is bound to the form and
         sets the forms validity to invalid.
         """
-        attrs = ('_data', '_raw_data', '_errors')
+        attrs = ('_data', '_raw_data', '_errors', '_form_errors')
         for attr in attrs:
             with ignored(AttributeError):
                 delattr(self, attr)
@@ -218,12 +227,20 @@ class Form(TagMixin):
             boolean value depending on the validity of the form.
         """
         if not self._validated:
+            self._form_errors = []
             self._valid = True
             for field_name, field in self.fields.items():
                 field.filter()
                 valid = field.validate()
                 if len(valid) > 0:
                     self._valid = False
+            if self._valid:
+                for validator in self.validators:
+                    try:
+                        validator(self)
+                    except ValueError as exc:
+                        self._valid = False
+                        self._form_errors.append(str(exc))
             self._validated = True
         if self._valid and self._bound_object:
             self.__hydrate_form_to_obj()
@@ -330,7 +347,7 @@ class Form(TagMixin):
                         raise AttributeError(
                             'Mapping for object does not match object structure.')
             if hasattr(current_obj, attr):
-                setattr(current_obj, attr, value)
+                setattr(current_obj, attr, value or None)
 
     def __len__(self):
         """Return the number of fields associated with the form.
