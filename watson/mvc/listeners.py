@@ -90,7 +90,6 @@ class DispatchExecute(Base):
                         format=format,
                         template=view_template,
                         data=model_data)
-                print(response)
         except Exception as exc:
             raise InternalServerError(
                 'An error occurred executing controller: {0}'.format(get_qualified_name(controller))) from exc
