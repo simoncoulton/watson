@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from cgi import FieldStorage
+import cgi
+import collections
 from urllib.parse import parse_qsl
 from watson.common.contextmanagers import ignored
 from watson.common.datastructures import MultiDict
@@ -16,12 +17,18 @@ def get_form_vars(environ):
     """
     if environ['REQUEST_METHOD'] == 'PUT' and not environ.get('CONTENT_TYPE'):
         environ['CONTENT_TYPE'] = 'application/x-www-form-urlencoded'
-    field_storage = FieldStorage(fp=environ['wsgi.input'], environ=environ,
-                                 keep_blank_values=True)
+    field_storage = cgi.FieldStorage(fp=environ['wsgi.input'], environ=environ,
+                                     keep_blank_values=True)
     get = MultiDict()
-    for name, value in parse_qsl(environ.get('QUERY_STRING'), keep_blank_values=True):
+    for name, value in parse_qsl(environ.get('QUERY_STRING'),
+                                 keep_blank_values=True):
         get[name] = value if value else True
     return _process_field_storage(field_storage, get=get)
+
+
+File = collections.namedtuple(
+    'File',
+    'data filename name type type_options disposition disposition_options headers')
 
 
 def _process_field_storage(fields, get=None, post=None, files=None):
@@ -37,7 +44,17 @@ def _process_field_storage(fields, get=None, post=None, files=None):
             if isinstance(field, list):
                 _process_field_storage(field, get, post, files)
             elif field.filename:
-                files[field.name] = field
+                # An uploaded file, create a new File tuple to resolve the
+                # not indexable issue.
+                files[field.name] = File(
+                    field.file,
+                    field.filename,
+                    field.name,
+                    field.type,
+                    field.type_options,
+                    field.disposition,
+                    field.disposition_options,
+                    field.headers)
             elif field.disposition or field.name not in get:
                 post[field.name] = field.value
             else:

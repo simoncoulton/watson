@@ -120,7 +120,7 @@ class TestFileInputField(object):
         assert str(field) == '<input name="test" type="file" />'
         field_with_value = fields.File(name='test', value=1)
         assert str(
-            field_with_value) == '<input name="test" type="file" value="1" />'
+            field_with_value) == '<input name="test" type="file" />'
 
     def test_render_with_label(self):
         field = fields.File(name='test')

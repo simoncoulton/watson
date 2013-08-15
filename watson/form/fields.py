@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import itertools
+from watson.common import contextmanagers
 from watson.common.imports import get_qualified_name
 from watson.filters import Trim
 from watson.html.elements import TagMixin, flatten_attributes
@@ -575,3 +576,10 @@ class File(Input):
 
     def __init__(self, name=None, value=None, **kwargs):
         super(File, self).__init__(name, value, type='file', **kwargs)
+
+    def render(self):
+        """Overridden to prevent value from being put back into the field.
+        """
+        attributes = self.attributes.copy()
+
+        return self.html.format(flatten_attributes(attributes))

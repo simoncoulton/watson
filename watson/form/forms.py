@@ -335,8 +335,9 @@ class Form(TagMixin):
     def __hydrate_form_to_obj(self):
         # should never be called externally. Triggered by is_valid.
         obj_mapping = self._bound_object_mapping or {}
-        for field_name, value in self.data.items():
+        for field_name in self.data:
             current_obj = self._bound_object
+            value = self.fields[field_name].value
             attr = field_name
             if field_name in obj_mapping:
                 attr = obj_mapping[field_name][-1]
