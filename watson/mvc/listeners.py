@@ -73,12 +73,20 @@ class DispatchExecute(Base):
                 controller_path = controller.get_execute_method_path(
                     **route_match.params)
                 controller_template = os.path.join(*controller_path)
-                response = Model(
-                    format=route_match.params.get('format', 'html'),
-                    template=self.templates.get(
-                        controller_template,
-                        controller_template),
-                    data=model_data)
+                view_template = self.templates.get(controller_template,
+                                                   controller_template)
+                format = route_match.params.get('format', 'html')
+                if isinstance(model_data, Model):
+                    if not model_data.template:
+                        model_data.template = view_template
+                    if not model_data.format:
+                        model_data.format = format
+                    response = model_data
+                else:
+                    response = Model(
+                        format=format,
+                        template=view_template,
+                        data=model_data)
         except Exception as exc:
             raise InternalServerError(
                 'An error occurred executing controller: {0}'.format(get_qualified_name(controller))) from exc

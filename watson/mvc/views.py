@@ -10,7 +10,16 @@ from watson.di import ContainerAware
 from watson.util import xml
 
 
-Model = namedtuple('Model', 'format template data')
+class Model(object):
+    format = None
+    template = None
+    data = None
+
+    def __init__(self, data=None, template=None, format=None):
+        self.template = template
+        self.data = data
+        self.format = format
+# Model = namedtuple('Model', 'format template data')
 
 
 class BaseRenderer(metaclass=abc.ABCMeta):

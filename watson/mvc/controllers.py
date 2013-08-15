@@ -12,12 +12,7 @@ from watson.common.contextmanagers import ignored
 class Base(ContainerAware, metaclass=abc.ABCMeta):
 
     """The base class for all controllers.
-
-    Attributes:
-        view_template: The name of the view to render, overrides the
-                       get_execute_method_path method.
     """
-    view_template = None
 
     """The interface for controller classes.
     """
@@ -308,9 +303,7 @@ class Action(Base, HttpMixin):
         return result
 
     def get_execute_method_path(self, **kwargs):
-        template = self.view_template
-        if not template:
-            template = re.sub('.-', '_', kwargs.get('action', 'index').lower())
+        template = re.sub('.-', '_', kwargs.get('action', 'index').lower())
         return [self.__class__.__name__.lower(), template]
 
 
@@ -333,7 +326,5 @@ class Rest(Base, HttpMixin):
         return result
 
     def get_execute_method_path(self, **kwargs):
-        template = self.view_template
-        if not template:
-            template = self.request.method.lower()
+        template = self.request.method.lower()
         return [self.__class__.__name__.lower(), template]
