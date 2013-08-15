@@ -70,15 +70,18 @@ class DispatchExecute(Base):
                 short_circuit = True
                 response = model_data
             if not short_circuit:
-                controller_path = controller.get_execute_method_path(
+                path = controller.get_execute_method_path(
                     **route_match.params)
-                controller_template = os.path.join(*controller_path)
+                controller_template = os.path.join(*path)
                 view_template = self.templates.get(controller_template,
                                                    controller_template)
                 format = route_match.params.get('format', 'html')
                 if isinstance(model_data, Model):
                     if not model_data.template:
                         model_data.template = view_template
+                    else:
+                        overridden_template = path[:-1] + [model_data.template]
+                        model_data.template = os.path.join(*overridden_template)
                     if not model_data.format:
                         model_data.format = format
                     response = model_data
@@ -87,6 +90,7 @@ class DispatchExecute(Base):
                         format=format,
                         template=view_template,
                         data=model_data)
+                print(response)
         except Exception as exc:
             raise InternalServerError(
                 'An error occurred executing controller: {0}'.format(get_qualified_name(controller))) from exc

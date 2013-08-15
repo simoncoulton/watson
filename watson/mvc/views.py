@@ -19,7 +19,14 @@ class Model(object):
         self.template = template
         self.data = data
         self.format = format
-# Model = namedtuple('Model', 'format template data')
+
+    def __repr__(self):
+        return (
+            '<{0} template: {1} format: {2}>'.format(
+                imports.get_qualified_name(self),
+                self.template,
+                self.format)
+        )
 
 
 class BaseRenderer(metaclass=abc.ABCMeta):
