@@ -17,7 +17,7 @@ class Trim(abc.Filter):
         """
         if not value:
             return value
-        return str(value).strip()
+        return str(value).strip() if isinstance(value, str) else value
 
 
 class Upper(abc.Filter):
