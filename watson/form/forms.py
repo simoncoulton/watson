@@ -55,6 +55,9 @@ class Form(TagMixin):
         """
         self.validators = validators or []
         method = method.lower()
+        if '_class' in kwargs:
+            kwargs['class'] = kwargs.get('_class')
+            del kwargs['_class']
         self.attributes = collections.ChainMap({
             'name': name or self.__class__.__name__,
             'method': method,
