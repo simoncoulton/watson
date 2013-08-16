@@ -63,6 +63,9 @@ class DispatchExecute(Base):
         try:
             execute_params = route_match.params
             model_data = controller.execute(**execute_params)
+            if not model_data:
+                raise InternalServerError(
+                    'The controller {0} did not return any data.'.format(controller))
             short_circuit = False
             if isinstance(model_data, str):
                 model_data = {'content': model_data}
@@ -81,7 +84,8 @@ class DispatchExecute(Base):
                         model_data.template = view_template
                     else:
                         overridden_template = path[:-1] + [model_data.template]
-                        model_data.template = os.path.join(*overridden_template)
+                        model_data.template = os.path.join(
+                            *overridden_template)
                     if not model_data.format:
                         model_data.format = format
                     response = model_data
