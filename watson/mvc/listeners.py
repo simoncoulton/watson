@@ -63,7 +63,7 @@ class DispatchExecute(Base):
         try:
             execute_params = route_match.params
             model_data = controller.execute(**execute_params)
-            if not model_data:
+            if model_data is None:
                 raise InternalServerError(
                     'The controller {0} did not return any data.'.format(controller))
             short_circuit = False
