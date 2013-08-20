@@ -29,7 +29,7 @@ def test():
         try:
             import pytest
             test_runner = 'py.test'
-            cli_args = '--cov-report html --cov watson'
+            cli_args = '--cov-report html --cov-report term --cov watson'
         except:
             pass  # pytest not available
         if test_runner:
