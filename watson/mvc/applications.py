@@ -23,8 +23,13 @@ class Base(ContainerAware, EventDispatcherAware, metaclass=abc.ABCMeta):
     It makes heavy use of the IocContainer and EventDispatcher classes to handle
     the wiring and executing of methods.
     The default configuration for Watson applications can be seen at watson.mvc.config.
+
+    Attributes:
+        dict _config: The configuration for the application.
+        Base global_app: A reference to the currently running application.
     """
     _config = None
+    global_app = None
 
     @property
     def config(self):
@@ -86,6 +91,7 @@ class Base(ContainerAware, EventDispatcherAware, metaclass=abc.ABCMeta):
         Args:
             mixed config: See the Base.config properties.
         """
+        Base.global_app = self
         self.config = config or {}
         self.dispatcher = self.container.get('shared_event_dispatcher')
         for event, listeners in self.config['events'].items():
