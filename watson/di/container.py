@@ -72,6 +72,10 @@ class IocContainer(EventDispatcherAware):
     __instantiated = None
 
     @property
+    def instantiated(self):
+        return self.__instantiated
+
+    @property
     def params(self):
         """Convenience method for retrieving the params.
 
@@ -125,7 +129,7 @@ class IocContainer(EventDispatcherAware):
             instantiated = self.__instantiated[name]
         return instantiated
 
-    def add(self, name, item, type='singleton'):
+    def add(self, name, item, type='singleton', **kwargs):
         """Add a dependency to the container (either already instatiated or not).
 
         Args:
@@ -133,6 +137,7 @@ class IocContainer(EventDispatcherAware):
             mixed item: The dependency to add (either qualified name or instance)
         """
         definition = self.definitions.get(name, {'item': item, 'type': type})
+        definition.update(**kwargs)
         self.definitions[name] = definition
 
     def __find(self, name):
