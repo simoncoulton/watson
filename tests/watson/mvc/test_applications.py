@@ -47,7 +47,6 @@ class TestHttpApplication(object):
                            REQUEST_METHOD='POST',
                            HTTP_ACCEPT='application/json'),
             start_response)
-        print(response)
         assert response == [b'{"content": "Posted Hello World!"}']
 
     def test_raise_exception_event_not_found(self):
