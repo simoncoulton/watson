@@ -73,6 +73,7 @@ class DispatchExecute(Base):
                 short_circuit = True
                 response = model_data
             if not short_circuit:
+                context = {'context': {'controller': controller}}
                 path = controller.get_execute_method_path(
                     **route_match.params)
                 controller_template = os.path.join(*path)
@@ -80,6 +81,7 @@ class DispatchExecute(Base):
                                                    controller_template)
                 format = route_match.params.get('format', 'html')
                 if isinstance(model_data, Model):
+                    model_data.data.update(context)
                     if not model_data.template:
                         model_data.template = view_template
                     else:
@@ -90,6 +92,7 @@ class DispatchExecute(Base):
                         model_data.format = format
                     response = model_data
                 else:
+                    model_data.update(context)
                     response = Model(
                         format=format,
                         template=view_template,

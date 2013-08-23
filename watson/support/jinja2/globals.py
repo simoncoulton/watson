@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Global functions for Jinja2 templates
 from watson.di import ContainerAware
+from jinja2 import contextfunction
 
 
 class Url(ContainerAware):
@@ -14,3 +15,23 @@ class Url(ContainerAware):
 
 
 url = Url  # alias to Url
+
+
+@contextfunction
+def get_request(context):
+    """Retrieves the request from the controller.
+
+    Usage:
+        {{ get_request() }}
+    """
+    return context['context']['controller'].request
+
+
+@contextfunction
+def get_flash_messages(context):
+    """Retrieves the flash messages from the controller.
+
+    Usage:
+        {{ get_flash_messages() }}
+    """
+    return context['context']['controller'].flash_messages
