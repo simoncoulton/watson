@@ -5,7 +5,7 @@ import importlib
 from json import JSONEncoder
 import jinja2
 import types
-from watson.common import datastructures, imports
+from watson.common import datastructures, imports, contextmanagers
 from watson.di import ContainerAware
 from watson.util import xml
 
@@ -340,4 +340,6 @@ class XmlRenderer(BaseRenderer):
 class JsonRenderer(BaseRenderer):
 
     def __call__(self, view_model):
+        with contextmanagers.ignored(KeyError):
+            del view_model.data['context']
         return JSONEncoder().encode(view_model.data)
