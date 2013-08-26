@@ -5,3 +5,7 @@ from watson.common import imports
 
 def get_qualified_name(obj):
     return imports.get_qualified_name(obj)
+
+
+def label(obj):
+    return obj.render_with_label()
