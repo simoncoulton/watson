@@ -228,7 +228,9 @@ class GroupInputMixin(Input):
             })
             if value:
                 attributes['value'] = value
-            if self.value and value == self.value:
+            if isinstance(self.value, (list, tuple)) and value in self.value:
+                attributes['checked'] = 'checked'
+            elif self.value and value == self.value:
                 attributes['checked'] = 'checked'
             flat_attributes = flatten_attributes(attributes)
             element = self.__render_input(

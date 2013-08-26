@@ -275,6 +275,11 @@ class TestCheckboxInputField(object):
         assert str(
             checked_field) == '<label for="test">My Checkbox<input checked="checked" id="test" name="test" type="checkbox" value="1" /></label>'
 
+    def test_render_checkbox_multiple_values(self):
+        field = fields.Checkbox(
+            name='test', label='My Checkbox Group', values=(('Test', 1), ('Testing', 2), ('Testing Again', 3)), value=(1, 2))
+        assert str(field) == '<label for="test_0">Test<input checked="checked" id="test_0" name="test" type="checkbox" value="1" /></label><label for="test_1">Testing<input checked="checked" id="test_1" name="test" type="checkbox" value="2" /></label><label for="test_2">Testing Again<input id="test_2" name="test" type="checkbox" value="3" /></label>'
+
 
 class TestHiddenInputField(object):
 

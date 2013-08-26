@@ -295,10 +295,17 @@ class Action(Base, HttpMixin):
     """
 
     def execute(self, **kwargs):
-        method = getattr(self, kwargs.get('action', 'index') + '_action')
+        method_name = kwargs.get('action', 'index') + '_action'
+        method = getattr(self, method_name)
         try:
             result = method(**kwargs)
-        except TypeError:
+        except TypeError as exc:
+            exc_msg = str(exc)
+            # There has to be a better/quicker way to determine if the cause
+            # is because of kwargs
+            if 'required positional argument' not in exc_msg \
+                    and not exc_msg.startswith(method_name):
+                raise exc
             result = method()
         return result
 
@@ -322,6 +329,12 @@ class Rest(Base, HttpMixin):
         try:
             result = method(**kwargs)
         except TypeError as exc:
+            exc_msg = str(exc)
+            # There has to be a better/quicker way to determine if the cause
+            # is because of kwargs
+            if 'required positional argument' not in exc_msg \
+                    and not exc_msg.startswith(self.request.method):
+                raise exc
             result = method()
         return result
 

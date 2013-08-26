@@ -351,7 +351,10 @@ class Form(TagMixin):
                         raise AttributeError(
                             'Mapping for object does not match object structure.')
             if hasattr(current_obj, attr):
-                setattr(current_obj, attr, value or None)
+                try:
+                    setattr(current_obj, attr, value or None)
+                except:
+                    pass  # something nasty happened here, the user should manage it
 
     def __len__(self):
         """Return the number of fields associated with the form.
