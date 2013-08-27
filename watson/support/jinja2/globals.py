@@ -17,6 +17,16 @@ class Url(ContainerAware):
 url = Url  # alias to Url
 
 
+class Config(ContainerAware):
+    """Convenience method to retrieve the configuration of the application.
+    """
+    def __call__(self, **kwargs):
+        return self.container.get('application').config
+
+
+config = Config  # alias to Config
+
+
 @contextfunction
 def get_request(context):
     """Retrieves the request from the controller.
