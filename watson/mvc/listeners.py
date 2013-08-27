@@ -132,8 +132,13 @@ class Render(Base):
             'response'], event.params['view_model']
         renderers = self.view_config['renderers']
         renderer = renderers.get(view_model.format, renderers['default'])
-        mime_type = MIME_TYPES[view_model.format][0]
+        try:
+            mime_type = MIME_TYPES[view_model.format][0]
+        except:
+            mime_type = '{0}/text'.format(view_model.format)
         renderer_instance = event.params['container'].get(renderer['name'])
+        renderer_instance.response = response
+        renderer_instance.request = event.params['request']
         try:
             response.body = renderer_instance(view_model)
             response.headers.add('Content-Type', mime_type)

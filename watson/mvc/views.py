@@ -31,6 +31,9 @@ class Model(object):
 
 class BaseRenderer(metaclass=abc.ABCMeta):
 
+    request = None
+    response = None
+
     @property
     def config(self):
         return self._config
