@@ -65,6 +65,10 @@ class FieldMixin(TagMixin):
         self.value = value
         self.filters = [Trim()] + kwargs.get('filters', [])
         self.validators = kwargs.get('validators', [])
+        if 'validators' in kwargs:
+            del kwargs['validators']
+        if 'filters' in kwargs:
+            del kwargs['filters']
         if '_class' in kwargs:
             kwargs['class'] = kwargs.get('_class')
             del kwargs['_class']
