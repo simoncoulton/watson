@@ -17,7 +17,7 @@ class Model(object):
 
     def __init__(self, data=None, template=None, format=None):
         self.template = template
-        self.data = data
+        self.data = data or {}
         self.format = format
 
     def __repr__(self):

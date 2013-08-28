@@ -31,9 +31,15 @@ class Length(abc.Validator):
         self.max = int(max)
 
     def __call__(self, value):
-        str_len = len(value)
         valid = True
         message = None
+        if not value:
+            raise ValueError(self.message.format(
+                min=self.min,
+                max=self.max,
+                value=value,
+                length=0))
+        str_len = len(value)
         if (self.min > -1 and str_len < self.min) or (self.max > -1 and str_len > self.max):
             valid = False
             message = self.message.format(
