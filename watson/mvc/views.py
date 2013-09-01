@@ -22,7 +22,7 @@ class Model(object):
 
     def __repr__(self):
         return (
-            '<{0} template: {1} format: {2}>'.format(
+            '<{0} template:{1} format:{2}>'.format(
                 imports.get_qualified_name(self),
                 self.template,
                 self.format)

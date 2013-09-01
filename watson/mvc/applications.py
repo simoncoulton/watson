@@ -148,11 +148,13 @@ class Http(Base):
                 exception=exc, request=request)
         if route_match:
             try:
-                dispatch_event = Event(events.DISPATCH_EXECUTE, target=self, params={
-                    'route_match': route_match,
-                    'request': request,
-                    'container': self.container
-                })
+                dispatch_event = Event(events.DISPATCH_EXECUTE,
+                                       target=self,
+                                       params={'route_match': route_match,
+                                               'request': request,
+                                               'container': self.container
+                                               }
+                                       )
                 dispatch_result = self.dispatcher.trigger(dispatch_event)
                 response = dispatch_event.params['controller_class'].response
                 view_model = dispatch_result.first()
@@ -173,6 +175,9 @@ class Http(Base):
                     response=response,
                     view_model=view_model)
         start_response(*response.start())
+        self.dispatcher.trigger(Event(events.COMPLETE,
+                                      target=self,
+                                      params={'container': self.container}))
         return [response()]
 
     def __call__(self, *args, **kwargs):
