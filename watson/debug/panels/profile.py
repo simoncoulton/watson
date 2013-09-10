@@ -35,8 +35,9 @@ class Panel(abc.Panel):
 
     def __init__(self, config, renderer, application):
         super(Panel, self).__init__(config, renderer, application)
-        self.application_run = application.run
-        application.run = self.run
+        if config.get('enabled'):
+            self.application_run = application.run
+            application.run = self.run
 
     def render(self):
         return self.renderer.env.from_string(TEMPLATE).render(
