@@ -167,24 +167,25 @@ class Input(FieldMixin):
     """
     html = '<input {0} />'
 
-    def render(self):
+    def render(self, **kwargs):
         """Render the element as html.
 
         Does not need to be called directly, as will be called by __str__
         natively.
         """
         attributes = self.attributes.copy()
+        attributes.update(kwargs)
         if self.value:
             attributes['value'] = str(self.value)
 
         return self.html.format(flatten_attributes(attributes))
 
-    def render_with_label(self):
+    def render_with_label(self, **kwargs):
         """Render the element as html and include the label.
 
         Output the element and prepend the <label> to it.
         """
-        return ''.join((self.label.render(self), self.render()))
+        return ''.join((self.label.render(self), self.render(**kwargs)))
 
 
 class GroupInputMixin(Input):
@@ -216,7 +217,7 @@ class GroupInputMixin(Input):
         """
         return isinstance(self.values, (tuple, list)) and len(self.values) > 1
 
-    def render(self):
+    def render(self, **kwargs):
         multiple_elements = self.has_multiple_elements()
         elements = []
         for index, label_value_pair in enumerate(self.values):
@@ -230,6 +231,7 @@ class GroupInputMixin(Input):
                 'name': self.name,
                 'id': element_id
             })
+            attributes.update(kwargs)
             if value:
                 attributes['value'] = value
             if isinstance(self.value, (list, tuple)) and value in self.value:
@@ -244,13 +246,13 @@ class GroupInputMixin(Input):
             elements.append(element)
         return ''.join(elements)
 
-    def render_with_label(self):
+    def render_with_label(self, **kwargs):
         multiple_elements = self.has_multiple_elements()
         if multiple_elements:
             wrap_html = self.fieldset_html
         else:
             wrap_html = '{1}'
-        return wrap_html.format(self.label.text, self.render())
+        return wrap_html.format(self.label.text, self.render(**kwargs))
 
     def __render_input(self, id, attributes, label_text):
         element = self.html.format(attributes)
@@ -368,16 +370,17 @@ class Button(Input):
     """
     html = '<button {0}>{1}</button>'
 
-    def render(self):
+    def render(self, **kwargs):
         attributes = self.attributes.copy()
+        attributes.update(kwargs)
         if self.value:
             attributes['value'] = str(self.value)
         return (
             self.html.format(flatten_attributes(attributes), self.label.text)
         )
 
-    def render_with_label(self):
-        return self.render()
+    def render_with_label(self, **kwargs):
+        return self.render(**kwargs)
 
 
 class Submit(Input):
@@ -396,9 +399,10 @@ class Submit(Input):
             self.button_mode = True
         super(Submit, self).__init__(name, real_value, type='submit', **kwargs)
 
-    def render(self):
+    def render(self, **kwargs):
         if self.button_mode:
             attributes = self.attributes.copy()
+            attributes.update(kwargs)
             return (
                 self.html.format(
                     flatten_attributes(attributes),
@@ -406,8 +410,8 @@ class Submit(Input):
             )
         return super(Submit, self).render()
 
-    def render_with_label(self):
-        return self.render()
+    def render_with_label(self, **kwargs):
+        return self.render(**kwargs)
 
 
 class Textarea(Input):
@@ -416,8 +420,9 @@ class Textarea(Input):
     """
     html = '<textarea {0}>{1}</textarea>'
 
-    def render(self):
+    def render(self, **kwargs):
         attributes = self.attributes.copy()
+        attributes.update(kwargs)
         value = self.value if self.value else ''
         return self.html.format(flatten_attributes(attributes), value)
 
@@ -469,16 +474,17 @@ class Select(FieldMixin):
             kwargs['multiple'] = 'multiple'
         super(Select, self).__init__(name, value, **kwargs)
 
-    def render(self):
+    def render(self, **kwargs):
         attributes = self.attributes.copy()
+        attributes.update(kwargs)
         return (
             self.html.format(
                 flatten_attributes(attributes),
                 self._options_render())
         )
 
-    def render_with_label(self):
-        return ''.join((self.label.render(self), self.render()))
+    def render_with_label(self, **kwargs):
+        return ''.join((self.label.render(self), self.render(**kwargs)))
 
     def _options_render(self):
         # internal method the render the options
