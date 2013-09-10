@@ -199,10 +199,10 @@ class GroupInputMixin(Input):
     fieldset_html = '<fieldset><legend>{0}</legend>{1}</fieldset>'
 
     def __init__(self, name=None, values=None, value=None, **kwargs):
-        super(GroupInputMixin, self).__init__(name, value, **kwargs)
         if 'label_position' in kwargs:
             self.label_position = kwargs['label_position']
             del kwargs['label_position']
+        super(GroupInputMixin, self).__init__(name, value, **kwargs)
         if not values:
             values = value
         try:
