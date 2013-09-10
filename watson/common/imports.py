@@ -118,7 +118,10 @@ class Resolver(abc.Finder, abc.Loader):
             try:
                 import_module(actual_name)
             except:
-                raise
+                raise Exception(
+                    'Module {0} does not exist (tried to load "{1}")'.format(
+                        fullname,
+                        actual_name))
         if actual_name in sys.modules and fullname not in sys.modules:
             sys.modules[fullname] = sys.modules[actual_name]
             sys.modules[fullname].__original_name__ = actual_name
