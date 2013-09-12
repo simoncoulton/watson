@@ -549,7 +549,7 @@ class Date(Input):
         super(Date, self).__init__(name, value, type='date', **kwargs)
 
     def render(self, **kwargs):
-        """Format the date in the HTML5 spec requires.
+        """Format the date in the format the HTML5 spec requires.
         """
         if self.value:
             if not isinstance(self.value, str):
