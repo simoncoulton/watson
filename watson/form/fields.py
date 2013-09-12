@@ -535,9 +535,10 @@ class Date(Input):
     """Creates an <input type="date" /> element.
     """
 
-    format = '%Y-%m-%d'
+    format = None
 
-    def __init__(self, name=None, value=None, format=None, **kwargs):
+    def __init__(self, name=None, value=None, format='%Y-%m-%d', **kwargs):
+        self.format = format
         date_filter = filters_.Date(format)
         if 'filters' in kwargs:
             kwargs['filters'].append(date_filter)

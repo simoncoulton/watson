@@ -138,4 +138,7 @@ class Date(abc.Filter):
         self.format = format
 
     def __call__(self, value):
-        return datetime.strptime(value, self.format)
+        print(value, self.format)
+        if value:
+            return datetime.strptime(value, self.format)
+        return value
