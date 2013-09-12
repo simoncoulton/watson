@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 import itertools
 from watson.common import contextmanagers
 from watson.common.imports import get_qualified_name
@@ -536,8 +537,23 @@ class Date(Input):
     """Creates an <input type="date" /> element.
     """
 
-    def __init__(self, name=None, value=None, **kwargs):
+    format = '%Y-%m-%d'
+
+    def __init__(self, name=None, value=None, format=None, **kwargs):
+        if format:
+            self.format = format
         super(Date, self).__init__(name, value, type='date', **kwargs)
+
+    def render(self, **kwargs):
+        """Format the date in the HTML5 spec requires.
+        """
+        if self.value:
+            if not isinstance(self.value, datetime):
+                date = datetime.strptime(self.value, self.format)
+                self.value = date.strftime(format)
+            else:
+                self.value = self.value.strftime(self.format)
+        return super(Date, self).render(**kwargs)
 
 
 class Email(Input):
