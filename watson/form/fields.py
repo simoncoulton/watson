@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 import itertools
-from watson.common import contextmanagers
 from watson.common.imports import get_qualified_name
-from watson.filters import Trim
 from watson.html.elements import TagMixin, flatten_attributes
-from watson import validators
+from watson import validators, filters as filters_
 
 
 class Label(TagMixin):
@@ -64,7 +62,7 @@ class FieldMixin(TagMixin):
             self.label.attributes.update(label_attrs)
         kwargs['name'] = name
         self.value = value
-        self.filters = [Trim()] + kwargs.get('filters', [])
+        self.filters = [filters_.Trim()] + kwargs.get('filters', [])
         self.validators = kwargs.get('validators', [])
         if 'validators' in kwargs:
             del kwargs['validators']
@@ -540,6 +538,11 @@ class Date(Input):
     format = '%Y-%m-%d'
 
     def __init__(self, name=None, value=None, format=None, **kwargs):
+        date_filter = filters_.Date(format)
+        if 'filters' in kwargs:
+            kwargs['filters'].append(date_filter)
+        else:
+            kwargs['filters'] = [date_filter]
         if format:
             self.format = format
         super(Date, self).__init__(name, value, type='date', **kwargs)
@@ -548,11 +551,11 @@ class Date(Input):
         """Format the date in the HTML5 spec requires.
         """
         if self.value:
-            if not isinstance(self.value, datetime):
-                date = datetime.strptime(self.value, self.format)
-                self.value = date.strftime(format)
-            else:
+            if not isinstance(self.value, str):
                 self.value = self.value.strftime(self.format)
+            else:
+                date = datetime.strptime(self.value, self.format)
+                self.value = date.strftime(self.format)
         return super(Date, self).render(**kwargs)
 
 

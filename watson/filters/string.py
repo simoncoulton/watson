@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 import re
 from watson.filters import abc
 from watson.html.entities import encode
@@ -117,3 +118,24 @@ class HtmlEntities(abc.Filter):
 
     def __call__(self, value):
         return encode(str(value))
+
+
+class Date(abc.Filter):
+
+    """Formats a string representation of a date to a particular format.
+
+    Usage:
+        filter = Date()
+        filter('2013-09-12')  # datetime object for that date
+    """
+
+    def __init__(self, format='%Y-%m-%d'):
+        """Initializes the filter.
+
+        Args:
+            string format: The date format to make.
+        """
+        self.format = format
+
+    def __call__(self, value):
+        return datetime.strptime(value, self.format)

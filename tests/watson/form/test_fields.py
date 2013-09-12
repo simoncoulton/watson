@@ -78,9 +78,9 @@ class TestDateInputField(object):
     def test_render(self):
         field = fields.Date(name='test')
         assert str(field) == '<input name="test" type="date" />'
-        field_with_value = fields.Date(name='test', value=1)
+        field_with_value = fields.Date(name='test', value='2013-09-12')
         assert str(
-            field_with_value) == '<input name="test" type="date" value="1" />'
+            field_with_value) == '<input name="test" type="date" value="2013-09-12" />'
 
     def test_render_with_label(self):
         field = fields.Date(name='test')
