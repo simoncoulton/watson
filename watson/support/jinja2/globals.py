@@ -10,8 +10,13 @@ class Url(ContainerAware):
     Usage:
         url('route_name', keyword=arg)
     """
-    def __call__(self, route_name, **kwargs):
-        return self.container.get('router').assemble(route_name, **kwargs)
+    def __call__(self, route_name, host=None, scheme=None, **kwargs):
+        path = self.container.get('router').assemble(route_name, **kwargs)
+        if host:
+            path = '{0}{1}'.format(host, path)
+        if scheme:
+            path = '{0}{1}'.format(scheme, path)
+        return path
 
 
 url = Url  # alias to Url

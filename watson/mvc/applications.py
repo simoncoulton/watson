@@ -136,6 +136,7 @@ class Http(Base):
         request = create_request_from_environ(environ,
                                               self.config['session']['class'],
                                               self.config['session'].get('options'))
+        self.container.add('request', request)
         try:
             route_result = self.dispatcher.trigger(Event(events.ROUTE_MATCH, target=self, params={
                 'request': request,
