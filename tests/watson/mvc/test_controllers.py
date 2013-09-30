@@ -59,6 +59,8 @@ class TestBaseHttpController(object):
         base.container.get.return_value = router
         assert base.url('test') == '/test'
         assert base.url('segment', part='test') == '/segment/test'
+        assert base.url('test', host='test.com') == 'test.com/test'
+        assert base.url('test', host='test.com', scheme='https://') == 'https://test.com/test'
 
     def test_redirect(self):
         base = controllers.HttpMixin()

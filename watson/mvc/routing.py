@@ -186,14 +186,16 @@ class Route(dict):
         Returns:
             A RouteMatch namedtuple containing the keys route, params, matched.
         """
-        # matched = True
         params = self.get('defaults', {}).copy()
         if request.method not in self.get('accepts', REQUEST_METHODS):
-            # matched = False
             return None
-        if 'subdomain' in self and request.url.subdomain != self.get('subdomain'):
-            # matched = False
-            return None
+        if 'subdomain' in self:
+            subdomains = self.get('subdomain')
+            if isinstance(subdomains, (list, tuple)):
+                if request.url.subdomain not in subdomains:
+                    return None
+            elif request.url.subdomain != self.get('subdomain'):
+                return None
         accept_format = request.headers.get('Accept')
         formats = None
         if accept_format:
@@ -205,16 +207,13 @@ class Route(dict):
             if self['format'].match(formats[0]):
                 params['format'] = formats[0]
             else:
-                # matched = False
                 return None
-        # if matched:
         matches = self.regex.match(request.url.path)
         if matches:
             params.update((k, v)
                           for k, v in matches.groupdict().items() if v is not None)
         else:
             return None
-                # matched = False
         return RouteMatch(self, params)
 
     def assemble(self, **kwargs):

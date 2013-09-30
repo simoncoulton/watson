@@ -119,6 +119,9 @@ class TestRoute(object):
         route = Route(name='test', path='/test', subdomain='clients')
         assert route.match(valid_request)
         assert not route.match(invalid_request)
+        route_multiple_subdomains = Route(name='test', path='/test', subdomain=('clients', 'test'))
+        assert route_multiple_subdomains.match(valid_request)
+        assert not route_multiple_subdomains.match(invalid_request)
 
     def test_assemble_static_route(self):
         route = Route(name='test', path='/testing')

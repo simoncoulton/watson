@@ -125,11 +125,13 @@ class HttpMixin(object):
                 'Invalid response type, expected watson.http.messages.Response')
         self._response = response
 
-    def url(self, route_name, **params):
+    def url(self, route_name, host=None, scheme=None, **params):
         """Converts a route into a url.
 
         Args:
             string route_name: The name of the route to convert
+            string host: The hostname to prepend to the route path
+            string scheme: The scheme to prepend to the route path
             dict params: The params to use on the route
 
         Returns:
@@ -138,7 +140,12 @@ class HttpMixin(object):
         if not params:
             params = {}
         router = self.container.get('router')
-        return router.assemble(route_name, **params)
+        path = router.assemble(route_name, **params)
+        if host:
+            path = '{0}{1}'.format(host, path)
+        if scheme:
+            path = '{0}{1}'.format(scheme, path)
+        return path
 
     def redirect(self, path, params=None, status_code=302, clear=False):
         """Redirect to a different route.
