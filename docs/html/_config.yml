@@ -6,4 +6,4 @@ pretty_style: html_extension
 permalink: none
 lsi: false
 safe: false
-baseurl: /watson
+baseurl: '/watson'
