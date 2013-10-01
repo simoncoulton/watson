@@ -141,7 +141,8 @@ class Render(Base):
         renderer_instance.request = event.params['request']
         try:
             response.body = renderer_instance(view_model)
-            response.headers.add('Content-Type', mime_type)
+            if 'Content-Type' not in response.headers:
+                response.headers.add('Content-Type', mime_type)
         except Exception as exc:
             raise InternalServerError(
                 'Template ({0}) not found'.format(

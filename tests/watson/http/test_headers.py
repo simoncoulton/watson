@@ -17,6 +17,13 @@ class TestHeaders(object):
         assert d.get_option('Content-Type', 'charset') == 'utf-8'
         assert d.get_option('Content-Type', 'random', 'test') == 'test'
 
+    def test_add_overwrite_header(self):
+        d = HeaderDict()
+        d.add('CONTENT_TYPE', 'text/html', charset='utf-8')
+        assert len(d) == 1
+        d.add('CONTENT_TYPE', 'text/plain', charset='utf-8', replace=True)
+        assert len(d) == 1
+
     def test_delete_header(self):
         d = HeaderDict()
         d['Content-Type'] = 'test'
