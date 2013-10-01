@@ -135,7 +135,7 @@ class Render(Base):
         try:
             mime_type = MIME_TYPES[view_model.format][0]
         except:
-            mime_type = '{0}/text'.format(view_model.format)
+            mime_type = 'text/{0}'.format(view_model.format)
         renderer_instance = event.params['container'].get(renderer['name'])
         renderer_instance.response = response
         renderer_instance.request = event.params['request']
