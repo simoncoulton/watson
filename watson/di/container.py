@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from types import FunctionType
+from watson.common.contextmanagers import ignored
 from watson.di import processors
 from watson.events.dispatcher import EventDispatcherAware
 from watson.events.types import Event
@@ -139,6 +140,8 @@ class IocContainer(EventDispatcherAware):
         definition = self.definitions.get(name, {'item': item, 'type': type})
         definition.update(**kwargs)
         self.definitions[name] = definition
+        if not isinstance(item, str):
+            self.__instantiated[name] = item
 
     def __find(self, name):
         """

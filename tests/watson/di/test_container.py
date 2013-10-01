@@ -89,3 +89,12 @@ class TestIoc(object):
         test1 = container.get('test')
         test2 = container.get('test')
         assert test1 != test2
+
+    def test_prototype_add(self):
+        container = IocContainer()
+        dep = SampleDependency()
+        container.add('test', dep)
+        assert container.get('test') == dep
+        dep2 = SampleDependency()
+        container.add('test', dep2)
+        assert container.get('test') == dep2
