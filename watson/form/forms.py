@@ -40,6 +40,7 @@ class Form(TagMixin):
     _valid = False
     _validated = False
     _ignored_attributes = ('fields', '_fields', 'data', 'raw_data', 'errors')
+    _ignored_bound_fields = None
     _bound_object = None
     _bound_object_mapping = None
 
@@ -53,6 +54,7 @@ class Form(TagMixin):
             string action: the url to submit the form to
             boolean detect_multipart: automatically set multipart/form-data
         """
+        self._ignored_bound_fields = []
         self.validators = validators or []
         method = method.lower()
         if '_class' in kwargs:
@@ -164,7 +166,7 @@ class Form(TagMixin):
     def _set_data_on_fields(self, data):
         # internal method for setting the data on the fields
         for key, value in data.items():
-            if key in self.fields:
+            if key in self.fields and key not in self._ignored_bound_fields:
                 self.fields[key].value = value
 
     @cached_property
@@ -176,7 +178,7 @@ class Form(TagMixin):
         return {field_name: field.original_value for
                 field_name, field in self.fields.items()}
 
-    def bind(self, obj=None, mapping=None, hydrate=True):
+    def bind(self, obj=None, mapping=None, ignored_fields=None, hydrate=True):
         """Binds an object to the form.
 
         Optionally additional mapping can be specified in order to set values on
@@ -188,6 +190,7 @@ class Form(TagMixin):
         Args:
             class obj: the class to bind to the form.
             dict mapping: the mapping between the form fields and obj attributes.
+            list|tuple ignored_fields: fields to ignore when binding.
             bool hydrate: whether or not to hydrate the form with the obj attributes.
 
         Usage:
@@ -196,6 +199,7 @@ class Form(TagMixin):
             form.bind(user)
             form.username.value  # 'test'
         """
+        self._ignored_bound_fields = ignored_fields or []
         if obj:
             self._bound_object = obj
             if mapping:
@@ -350,7 +354,7 @@ class Form(TagMixin):
                     except:
                         raise AttributeError(
                             'Mapping for object does not match object structure.')
-            if hasattr(current_obj, attr):
+            if hasattr(current_obj, attr) and attr not in self._ignored_bound_fields:
                 try:
                     setattr(current_obj, attr, value or None)
                 except:

@@ -163,6 +163,15 @@ class TestForm(object):
         assert form.close(
         ) == '<input name="HTTP_REQUEST_METHOD" type="hidden" value="PUT" /></form>'
 
+    def test_ignored_fields(self):
+        form = LoginForm('test')
+        user = User()
+        form.bind(user, ignored_fields=('username',))
+        form.data = {'username': 'should be ignored', 'password': 'test'}
+        form.is_valid()
+        assert not form.username.value
+        assert form.password.value
+
 
 class TestMultiPartForm(object):
 
