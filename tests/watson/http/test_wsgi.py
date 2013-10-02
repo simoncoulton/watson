@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from io import BytesIO
 from watson.http.wsgi import get_form_vars, _process_field_storage
-from tests.watson.http.support import sample_environ
+from tests.watson.http.support import sample_environ, SampleField
 
 
 class TestWsgiModule(object):

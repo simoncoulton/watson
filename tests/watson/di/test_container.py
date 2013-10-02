@@ -40,6 +40,7 @@ class TestIoc(object):
         assert container.get('def') == 'something'
         assert container.get('def') == 'something'
         assert container.get('test3') == 'some arg'
+        assert len(container.instantiated) == 4
 
     def test_add_item(self):
         container = IocContainer()

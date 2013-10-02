@@ -58,6 +58,5 @@ def _process_field_storage(fields, get=None, post=None, files=None):
             elif field.disposition or field.name not in get:
                 post[field.name] = field.value
             else:
-                if field.name not in get:
-                    get[field.name] = field.value
+                pass  # pragma: no cover
     return get, post, files

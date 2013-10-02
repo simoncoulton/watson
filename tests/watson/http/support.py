@@ -8,3 +8,8 @@ def sample_environ(**kwargs):
     util.setup_testing_defaults(environ)
     environ.update(kwargs)
     return environ
+
+
+class SampleField(object):
+    name = 'test'
+    value = 'test'
