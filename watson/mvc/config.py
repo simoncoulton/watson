@@ -54,15 +54,15 @@ dependencies = {
                                        {})]
         },
         'jinja2_renderer': {
-            'item': 'watson.mvc.views.Jinja2Renderer',
+            'item': 'watson.renderers.Jinja2',
             'init': [
                 lambda container: container.get('application.config')[
                     'views']['renderers']['default'].get('config', {}),
                 lambda container: container.get('application')
             ]
         },
-        'json_renderer': {'item': 'watson.mvc.views.JsonRenderer'},
-        'xml_renderer': {'item': 'watson.mvc.views.XmlRenderer'},
+        'json_renderer': {'item': 'watson.renderers.Json'},
+        'xml_renderer': {'item': 'watson.renderers.Xml'},
         'app_dispatch_execute_listener': {
             'item': 'watson.mvc.listeners.DispatchExecute',
             'init':
