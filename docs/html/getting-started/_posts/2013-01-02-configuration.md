@@ -35,11 +35,22 @@ Debug is responsible for determining if the application is running in debug mode
 <span class="sub">watson.mvc.config</span>
 {% highlight python %}
 debug = {
-    'enabled': False,  # is the debug mode enabled?
-    'profiling': {
-        'enabled': False,  # is the profiler enabled?
-        'max_results': 20,  # the number of results to display
-        'sort': 'cumulative',  # the column to sort on
+    'enabled': False,
+    'panels': {
+        'watson.debug.panels.request.Panel': {
+            'enabled': True
+        },
+        'watson.debug.panels.application.Panel': {
+            'enabled': True
+        },
+        'watson.debug.panels.profile.Panel': {
+            'enabled': True,
+            'max_results': 20,
+            'sort': 'time',
+        },
+        'watson.debug.panels.framework.Panel': {
+            'enabled': True
+        },
     }
 }
 {% endhighlight %}

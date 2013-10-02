@@ -30,7 +30,7 @@ Notes about these dependencies can be found within the relevant documentation in
 
 ### Testing
 
-Watson can be tested with both py.test and nose.
+Watson can be tested with both py.test and nose (though we recommend py.test).
 
 ### Contributing
 If you would like to contribute to Watson, please feel free to issue a pull request via Github with the associated tests for your code.

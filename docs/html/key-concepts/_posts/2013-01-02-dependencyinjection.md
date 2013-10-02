@@ -46,7 +46,7 @@ These events are only triggered once per dependency, unless the dependency is de
 
 ### <a id="example"></a>Example Usage
 
-Watson provides an easy to use IoC (Inversion of Control) container which allows these sorts of dependencies to be managed easily. Lets take a look at how we might instantiate a database connection without dependency injection.
+Watson provides an easy to use IoC (Inversion of Control) container which allows these sorts of dependencies to be managed easily. Lets take a look at how we might instantiate a database connection without dependency injection (for a more complete example of this, check out [watson-db](https://github.com/simoncoulton/watson-db))
 
 <span class="sub">app_name/db.py</span>
 {% highlight python %}
@@ -140,7 +140,7 @@ class Profile(controllers.Rest):
         db.commit()
 {% endhighlight %}
 
-We can also take this a step further and remove the container itself as being a hardcoded dependency. We do this by adding the controller itself to the dependency definitions, and injecting the dependency either as a property, setter, or through the constructor. We can get access to the container itself (for retrieving dependencies or configurtion) via lambdas, or just by the same name as the definition. Note that you can also omit the 'item' key if you are configuring a controller.
+We can also take this a step further and remove the container itself as being a hardcoded dependency (db = self.get('db_*')). We do this by adding the controller itself to the dependency definitions, and injecting the dependency either as a property, setter, or through the constructor. We can get access to the container itself (for retrieving dependencies or configurtion) via lambdas, or just by the same name as the definition. Note that you can also omit the 'item' key if you are configuring a controller.
 
 <span class="sub">app_name/config/config.py</span>
 {% highlight python %}
@@ -160,8 +160,8 @@ dependencies = {
         },
         'app_name.controllers.user.Profile': {
             'property': {
-                'db_read': db_read,
-                'db_write': db_write
+                'db_read': 'db_read',  # References the db_read definition
+                'db_write': 'db_write'
             }
         }
     }

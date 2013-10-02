@@ -115,7 +115,6 @@ class Controller(controllers.Rest):
     def GET(self):
         return {
             'form': forms.Login(),  # form has a POST method
-            'flash_messages': self.flash_messages
         }
 
     def POST(self):
@@ -132,7 +131,7 @@ class Controller(controllers.Rest):
 <html>
     <head></head>
     <body>{% raw %}
-        {% for namespace, message in flash_messages %}
+        {% for namespace, message in get_flash_messages() %}
         <div class="{{ namespace }}">{{ message }}</div>
         {% endfor %}
         {{ form.open() }}
