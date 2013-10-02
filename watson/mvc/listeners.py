@@ -16,8 +16,7 @@ class Base(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def __call__(self, event):
-        # pragma: no cover
-        raise NotImplementedError('You must implement __call__')
+        raise NotImplementedError('You must implement __call__')  # pragma: no cover
 
 
 class Route(Base):
@@ -135,7 +134,10 @@ class Render(Base):
         try:
             mime_type = MIME_TYPES[view_model.format][0]
         except:
-            mime_type = 'text/{0}'.format(view_model.format)
+            if '/' in view_model.format:
+                mime_type = view_model.format
+            else:
+                mime_type = 'text/{0}'.format(view_model.format)
         renderer_instance = event.params['container'].get(renderer['name'])
         renderer_instance.response = response
         renderer_instance.request = event.params['request']
