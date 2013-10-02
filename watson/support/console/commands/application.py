@@ -229,10 +229,7 @@ from ${app_name}.config.routes import routes
 
 
 debug = {
-    'enabled': False,
-    'profiling': {
-        'enabled': False
-    }
+    'enabled': False
 }
 """
 
@@ -241,10 +238,7 @@ from ${app_name}.config.routes import routes
 
 
 debug = {
-    'enabled': True,
-    'profiling': {
-        'enabled': True
-    }
+    'enabled': True
 }
 
 """
