@@ -828,7 +828,6 @@
     <span class="k">def</span> <span class="nf">GET</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s">&#39;form&#39;</span><span class="p">:</span> <span class="n">forms</span><span class="o">.</span><span class="n">Login</span><span class="p">(),</span>  <span class="c"># form has a POST method</span>
-            <span class="s">&#39;flash_messages&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">flash_messages</span>
         <span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">POST</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -844,7 +843,7 @@
 <div class="highlight"><pre><code class="html"><span class="nt">&lt;html&gt;</span>
     <span class="nt">&lt;head&gt;&lt;/head&gt;</span>
     <span class="nt">&lt;body&gt;</span>
-        {% for namespace, message in flash_messages %}
+        {% for namespace, message in get_flash_messages() %}
         <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;{{ namespace }}&quot;</span><span class="nt">&gt;</span>{{ message }}<span class="nt">&lt;/div&gt;</span>
         {% endfor %}
         {{ form.open() }}
@@ -901,6 +900,11 @@
 				<li class="title">Useful Resources</li>
 				<li><a href="http://docs.python.org/3/">Python 3 Documentation</a></li>
 				<li><a href="http://www.reddit.com/r/python">Python Subreddit</a></li>
+			</ul>
+			<ul>
+				<li class="title">Additional Modules</li>
+				<li><a href="https://github.com/simoncoulton/watson-db">Watson DB</a></li>
+				<li><a href="https://github.com/simoncoulton/watson-auth">Watson Auth</a></li>
 
 			</ul>
 		</div>

@@ -770,7 +770,7 @@
 
 <h3 id="toc_2"><a id="example"></a>Example Usage</h3>
 
-<p>Watson provides an easy to use IoC (Inversion of Control) container which allows these sorts of dependencies to be managed easily. Lets take a look at how we might instantiate a database connection without dependency injection.</p>
+<p>Watson provides an easy to use IoC (Inversion of Control) container which allows these sorts of dependencies to be managed easily. Lets take a look at how we might instantiate a database connection without dependency injection (for a more complete example of this, check out <a href="https://github.com/simoncoulton/watson-db">watson-db</a>)</p>
 
 <p><span class="sub">app_name/db.py</span></p>
 
@@ -864,7 +864,7 @@ By using the IocContainer, we can abstract both of these issues out keeping our 
         <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 </code></pre></div>
 
-<p>We can also take this a step further and remove the container itself as being a hardcoded dependency. We do this by adding the controller itself to the dependency definitions, and injecting the dependency either as a property, setter, or through the constructor. We can get access to the container itself (for retrieving dependencies or configurtion) via lambdas.</p>
+<p>We can also take this a step further and remove the container itself as being a hardcoded dependency (db = self.get(&#39;db_*&#39;)). We do this by adding the controller itself to the dependency definitions, and injecting the dependency either as a property, setter, or through the constructor. We can get access to the container itself (for retrieving dependencies or configurtion) via lambdas, or just by the same name as the definition. Note that you can also omit the &#39;item&#39; key if you are configuring a controller.</p>
 
 <p><span class="sub">app_name/config/config.py</span></p>
 
@@ -883,10 +883,9 @@ By using the IocContainer, we can abstract both of these issues out keeping our 
             <span class="p">}</span>
         <span class="p">},</span>
         <span class="s">&#39;app_name.controllers.user.Profile&#39;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s">&#39;item&#39;</span><span class="p">:</span> <span class="s">&#39;app_name.controllers.user.Profile&#39;</span><span class="p">,</span>
             <span class="s">&#39;property&#39;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s">&#39;db_read&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">container</span><span class="p">:</span> <span class="n">container</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;db_read&#39;</span><span class="p">),</span>
-                <span class="s">&#39;db_write&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">container</span><span class="p">:</span> <span class="n">container</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;db_write&#39;</span><span class="p">)</span>
+                <span class="s">&#39;db_read&#39;</span><span class="p">:</span> <span class="s">&#39;db_read&#39;</span><span class="p">,</span>  <span class="c"># References the db_read definition</span>
+                <span class="s">&#39;db_write&#39;</span><span class="p">:</span> <span class="s">&#39;db_write&#39;</span>
             <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
@@ -976,25 +975,17 @@ By using the IocContainer, we can abstract both of these issues out keeping our 
 
 <section>
 	
-		
-			
-		
-	
-		
-			
-		
-	
 
 	
 	<h4>See also:</h4>
 	
 	
-	<a class="label blue" href="/watson/reference-library/di/processors.html">watson.di.processors</a>
-	
-	
-	
-	
 	<a class="label blue" href="/watson/reference-library/di/container.html">watson.di.container</a>
+	
+	
+	
+	
+	<a class="label blue" href="/watson/reference-library/di/processors.html">watson.di.processors</a>
 	
 	
 	
@@ -1020,6 +1011,11 @@ By using the IocContainer, we can abstract both of these issues out keeping our 
 				<li class="title">Useful Resources</li>
 				<li><a href="http://docs.python.org/3/">Python 3 Documentation</a></li>
 				<li><a href="http://www.reddit.com/r/python">Python Subreddit</a></li>
+			</ul>
+			<ul>
+				<li class="title">Additional Modules</li>
+				<li><a href="https://github.com/simoncoulton/watson-db">Watson DB</a></li>
+				<li><a href="https://github.com/simoncoulton/watson-auth">Watson Auth</a></li>
 
 			</ul>
 		</div>
