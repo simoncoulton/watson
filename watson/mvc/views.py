@@ -53,6 +53,7 @@ class BaseRenderer(metaclass=abc.ABCMeta):
 
 class Jinja2Renderer(BaseRenderer):
     _env = None
+    _debug_mode = False
 
     @property
     def env(self):
@@ -60,6 +61,7 @@ class Jinja2Renderer(BaseRenderer):
 
     def __init__(self, config=None, application=None):
         super(Jinja2Renderer, self).__init__(config)
+        self._debug_mode = application.config['debug']['enabled']
         self.register_loaders()
         _types = ('filters', 'globals')
         for _type in _types:
@@ -76,9 +78,9 @@ class Jinja2Renderer(BaseRenderer):
                         env_type[name] = application.container.get(obj)
 
     def register_loaders(self):
-        loaders = [jinja2.FileSystemLoader(path)
-                   for path in self.config.get('paths')]
-        loaders.append(jinja2.DictLoader({
+        user_loaders = [jinja2.FileSystemLoader(path)
+                        for path in self.config.get('paths')]
+        system_loaders = [jinja2.DictLoader({
             'base': '''<!DOCTYPE html>
                 <html>
                     <head>
@@ -323,7 +325,12 @@ class Jinja2Renderer(BaseRenderer):
                     {% endif %}
                 {% endblock %}
             '''
-        }))
+        })]
+        if self._debug_mode:
+            loaders = system_loaders + user_loaders
+        else:
+            loaders = user_loaders + system_loaders
+
         self._env = jinja2.Environment(loader=jinja2.ChoiceLoader(loaders))
 
     def __call__(self, view_model):
