@@ -65,6 +65,7 @@ def create_request_from_environ(
         method, ImmutableMultiDict(get), ImmutableMultiDict(post),
         ImmutableMultiDict(files), ImmutableMultiDict(headers),
         ImmutableMultiDict(server), cookies)
+    request._environ = environ
     if session_class:
         request.define_session(session_class, session_options or {})
     return request
@@ -101,6 +102,7 @@ class Request(MessageMixin, SessionMixin):
     _headers = None
     _server = None
     _cookies = None
+    _environ = None
 
     @property
     def method(self):
@@ -178,7 +180,7 @@ class Request(MessageMixin, SessionMixin):
             A watson.http.uri.Url object
         """
         if not self._url:
-            self._url = Url(request_uri(self._server))
+            self._url = Url(request_uri(self._environ))
         return self._url
 
     def __init__(self, method, get=None, post=None, files=None, headers=None,

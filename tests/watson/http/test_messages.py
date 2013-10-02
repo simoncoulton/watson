@@ -48,8 +48,7 @@ class TestRequest(object):
         environ = sample_environ(HTTPS='HTTPS')
         environ['wsgi.url_scheme'] = 'https'
         request = create_request_from_environ(environ)
-        assert str(
-            request) == 'GET https://127.0.0.1:80/ HTTP/1.1\r\nHost: 127.0.0.1\r\nHttps: HTTPS\r\n\r\n'
+        assert str(request) == 'GET https://127.0.0.1/ HTTP/1.1\r\nHost: 127.0.0.1\r\nHttps: HTTPS\r\n\r\n'
         assert request.is_secure()
 
     def test_host(self):

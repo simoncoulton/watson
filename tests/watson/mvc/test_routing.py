@@ -113,9 +113,11 @@ class TestRoute(object):
     def test_subdomain_match(self):
         valid_request = create_request_from_environ(
             sample_environ(PATH_INFO='/test',
-                           SERVER_NAME='clients.test.com'))
+                           SERVER_NAME='clients.test.com',
+                           HTTP_HOST='clients.test.com'))
         invalid_request = create_request_from_environ(
-            sample_environ(PATH_INFO='/test', SERVER_NAME='clients2.test.com'))
+            sample_environ(PATH_INFO='/test', SERVER_NAME='clients2.test.com',
+                           HTTP_HOST='clients2.test.com'))
         route = Route(name='test', path='/test', subdomain='clients')
         assert route.match(valid_request)
         assert not route.match(invalid_request)
