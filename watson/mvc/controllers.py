@@ -314,7 +314,7 @@ class Action(Base, HttpMixin):
                     and not exc_msg.startswith(method_name):
                 raise exc
             result = method()
-        return result
+        return result or {}
 
     def get_execute_method_path(self, **kwargs):
         template = re.sub('.-', '_', kwargs.get('action', 'index').lower())
@@ -343,7 +343,7 @@ class Rest(Base, HttpMixin):
                     and not exc_msg.startswith(self.request.method):
                 raise exc
             result = method()
-        return result
+        return result or {}
 
     def get_execute_method_path(self, **kwargs):
         template = self.request.method.lower()

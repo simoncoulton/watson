@@ -29,6 +29,9 @@ class SampleActionController(controllers.Action):
     def blah_syntax_error_action(self):
         a = b
 
+    def blank_action(self):
+        pass
+
 
 class ShortCircuitedController(controllers.Rest):
 

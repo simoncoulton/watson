@@ -119,6 +119,12 @@ class TestActionController(object):
         assert repr(
             controller) == '<tests.watson.mvc.support.SampleActionController>'
 
+    def test_blank_response(self):
+        controller = SampleActionController()
+        controller.request = Request('GET')
+        result = controller.execute(action='blank')
+        assert isinstance(result, dict)
+
     def test_execute_result(self):
         controller = SampleActionController()
         assert controller.execute(action='something') == 'something_action'
