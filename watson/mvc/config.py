@@ -108,6 +108,36 @@ views = {
     }
 }
 
+# Logging settings
+logging = {
+    'callable': 'logging.config.dictConfig',
+    'options': {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'verbose': {
+                'format': '%(asctime)s - %(name)s - %(levelname)s - %(process)d %(thread)d - %(message)s'
+            },
+            'simple': {
+                'format': '%(asctime)s - %(levelname)s - %(message)s'
+            },
+        },
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+                'level': 'DEBUG',
+                'formatter': 'verbose',
+                'stream': 'ext://sys.stdout'
+            },
+        },
+        'loggers': {},
+        'root': {
+            'level': 'DEBUG',
+            'handlers': ['console']
+        }
+    }
+}
+
 # Session settings
 session = {
     'class': 'watson.http.sessions.File',
@@ -120,7 +150,8 @@ session = {
 events = {
     events.EXCEPTION: [('app_exception_listener',)],
     events.INIT: [
-        ('watson.debug.listeners.Init', 1, True)
+        ('watson.debug.listeners.Init', 1, True),
+        ('watson.logging.listeners.Init', 1, True)
     ],
     events.ROUTE_MATCH: [('watson.mvc.listeners.Route',)],
     events.DISPATCH_EXECUTE: [('app_dispatch_execute_listener',)],

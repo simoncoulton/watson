@@ -109,14 +109,13 @@ class RunDevelopmentServer(command.Base, ContainerAware):
 
     def execute(self):
         from __main__ import APP_MODULE, APP_DIR, SCRIPT_DIR, PUBLIC_DIR
-        app = load_definition_from_string(
-    '{0}.app.application'.format(APP_MODULE))
         os.chdir(APP_DIR)
-        make_dev_server(
-    app,
-     do_reload=True,
-     script_dir=SCRIPT_DIR,
-     public_dir=PUBLIC_DIR)
+        app = load_definition_from_string('{0}.app.application'.format(
+            APP_MODULE))
+        make_dev_server(app,
+                        do_reload=True,
+                        script_dir=SCRIPT_DIR,
+                        public_dir=PUBLIC_DIR)
 
 
 class RunTests(command.Base, ContainerAware):
@@ -302,6 +301,7 @@ from watson.mvc import applications
 from ${app_name}.config import config
 
 if __name__ == '__main__':
+    os.chdir(APP_DIR)
     application = applications.Console(config)
     application()
 """
