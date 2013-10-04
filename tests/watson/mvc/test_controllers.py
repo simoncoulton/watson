@@ -135,6 +135,11 @@ class TestActionController(object):
         assert controller.get_execute_method_path(
             action='something') == ['sampleactioncontroller', 'something']
 
+    @raises(Exception)
+    def test_kwargs_missing(self):
+        controller = SampleActionController()
+        controller.execute(action='kwargs_missing')
+
 
 class TestRestController(object):
 

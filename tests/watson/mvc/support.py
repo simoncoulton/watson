@@ -32,6 +32,9 @@ class SampleActionController(controllers.Action):
     def blank_action(self, **kwargs):
         pass
 
+    def kwargs_missing_action(self):
+        raise Exception('Exception related to the code')
+
 
 class ShortCircuitedController(controllers.Rest):
 
