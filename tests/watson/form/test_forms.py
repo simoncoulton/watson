@@ -17,6 +17,10 @@ class TestForm(object):
         form2 = LoginForm('test')
         assert len(form2) == 5
 
+    def test_class_attribute(self):
+        form = Form(_class='test')
+        assert form.open() == '<form action="/" class="test" enctype="application/x-www-form-urlencoded" method="post" name="Form">'
+
     def test_form_create_no_name(self):
         form = Form()
         assert form.name == 'Form'

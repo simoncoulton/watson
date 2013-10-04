@@ -20,5 +20,4 @@ class Renderer(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def __call__(self, view_model):
-        # pragma: no cover
-        raise NotImplementedError('You must implement __call__')
+        raise NotImplementedError('You must implement __call__')  # pragma: no cover

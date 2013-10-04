@@ -1,6 +1,19 @@
 # -*- coding: utf-8 -*-
 import collections
+from datetime import datetime
+from nose.tools import raises
 from watson.form import fields
+
+
+class TestFieldMixin(object):
+    def test_remove_validators(self):
+        field = fields.FieldMixin(validators=[123])
+        assert len(field.validators) == 1
+
+    @raises(NotImplementedError)
+    def test_render_with_label(self):
+        field = fields.FieldMixin()
+        field.render_with_label()
 
 
 class TestInputField(object):
@@ -21,6 +34,16 @@ class TestInputField(object):
             label_attrs={'class': 'inline'})
         assert field.render_with_label(
         ) == '<label class="inline" for="test">Test</label><input class="text" id="test" name="test" type="text" />'
+
+
+class TestDateField(object):
+    def test_create(self):
+        field = fields.Date(filters=[1234])
+        assert len(field.filters) == 3
+
+    def test_render(self):
+        field = fields.Date(value=datetime.now())
+        assert isinstance(field.render(), str)
 
 
 class TestTextInputField(object):

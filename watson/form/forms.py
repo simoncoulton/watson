@@ -357,8 +357,9 @@ class Form(TagMixin):
             if hasattr(current_obj, attr) and attr not in self._ignored_bound_fields:
                 try:
                     setattr(current_obj, attr, value or None)
-                except:
-                    pass  # something nasty happened here, the user should manage it
+                except:  # pragma: no cover
+                    # something nasty happened here, the user should manage it
+                    pass
 
     def __len__(self):
         """Return the number of fields associated with the form.
