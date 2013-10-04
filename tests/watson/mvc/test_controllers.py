@@ -140,6 +140,11 @@ class TestActionController(object):
         controller = SampleActionController()
         controller.execute(action='kwargs_missing')
 
+    @raises(TypeError)
+    def tests_exception_occuring_within_action(self):
+        controller = SampleActionController()
+        controller.execute(action='exception')
+
 
 class TestRestController(object):
 

@@ -35,6 +35,9 @@ class SampleActionController(controllers.Action):
     def kwargs_missing_action(self):
         raise Exception('Exception related to the code')
 
+    def exception_action(self, **kwargs):
+        raise TypeError('Exception related to the code')
+
 
 class ShortCircuitedController(controllers.Rest):
 
