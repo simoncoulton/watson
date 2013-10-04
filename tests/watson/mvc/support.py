@@ -23,13 +23,13 @@ class SampleActionController(controllers.Action):
     def something_action(self, **kwargs):
         return 'something_action'
 
-    def blah_action(self):
+    def blah_action(self, **kwargs):
         return 'blah_action'
 
     def blah_syntax_error_action(self):
         a = b
 
-    def blank_action(self):
+    def blank_action(self, **kwargs):
         pass
 
 

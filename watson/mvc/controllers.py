@@ -16,10 +16,24 @@ class Base(ContainerAware, metaclass=abc.ABCMeta):
 
     """The interface for controller classes.
     """
-    @abc.abstractmethod
     def execute(self, **kwargs):
+        method = self.get_execute_method(**kwargs)
+        try:
+            result = method(**kwargs)
+        except TypeError as exc:
+            exc_msg = str(exc)
+            # There has to be a better/quicker way to determine if the cause
+            # is because of kwargs
+            if 'required positional argument' not in exc_msg \
+                    and not exc_msg.startswith(self.request.method):
+                raise exc
+            result = method()
+        return result or {}
+
+    @abc.abstractmethod
+    def get_execute_method(self, **kwargs):
         raise NotImplementedError(
-            'You must implement execute')  # pragma: no cover
+            'You must implement get_execute_method')  # pragma: no cover
 
     @abc.abstractmethod
     def get_execute_method_path(self, **kwargs):
@@ -286,9 +300,7 @@ class FlashMessagesContainer(object):
         return len(self.messages)
 
     def __repr__(self):
-        return (
-            '<{0} messages: {1}>'.format(get_qualified_name(self), len(self))
-        )
+        return '<{0} messages: {1}>'.format(get_qualified_name(self), len(self))
 
 
 class Action(Base, HttpMixin):
@@ -301,20 +313,9 @@ class Action(Base, HttpMixin):
                 return 'something'
     """
 
-    def execute(self, **kwargs):
+    def get_execute_method(self, **kwargs):
         method_name = kwargs.get('action', 'index') + '_action'
-        method = getattr(self, method_name)
-        try:
-            result = method(**kwargs)
-        except TypeError as exc:
-            exc_msg = str(exc)
-            # There has to be a better/quicker way to determine if the cause
-            # is because of kwargs
-            if 'required positional argument' not in exc_msg \
-                    and not exc_msg.startswith(method_name):
-                raise exc
-            result = method()
-        return result or {}
+        return getattr(self, method_name)
 
     def get_execute_method_path(self, **kwargs):
         template = re.sub('.-', '_', kwargs.get('action', 'index').lower())
@@ -331,19 +332,8 @@ class Rest(Base, HttpMixin):
                 return 'something'
     """
 
-    def execute(self, **kwargs):
-        method = getattr(self, self.request.method)
-        try:
-            result = method(**kwargs)
-        except TypeError as exc:
-            exc_msg = str(exc)
-            # There has to be a better/quicker way to determine if the cause
-            # is because of kwargs
-            if 'required positional argument' not in exc_msg \
-                    and not exc_msg.startswith(self.request.method):
-                raise exc
-            result = method()
-        return result or {}
+    def get_execute_method(self, **kwargs):
+        return getattr(self, self.request.method)
 
     def get_execute_method_path(self, **kwargs):
         template = self.request.method.lower()

@@ -106,7 +106,7 @@ class Router(object):
         )
 
 
-# oute: The matched route
+# route: The matched route
 # params: The parameters that have been matched
 RouteMatch = collections.namedtuple('RouteMatch', 'route params')
 
