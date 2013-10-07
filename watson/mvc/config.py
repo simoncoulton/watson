@@ -111,6 +111,9 @@ views = {
 # Logging settings
 logging = {
     'callable': 'logging.config.dictConfig',
+    'ignore_status': {
+        '404': True
+    },
     'options': {
         'version': 1,
         'disable_existing_loggers': False,

@@ -25,6 +25,7 @@ Configuration for Watson is just a standard python module (and should be familia
 * views
 * session
 * events
+* logging
 
 You can see the default configuration that Watson uses within the `watson.mvc.config` module.
 
@@ -124,6 +125,106 @@ events = {
     events.DISPATCH_EXECUTE: [('app_dispatch_execute_listener',)],
     events.RENDER_VIEW: [('app_render_listener',)],
 }
+{% endhighlight %}
+
+#### Logging
+
+Watson will automatically catch all exceptions thrown by your application. You can configure the logging exactly how you would using the standard libraries logging module.
+
+{% highlight python %}
+logging = {
+    'callable': 'logging.config.dictConfig',
+    'ignore_status': {
+        '404': True
+    },
+    'options': {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'verbose': {
+                'format': '%(asctime)s - %(name)s - %(levelname)s - %(process)d %(thread)d - %(message)s'
+            },
+            'simple': {
+                'format': '%(asctime)s - %(levelname)s - %(message)s'
+            },
+        },
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+                'level': 'DEBUG',
+                'formatter': 'verbose',
+                'stream': 'ext://sys.stdout'
+            },
+        },
+        'loggers': {},
+        'root': {
+            'level': 'DEBUG',
+            'handlers': ['console']
+        }
+    }
+}
+{% endhighlight %}
+
+The `callable` key allows you to change the way the logging it to be configured, in case you want to use a different method for logging. `ignore_status` allows you to ignore specific status codes from being logged (chances are you don't want to log 404 errors).
+
+A common logging setup may look similar to the following:
+
+{% highlight python %}
+logging = {
+    'options': {
+        'handlers': {
+            'error_file_handler': {
+                'class': 'logging.handlers.RotatingFileHandler',
+                'level': 'DEBUG',
+                'formatter': 'verbose',
+                'filename': '../data/logs/error.log',
+                'maxBytes': 10485760,
+                'backupCount': '20',
+                'encoding': 'utf8'
+            },
+        },
+        'loggers': {
+            'my_app': {
+                'level': 'DEBUG',
+                'handlers': ['error_file_handler']
+            },
+
+        },
+    }
+}
+{% endhighlight %}
+
+
+##### Integrating Sentry
+
+Sentry is a great piece of software that allows you to aggregrate your error logs. Integrating it into Watson is straightfoward, and only requires modifying the configuration of your application.
+
+{% highlight python %}
+logging = {
+    'options': {
+        'handlers': {
+            'sentry': {
+                'level': 'ERROR',
+                'class': 'raven.handlers.logging.SentryHandler',
+                'dsn': 'http://SENTRY_DSN_URL_GOES_HERE',
+            },
+        },
+        'loggers': {
+            'my_app': {
+                'level': 'DEBUG',
+                'handlers': ['sentry']
+            }
+        }
+    }
+}
+{% endhighlight %}
+
+You can then access the logger from within your app with the following code:
+
+{% highlight python %}
+import logging
+logging.getLogger(__name__)
+logger.error('Something has gone wrong')
 {% endhighlight %}
 
 ### <a id="extending"></a>Extending the Configuration

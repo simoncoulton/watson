@@ -13,7 +13,7 @@ from watson.mvc.exceptions import NotFoundError, InternalServerError, ExceptionH
 from watson.mvc.views import Model
 
 
-class Base(metaclass=abc.ABCMeta):
+class Base(ContainerAware, metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def __call__(self, event):
@@ -116,11 +116,15 @@ class Exception_(Base):
         exception = event.params['exception']
         status_code = exception.status_code
         exc_data = self.handler(sys.exc_info(), event.params)
-        context = exception.__context__
-        logger = logging.getLogger(__name__)
-        logger.error(
-            str(context),
-            exc_info=(context.__class__, context, context.__traceback__))
+        ignore_statuses = self.container.get(
+            'application.config')['logging'].get('ignore_status', {})
+        ignore_this_status = ignore_statuses.get(str(status_code), False)
+        if not ignore_this_status:
+            context = exception.__context__
+            logger = logging.getLogger(__name__)
+            logger.error(
+                str(context),
+                exc_info=(context.__class__, context, context.__traceback__))
         return Model(format='html',  # should this take the format from the request?
                      template=self.templates.get(
                          str(status_code),
