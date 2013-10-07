@@ -44,7 +44,6 @@ class ExceptionHandler(object):
 
     def __init__(self, config=None):
         self.config = config or {}
-        # TODO implement config for emailing to admin
 
     def __call__(self, exc_info, params):
         code, message, cause_message, frames, type = self.__process_exception(

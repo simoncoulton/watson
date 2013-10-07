@@ -2,6 +2,7 @@
 # TODO: Refactor these into single functions rather than classes where
 # appropriate
 import abc
+import logging
 import os
 import sys
 from watson.common.imports import get_qualified_name
@@ -114,11 +115,17 @@ class Exception_(Base):
     def __call__(self, event):
         exception = event.params['exception']
         status_code = exception.status_code
+        exc_data = self.handler(sys.exc_info(), event.params)
+        context = exception.__context__
+        logger = logging.getLogger(__name__)
+        logger.error(
+            str(context),
+            exc_info=(context.__class__, context, context.__traceback__))
         return Model(format='html',  # should this take the format from the request?
                      template=self.templates.get(
                          str(status_code),
                          self.templates['500']),
-                     data=self.handler(sys.exc_info(), event.params))
+                     data=exc_data)
 
 
 class Render(Base):
