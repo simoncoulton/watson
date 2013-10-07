@@ -750,6 +750,7 @@
 <li>views</li>
 <li>session</li>
 <li>events</li>
+<li>logging</li>
 </ul>
 
 <p>You can see the default configuration that Watson uses within the <code>watson.mvc.config</code> module.</p>
@@ -850,7 +851,102 @@ within your systems temporary directory (unless otherwise specified in the confi
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="toc_7"><a id="extending"></a>Extending the Configuration</h3>
+<h4 id="toc_7">Logging</h4>
+
+<p>Watson will automatically catch all exceptions thrown by your application. You can configure the logging exactly how you would using the standard libraries logging module.</p>
+
+<div class="highlight"><pre><code class="python"><span class="n">logging</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;callable&#39;</span><span class="p">:</span> <span class="s">&#39;logging.config.dictConfig&#39;</span><span class="p">,</span>
+    <span class="s">&#39;ignore_status&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;404&#39;</span><span class="p">:</span> <span class="bp">True</span>
+    <span class="p">},</span>
+    <span class="s">&#39;options&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;version&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s">&#39;disable_existing_loggers&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+        <span class="s">&#39;formatters&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;verbose&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;format&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="si">%(asctime)s</span><span class="s"> - </span><span class="si">%(name)s</span><span class="s"> - </span><span class="si">%(levelname)s</span><span class="s"> - </span><span class="si">%(process)d</span><span class="s"> </span><span class="si">%(thread)d</span><span class="s"> - </span><span class="si">%(message)s</span><span class="s">&#39;</span>
+            <span class="p">},</span>
+            <span class="s">&#39;simple&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;format&#39;</span><span class="p">:</span> <span class="s">&#39;</span><span class="si">%(asctime)s</span><span class="s"> - </span><span class="si">%(levelname)s</span><span class="s"> - </span><span class="si">%(message)s</span><span class="s">&#39;</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+        <span class="s">&#39;handlers&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;console&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;class&#39;</span><span class="p">:</span> <span class="s">&#39;logging.StreamHandler&#39;</span><span class="p">,</span>
+                <span class="s">&#39;level&#39;</span><span class="p">:</span> <span class="s">&#39;DEBUG&#39;</span><span class="p">,</span>
+                <span class="s">&#39;formatter&#39;</span><span class="p">:</span> <span class="s">&#39;verbose&#39;</span><span class="p">,</span>
+                <span class="s">&#39;stream&#39;</span><span class="p">:</span> <span class="s">&#39;ext://sys.stdout&#39;</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+        <span class="s">&#39;loggers&#39;</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="s">&#39;root&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;level&#39;</span><span class="p">:</span> <span class="s">&#39;DEBUG&#39;</span><span class="p">,</span>
+            <span class="s">&#39;handlers&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;console&#39;</span><span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>The <code>callable</code> key allows you to change the way the logging it to be configured, in case you want to use a different method for logging. <code>ignore_status</code> allows you to ignore specific status codes from being logged (chances are you don&#39;t want to log 404 errors).</p>
+
+<p>A common logging setup may look similar to the following:</p>
+
+<div class="highlight"><pre><code class="python"><span class="n">logging</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;options&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;handlers&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;error_file_handler&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;class&#39;</span><span class="p">:</span> <span class="s">&#39;logging.handlers.RotatingFileHandler&#39;</span><span class="p">,</span>
+                <span class="s">&#39;level&#39;</span><span class="p">:</span> <span class="s">&#39;DEBUG&#39;</span><span class="p">,</span>
+                <span class="s">&#39;formatter&#39;</span><span class="p">:</span> <span class="s">&#39;verbose&#39;</span><span class="p">,</span>
+                <span class="s">&#39;filename&#39;</span><span class="p">:</span> <span class="s">&#39;../data/logs/error.log&#39;</span><span class="p">,</span>
+                <span class="s">&#39;maxBytes&#39;</span><span class="p">:</span> <span class="mi">10485760</span><span class="p">,</span>
+                <span class="s">&#39;backupCount&#39;</span><span class="p">:</span> <span class="s">&#39;20&#39;</span><span class="p">,</span>
+                <span class="s">&#39;encoding&#39;</span><span class="p">:</span> <span class="s">&#39;utf8&#39;</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+        <span class="s">&#39;loggers&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;my_app&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;level&#39;</span><span class="p">:</span> <span class="s">&#39;DEBUG&#39;</span><span class="p">,</span>
+                <span class="s">&#39;handlers&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;error_file_handler&#39;</span><span class="p">]</span>
+            <span class="p">},</span>
+
+        <span class="p">},</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h5 id="toc_8">Integrating Sentry</h5>
+
+<p>Sentry is a great piece of software that allows you to aggregrate your error logs. Integrating it into Watson is straightfoward, and only requires modifying the configuration of your application.</p>
+
+<div class="highlight"><pre><code class="python"><span class="n">logging</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;options&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&#39;handlers&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;sentry&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;level&#39;</span><span class="p">:</span> <span class="s">&#39;ERROR&#39;</span><span class="p">,</span>
+                <span class="s">&#39;class&#39;</span><span class="p">:</span> <span class="s">&#39;raven.handlers.logging.SentryHandler&#39;</span><span class="p">,</span>
+                <span class="s">&#39;dsn&#39;</span><span class="p">:</span> <span class="s">&#39;http://SENTRY_DSN_URL_GOES_HERE&#39;</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+        <span class="s">&#39;loggers&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;my_app&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;level&#39;</span><span class="p">:</span> <span class="s">&#39;DEBUG&#39;</span><span class="p">,</span>
+                <span class="s">&#39;handlers&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;sentry&#39;</span><span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>You can then access the logger from within your app with the following code:</p>
+
+<div class="highlight"><pre><code class="python"><span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&#39;Something has gone wrong&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="toc_9"><a id="extending"></a>Extending the Configuration</h3>
 
 <p>There are times when you may want to allow other developers to get access to your configuration from dependencies retrieved from the
 container. This can easily be achieved by the use of lambda functions.</p>
