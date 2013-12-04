@@ -24,9 +24,8 @@ class Base(ContainerAware, metaclass=abc.ABCMeta):
             exc_msg = str(exc)
             # There has to be a better/quicker way to determine if the cause
             # is because of kwargs
-            if ('required positional argument' not in exc_msg
-                    or 'got an unexpected keyword' not in exc_msg) \
-                    and not exc_msg.startswith(method.__name__):
+            if 'required positional argument' not in exc_msg \
+                    and 'got an unexpected keyword' not in exc_msg:
                 raise exc
             result = method()
         return result or {}

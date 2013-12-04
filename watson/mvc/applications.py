@@ -215,6 +215,8 @@ class Console(Base):
         self.config = dict_deep_update({
             'commands': find_commands_in_module(DefaultConsoleCommands)
         }, self.config)
+        # from pprint import pprint
+        # pprint(self.config)
         self.runner = Runner(argv, commands=self.config.get('commands'))
         self.runner.get_command = self.get_command
 

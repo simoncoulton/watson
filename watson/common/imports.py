@@ -89,45 +89,39 @@ class Resolver(abc.Finder, abc.Loader):
         self.modules = modules
         self.register()
 
-    def find_module(self, fullname, path=None):
+    def find_module(self, module_name, path=None):
         """Determine if the module is to be loaded via the Resolver.
 
         Args:
-            string fullname: The name of the module
+            string module_name: The name of the module
             string path: The path to the module
         """
         for module in self.modules:
-            if fullname.startswith(module):
+            if module_name.startswith(module):
                 return self
         return None
 
-    def load_module(self, fullname):
+    def load_module(self, module_name):
         """Loads the module.
 
         Args:
-            string fullname: The name of the module to load
+            string module_name: The name of the module to load
         """
-        module_name = fullname.split('.')
-        if len(module_name) > 2:
-            actual_name = module_name[2:]
-            actual_name.insert(0, '_'.join(module_name[:2]))
-        else:
-            actual_name = ['_'.join(module_name)]
-        actual_name = '.'.join(actual_name)
-        if fullname not in sys.modules and actual_name not in sys.modules:
+        actual_name = module_name.replace('.', '_', 1)
+        if module_name not in sys.modules and actual_name not in sys.modules:
             try:
                 import_module(actual_name)
             except:
                 raise Exception(
                     'Module {0} does not exist (tried to load "{1}")'.format(
-                        fullname,
+                        module_name,
                         actual_name))
-        if actual_name in sys.modules and fullname not in sys.modules:
-            sys.modules[fullname] = sys.modules[actual_name]
-            sys.modules[fullname].__original_name__ = actual_name
-            sys.modules[fullname].__name__ = fullname
+        if actual_name in sys.modules and module_name not in sys.modules:
+            sys.modules[module_name] = sys.modules[actual_name]
+            sys.modules[module_name].__original_name__ = actual_name
+            sys.modules[module_name].__name__ = module_name
             del sys.modules[actual_name]
-        return sys.modules[fullname]
+        return sys.modules[module_name]
 
     def module_repr(self, module):
         """Retrieve the module repr of a particular module.

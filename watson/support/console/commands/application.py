@@ -108,14 +108,17 @@ class RunDevelopmentServer(command.Base, ContainerAware):
     help = 'Runs the development server for the current application.'
 
     def execute(self):
-        from __main__ import APP_MODULE, APP_DIR, SCRIPT_DIR, PUBLIC_DIR
-        os.chdir(APP_DIR)
+        app_dir = os.environ['APP_DIR']
+        app_module = os.environ['APP_MODULE']
+        script_dir = os.environ['SCRIPT_DIR']
+        public_dir = os.environ['PUBLIC_DIR']
+        os.chdir(app_dir)
         app = load_definition_from_string('{0}.app.application'.format(
-            APP_MODULE))
+            app_module))
         make_dev_server(app,
                         do_reload=True,
-                        script_dir=SCRIPT_DIR,
-                        public_dir=PUBLIC_DIR)
+                        script_dir=script_dir,
+                        public_dir=public_dir)
 
 
 class RunTests(command.Base, ContainerAware):
@@ -124,19 +127,19 @@ class RunTests(command.Base, ContainerAware):
 
     def execute(self):
         try:
-            from __main__ import APP_MODULE
+            app_module = os.environ['APP_MODULE']
             test_runner = None
             cli_args = ''
             sys.argv = [sys.argv.pop(0)]
             try:
                 import pytest
                 test_runner = 'pytest'
-                cli_args = '--cov {0}'.format(APP_MODULE)
+                cli_args = '--cov {0}'.format(app_module)
             except:
                 with ignored(ImportError):
                     import nose
                     test_runner = 'nose'
-                    cli_args = '--cover-package={0}'.format(APP_MODULE)
+                    cli_args = '--cover-package={0}'.format(app_module)
             if test_runner:
                 sys.modules[test_runner].main(cli_args.split(' '))
             else:
@@ -287,10 +290,16 @@ CONSOLE_TEMPLATE = """#!/usr/bin/env python
 import os
 import sys
 
+import os
+import sys
+
 SCRIPT_DIR, SCRIPT_FILE = os.path.split(os.path.abspath(__file__))
-APP_MODULE = '${app_name}'
-APP_DIR = os.path.join(SCRIPT_DIR, APP_MODULE)
-PUBLIC_DIR = os.path.join(SCRIPT_DIR, 'public')
+os.environ.update({
+    'APP_MODULE': '${app_name}',
+    'APP_DIR': os.path.join(SCRIPT_DIR, '${app_name}'),
+    'PUBLIC_DIR': os.path.join(SCRIPT_DIR, 'public')
+    'SCRIPT_DIR': SCRIPT_DIR
+})
 try:
     import watson
 except:
