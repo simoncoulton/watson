@@ -31,10 +31,8 @@ class StaticFileMiddleware(object):
         path = os.path.join(self.initial_dir, environ['PATH_INFO'][1:])
         run_app = True
         actual_path = os.path.join(path)
-        if os.path.exists(actual_path):
+        if os.path.exists(actual_path) and not stat.S_ISDIR(os.stat(actual_path).st_mode):
             run_app = False
-        else:
-            run_app = True
         if run_app:
             return self.app(environ, start_response)
         else:
