@@ -117,8 +117,7 @@ class Base(ContainerAware, EventDispatcherAware, metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def run(self):
-        # pragma: no cover
-        raise NotImplementedError('You must implement __call__')
+        raise NotImplementedError('You must implement __call__')  # pragma: no cover
 
 
 class Http(Base):
@@ -145,8 +144,7 @@ class Http(Base):
             route_match = route_result.first()
         except ApplicationError as exc:
             route_match = None
-            response, view_model = self.__raise_exception_event(
-                exception=exc, request=request)
+            response, view_model = self.handle_exception(exception=exc, request=request)
         if route_match:
             try:
                 dispatch_event = Event(events.DISPATCH_EXECUTE,
@@ -160,21 +158,12 @@ class Http(Base):
                 response = dispatch_event.params['controller_class'].response
                 view_model = dispatch_result.first()
             except ApplicationError as exc:
-                response, view_model = self.__raise_exception_event(
-                    exception=exc, request=request, route_match=route_match)
+                response, view_model = self.handle_exception(exception=exc, request=request, route_match=route_match)
         if not isinstance(view_model, Response):
             try:
-                self.__render(
-                    request=request,
-                    response=response,
-                    view_model=view_model)
-            except ApplicationError as exc:
-                response, view_model = self.__raise_exception_event(
-                    exception=exc, request=request, route_match=route_match)
-                self.__render(
-                    request=request,
-                    response=response,
-                    view_model=view_model)
+                self.render(request=request, response=response, view_model=view_model)
+            except Exception as exc:
+                response, view_model = self.handle_exception(exception=exc, request=request, route_match=route_match)
         start_response(*response.start())
         self.dispatcher.trigger(Event(events.COMPLETE,
                                       target=self,
@@ -184,18 +173,33 @@ class Http(Base):
     def __call__(self, *args, **kwargs):
         return self.run(*args, **kwargs)
 
-    def __raise_exception_event(self, **kwargs):
+    def handle_exception(self, last_exception=None, **kwargs):
         exception_event = Event(events.EXCEPTION, target=self, params=kwargs)
         exception_result = self.dispatcher.trigger(exception_event)
-        return (
-            Response(kwargs['exception'].status_code), exception_result.first()
-        )
+        response = Response(kwargs['exception'].status_code)
+        view_model = exception_result.first()
+        kwargs.update({
+            'response': response,
+            'view_model': view_model
+        })
+        if last_exception:
+            self.render(with_dispatcher=False, **kwargs)
+        try:
+            self.render(**kwargs)
+        except Exception as exc:
+            kwargs['exception'] = exc
+            self.handle_exception(last_exception=exc, **kwargs)
+        return response, view_model
 
-    def __render(self, **kwargs):
+    def render(self, with_dispatcher=True, **kwargs):
         kwargs['container'] = self.container
         render_event = Event(events.RENDER_VIEW, target=self, params=kwargs)
-        self.container.add('render_event_params', kwargs)
-        self.dispatcher.trigger(render_event)
+        if with_dispatcher:
+            self.container.add('render_event_params', kwargs)
+            self.dispatcher.trigger(render_event)
+        else:
+            listener = self.container.get('app_render_listener')
+            listener(render_event)
 
 
 class Console(Base):
@@ -215,8 +219,6 @@ class Console(Base):
         self.config = dict_deep_update({
             'commands': find_commands_in_module(DefaultConsoleCommands)
         }, self.config)
-        # from pprint import pprint
-        # pprint(self.config)
         self.runner = Runner(argv, commands=self.config.get('commands'))
         self.runner.get_command = self.get_command
 

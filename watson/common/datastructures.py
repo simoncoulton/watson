@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from copy import deepcopy
+from copy import deepcopy, copy
 from collections import OrderedDict
 from types import ModuleType
 
@@ -18,14 +18,20 @@ def dict_deep_update(d1, d2):
     """
     if not isinstance(d2, dict):
         return d2
-    result = deepcopy(d1)
+    try:
+        result = deepcopy(d1)
+    except:
+        result = copy(d1)
     for k, v in d2.items():
         if k in result and isinstance(result[k], dict):
             result[k] = dict_deep_update(result[k], v)
         elif k in result and isinstance(result[k], (list, tuple)) and isinstance(v, (list, tuple)):
             result[k] = result[k] + v
         else:
-            result[k] = deepcopy(v)
+            try:
+                result[k] = deepcopy(v)
+            except:
+                result[k] = copy(v)
     return result
 
 

@@ -83,13 +83,20 @@ class ExceptionHandler(object):
             function = co.co_name
             linecache.checkcache(file)
             sourcecode = linecache.getline(file, line, frame.f_globals)
-            frames.append({
+            this_frame = {
                 'line': line,
                 'file': file,
                 'function': function,
                 'code': sourcecode.strip(),
-                'vars': frame.f_locals.items()
-            })
+                'vars': {}
+            }
+            frame_vars = frame.f_locals.items()
+            for var_name, value in frame_vars:
+                try:
+                    this_frame['vars'][var_name] = str(value)
+                except:
+                    this_frame['vars'][var_name] = ''
+            frames.append(this_frame)
             tb = tb.tb_next
         frames.reverse()
         del tb

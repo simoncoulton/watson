@@ -29,13 +29,20 @@ class StaticFileMiddleware(object):
 
     def __call__(self, environ, start_response):
         path = os.path.join(self.initial_dir, environ['PATH_INFO'][1:])
-        try:
+        run_app = True
+        actual_path = os.path.join(path)
+        if os.path.exists(actual_path):
+            run_app = False
+        else:
+            run_app = True
+        if run_app:
+            return self.app(environ, start_response)
+        else:
+            file_stat = os.stat(actual_path)
             return self.serve_static(path,
-                                     os.stat(os.path.join(path)),
+                                     file_stat,
                                      environ,
                                      start_response)
-        except:
-            return self.app(environ, start_response)
 
     def serve_static(self, path, file_stat, environ, start_response):
         if stat.S_ISDIR(file_stat.st_mode):

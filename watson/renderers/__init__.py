@@ -102,6 +102,11 @@ class Jinja2(abc.Renderer):
                 }
                 .watson-stack-frames > tbody > tr {
                     background-color: #f5f5f5;
+                    cursor: pointer;
+                }
+                .watson-stack-frames > tbody > tr.watson-stack-frames-frame-vars {
+                    cursor: default;
+                    background: #f1ecc2;
                 }
                 .hide {
                     display: none;
@@ -226,19 +231,18 @@ class Jinja2(abc.Renderer):
                 <th>Line</th><th>File</th><th>Function</th><th>Code</th>
             </tr>
             {% for frame in frames %}
-            <tr>
+            <tr class="watson-stack-frames-frame">
                 <td>{{ frame.line }}</td>
                 <td>{{ frame.file }}</td>
                 <td>{{ frame.function }}</td>
                 <td>{{ frame.code }}</td>
             </tr>
             {% if frame.vars %}
-            {% endif %}
-            <tr>
+            <tr class="watson-stack-frames-frame-vars">
                 <td colspan="4" class="hide">
                     <table class="watson-stack-frames-vars">
                         <tr><th>Name</th><th>Value</th></tr>
-                        {% for k, v in frame.vars %}
+                        {% for k, v in frame.vars|dictsort %}
                         <tr>
                             <td>{{ k|e }}</td>
                             <td>{{ v|e }}</td>
@@ -247,8 +251,21 @@ class Jinja2(abc.Renderer):
                     </table>
                 </td>
             </tr>
+            {% endif %}
             {% endfor %}
             </table>
+            <script>
+            Element.prototype.toggleClass = function (className) {
+                this.className = this.className === className ? '' : className;
+            };
+            var frames = document.getElementsByClassName('watson-stack-frames-frame');
+            for (var i = 0; i < frames.length; i++) {
+                var frame = frames[i];
+                frame.onclick = function() {
+                    this.nextElementSibling.children[0].toggleClass('hide');
+                }
+            }
+            </script>
             {% endif %}
             ''',
             'blank.html': '''{% extends "base" %}

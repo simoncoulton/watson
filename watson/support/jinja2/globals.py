@@ -39,7 +39,7 @@ def get_request(context):
     Usage:
         {{ get_request() }}
     """
-    return context['context']['controller'].request
+    return context['request']
 
 
 @contextfunction
@@ -49,4 +49,6 @@ def get_flash_messages(context):
     Usage:
         {{ get_flash_messages() }}
     """
+    if 'context' not in context:
+        return []
     return context['context']['controller'].flash_messages

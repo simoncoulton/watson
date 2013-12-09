@@ -9,7 +9,7 @@ from watson.common.imports import get_qualified_name
 from watson.di import ContainerAware
 from watson.http import MIME_TYPES
 from watson.http.messages import Response
-from watson.mvc.exceptions import NotFoundError, InternalServerError, ExceptionHandler
+from watson.mvc.exceptions import NotFoundError, InternalServerError, ExceptionHandler, ApplicationError
 from watson.mvc.views import Model
 
 
@@ -97,6 +97,8 @@ class DispatchExecute(Base):
                         format=format,
                         template=view_template,
                         data=model_data)
+        except (ApplicationError, NotFoundError, InternalServerError) as exc:
+            raise
         except Exception as exc:
             raise InternalServerError(
                 'An error occurred executing controller: {0}'.format(get_qualified_name(controller))) from exc
@@ -114,13 +116,19 @@ class Exception_(Base):
 
     def __call__(self, event):
         exception = event.params['exception']
-        status_code = exception.status_code
+        try:
+            status_code = exception.status_code
+        except:
+            status_code = 500
+            setattr(exception, 'status_code', status_code)
         exc_data = self.handler(sys.exc_info(), event.params)
         ignore_statuses = self.container.get(
             'application.config')['logging'].get('ignore_status', {})
         ignore_this_status = ignore_statuses.get(str(status_code), False)
         if not ignore_this_status:
             context = exception.__context__
+            if not hasattr(context, '__traceback__'):
+                context = exception
             logger = logging.getLogger(__name__)
             logger.error(
                 str(context),
@@ -128,7 +136,7 @@ class Exception_(Base):
         return Model(format='html',  # should this take the format from the request?
                      template=self.templates.get(
                          str(status_code),
-                         self.templates['500']),
+                         self.templates[str(status_code)]),
                      data=exc_data)
 
 
