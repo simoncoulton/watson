@@ -155,6 +155,8 @@ def get_param_from_container(param, container):
     """
     if param in container.params:
         param = container.params[param]
+        if param in container.definitions:
+            param = container.get(param)
     elif param in container.definitions:
         param = container.get(param)
     if isinstance(param, FunctionType):
