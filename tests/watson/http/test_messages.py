@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from copy import copy
 from io import BytesIO, BufferedReader
+import json
 from nose.tools import raises
 from watson.http.messages import Response, Request, create_request_from_environ
 from watson.http.cookies import CookieDict
@@ -91,6 +92,15 @@ class TestRequest(object):
         environ = sample_environ()
         assert repr(create_request_from_environ(environ)
                     ) == '<watson.http.messages.Request method:GET url:http://127.0.0.1/>'
+
+    def test_json_body(self):
+        json_str = '{"test": [1, 2, 3]}'
+        environ = sample_environ(CONTENT_TYPE='application/json; charset=utf-8', CONTENT_LENGTH=len(json_str))
+        environ['wsgi.input'] = BufferedReader(
+            BytesIO(json_str.encode('utf-8')))
+        request = create_request_from_environ(environ)
+        json_output = json.loads(request.body)
+        assert 'test' in json_output
 
 
 class TestResponse(object):
