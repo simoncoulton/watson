@@ -83,6 +83,7 @@ class Router(object):
             if not isinstance(route_definition, Route):
                 route = Route(**route_definition)
             self.add_route(route)
+            self._create_child_routes(route_definition, route)
 
     def _from_dict(self, routes):
         # Creates a router from a dict of named route definitions.
