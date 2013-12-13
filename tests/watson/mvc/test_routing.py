@@ -147,6 +147,20 @@ class TestRoute(object):
             requires={'keyword': '.*'})
         route.assemble()
 
+    def test_requires_get_variables(self):
+        route = Route(name='test', path='/', requires={'test': '.*'})
+        request = create_request_from_environ(sample_environ(
+            PATH_INFO='/',
+            QUERY_STRING='test=blah&something=test'))
+        match = route.match(request)
+        assert match
+
+        request = create_request_from_environ(sample_environ(
+            PATH_INFO='/',
+            QUERY_STRING='tesst=blah'))
+        match = route.match(request)
+        assert not match
+
 
 class TestRouter(object):
 

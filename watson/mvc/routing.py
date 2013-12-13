@@ -179,7 +179,8 @@ class Route(dict):
         """
         kwargs.update({
             'name': name,
-            'path': path
+            'path': path,
+            'requires': kwargs.get('requires', {})
         })
         super(Route, self).__init__(*args, **kwargs)
         if 'priority' not in kwargs:
@@ -224,9 +225,19 @@ class Route(dict):
             else:
                 return None
         matches = self.regex.match(request.url.path)
+        if self['requires'] and request.get:
+            if all(key in request.get for key in self['requires']):
+                params.update((k, v)
+                              for k, v in request.get.items()
+                              if k in self['requires'])
+            elif matches and matches.groupdict():
+                pass
+            else:
+                return None
         if matches:
             params.update((k, v)
-                          for k, v in matches.groupdict().items() if v is not None)
+                          for k, v in matches.groupdict().items()
+                          if v is not None)
         else:
             return None
         return RouteMatch(self, params)

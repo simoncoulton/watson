@@ -36,6 +36,8 @@ config = Config  # alias to Config
 def get_request(context):
     """Retrieves the request from the controller.
 
+    Deprecated: Just use 'request'
+
     Usage:
         {{ get_request() }}
     """
