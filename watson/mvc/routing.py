@@ -78,18 +78,32 @@ class Router(object):
 
     def _from_list(self, routes):
         # Creates a router from a list of route objects or definitions.
-        for route in routes:
-            if not isinstance(route, Route):
-                route = Route(**route)
+        for route_definition in routes:
+            route = route_definition
+            if not isinstance(route_definition, Route):
+                route = Route(**route_definition)
             self.add_route(route)
 
     def _from_dict(self, routes):
         # Creates a router from a dict of named route definitions.
-        for name, route in routes.items():
-            if not isinstance(route, Route):
-                route = Route(name=name, **route)
+        for name, route_definition in routes.items():
+            route = route_definition
+            if not isinstance(route_definition, Route):
+                route = Route(name=name, **route_definition)
             self.add_route(route)
+            self._create_child_routes(route_definition, route)
         self.sort()
+
+    def _create_child_routes(self, definition, parent_route):
+        if 'children' in definition:
+            for name, child_definition in definition['children'].items():
+                child_definition['path'] = '{0}{1}'.format(
+                    parent_route.path,
+                    child_definition['path'])
+                name = '{0}/{1}'.format(parent_route.name, name)
+                route = Route(name=name, **child_definition)
+                self.add_route(route)
+                self._create_child_routes(child_definition, route)
 
     def __len__(self):
         return len(self.routes)
