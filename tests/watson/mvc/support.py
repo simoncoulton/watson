@@ -38,6 +38,12 @@ class SampleActionController(controllers.Action):
     def exception_action(self, **kwargs):
         raise TypeError('Exception related to the code')
 
+    def do_forward(self):
+        return self.forward(SampleActionController(), method='forwarded')
+
+    def forwarded(self):
+        return 'Response'
+
 
 class ShortCircuitedController(controllers.Rest):
 

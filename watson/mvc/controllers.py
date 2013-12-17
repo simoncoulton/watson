@@ -2,6 +2,7 @@
 import abc
 import collections
 import re
+import types
 from watson.di import ContainerAware
 from watson.events.types import Event
 from watson.http.messages import Response, Request
@@ -204,6 +205,24 @@ class HttpMixin(object):
         """
         del self.request.session['post_redirect_get']
 
+    def forward(self, controller, method=None, *args, **kwargs):
+        """Fowards a request across to a different controller.
+
+        Attributes:
+            string|object controller: The controller to execute
+            string method: The method to run, defaults to currently called method
+
+        Returns:
+            Response from other controller.
+        """
+        if not method:
+            method = self.__action__
+        if not hasattr(controller, method):
+            controller = self.container.get(controller)
+            controller.request = self.request
+            controller.event = self.event
+        return getattr(controller, method)(*args, **kwargs)
+
     @property
     def flash_messages(self):
         """Retrieves all the flash messages associated with the controller.
@@ -314,8 +333,10 @@ class Action(Base, HttpMixin):
     """
 
     def get_execute_method(self, **kwargs):
-        method_name = kwargs.get('action', 'index') + '_action'
-        return getattr(self, method_name)
+        if not hasattr(self, '__action__') or 'action' in kwargs:
+            method_name = kwargs.get('action', 'index') + '_action'
+            self.__action__ = method_name
+        return getattr(self, self.__action__)
 
     def get_execute_method_path(self, **kwargs):
         template = re.sub('.-', '_', kwargs.get('action', 'index').lower())
@@ -333,7 +354,9 @@ class Rest(Base, HttpMixin):
     """
 
     def get_execute_method(self, **kwargs):
-        return getattr(self, self.request.method)
+        if not hasattr(self, '__action__'):
+            self.__action__ = self.request.method
+        return getattr(self, self.__action__)
 
     def get_execute_method_path(self, **kwargs):
         template = self.request.method.lower()

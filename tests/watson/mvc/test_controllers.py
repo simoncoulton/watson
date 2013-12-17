@@ -111,6 +111,10 @@ class TestBaseHttpController(object):
             assert namespace == 'info'
         assert not controller.flash_messages.messages
 
+    def test_forward(self):
+        controller = SampleActionController()
+        assert controller.do_forward() == 'Response'
+
 
 class TestActionController(object):
 
