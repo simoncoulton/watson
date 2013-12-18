@@ -56,8 +56,7 @@ def create_request_from_environ(
     method will be set to that method.
     """
     headers, server, cookies = split_headers_server_vars(environ)
-    get, post, files = get_form_vars(environ)
-    body = None
+    get, post, files, body = get_form_vars(environ)
     if post.get('HTTP_REQUEST_METHOD', '').upper() in REQUEST_METHODS:
         method = post.get('HTTP_REQUEST_METHOD')
     else:
@@ -107,13 +106,10 @@ class Request(MessageMixin, SessionMixin):
 
     @property
     def body(self):
-        if not self._body:
-            input_ = self._environ['wsgi.input']
-            input_.seek(0)
-            body = input_.readlines()
+        if not isinstance(self._body, str):
+            data = b''.join(self._body.readlines())
             encoding = self.headers.get_option('Content-Type', 'charset', 'utf-8')
-            body = ''.join(line.decode(encoding) for line in body)
-            self._body = body
+            self._body = data.decode(encoding)
         return self._body
 
     @body.setter
@@ -257,12 +253,8 @@ class Request(MessageMixin, SessionMixin):
         Returns:
             Boolean
         """
-        return (
-            self.headers.get(
-                'X-Requested-With',
-                '').lower(
-        ) == 'xmlhttprequest'
-        )
+        return (self.headers.get(
+            'X-Requested-With', '').lower() == 'xmlhttprequest')
 
     def is_secure(self):
         """
@@ -303,8 +295,10 @@ class Request(MessageMixin, SessionMixin):
             hostname attribute.
         """
         return (
-            self.url.hostname if 'X-Forwarded-For' not in self.headers else self.headers.get(
-    'X-Forwarded-For')
+            self.url.hostname
+            if 'X-Forwarded-For'
+            not in self.headers
+            else self.headers.get('X-Forwarded-For')
         )
 
 
@@ -347,9 +341,7 @@ class Response(MessageMixin):
         """
         return (
             '{0} {1}'.format(
-    self.status_code,
-     STATUS_CODES.get(self.status_code))
-        )
+                self.status_code, STATUS_CODES.get(self.status_code)))
 
     @property
     def cookies(self):
@@ -409,10 +401,7 @@ class Response(MessageMixin):
 
     def _prepare(self):
         if not self._prepared:
-            self.headers.add(
-    'Content-Length',
-     self.body.__len__(),
-     replace=True)
+            self.headers.add('Content-Length', len(self.body), replace=True)
             for cookie, morsel in self.cookies.items():
                 self.headers.add('Set-Cookie', str(morsel))
             self._prepared = True

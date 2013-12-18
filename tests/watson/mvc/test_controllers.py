@@ -113,6 +113,8 @@ class TestBaseHttpController(object):
 
     def test_forward(self):
         controller = SampleActionController()
+        controller.request = create_request_from_environ(sample_environ())
+        controller.event = types.Event('test')
         assert controller.do_forward() == 'Response'
 
 

@@ -10,8 +10,10 @@ class TestHasCsrf(object):
 
     def setup(self):
         self.protected_form = has_csrf(UnprotectedForm)
+        data = 'test=blah'
         environ = sample_environ(REQUEST_METHOD='POST')
-        environ['wsgi.input'] = BufferedReader(BytesIO(b'test=blah'))
+        environ['wsgi.input'] = BufferedReader(BytesIO(data.encode('utf-8')))
+        environ['CONTENT_LENGTH'] = len(data)
         self.request = create_request_from_environ(
             environ, 'watson.http.sessions.Memory')
 

@@ -27,9 +27,10 @@ class TestRequest(object):
         assert request.is_method('GET')
 
     def test_create_put_from_environ(self):
-        environ = sample_environ(REQUEST_METHOD='POST')
+        data = 'HTTP_REQUEST_METHOD=PUT'
+        environ = sample_environ(REQUEST_METHOD='POST', CONTENT_LENGTH=len(data))
         environ['wsgi.input'] = BufferedReader(
-            BytesIO(b'HTTP_REQUEST_METHOD=PUT'))
+            BytesIO(data.encode('utf-8')))
         request = create_request_from_environ(environ)
         assert request.post['HTTP_REQUEST_METHOD'] == 'PUT'
         assert request.is_method('PUT')
@@ -80,9 +81,11 @@ class TestRequest(object):
 
     def test_create_mutable(self):
         environ = sample_environ()
+        data = 'HTTP_REQUEST_METHOD=PUT'
         environ['REQUEST_METHOD'] = 'POST'
+        environ['CONTENT_LENGTH'] = len(data)
         environ['wsgi.input'] = BufferedReader(
-            BytesIO(b'HTTP_REQUEST_METHOD=PUT'))
+            BytesIO(data.encode('utf-8')))
         request = create_request_from_environ(environ)
         new_request = copy(request)
         assert isinstance(request.post, ImmutableMultiDict)
@@ -94,10 +97,12 @@ class TestRequest(object):
                     ) == '<watson.http.messages.Request method:GET url:http://127.0.0.1/>'
 
     def test_json_body(self):
+        json_str = '{"test": [1, 2, 3]}'
         environ = sample_environ(CONTENT_TYPE='application/json; charset=utf-8',
-                                 REQUEST_METHOD='post')
+                                 CONTENT_LENGTH=len(json_str),
+                                 REQUEST_METHOD='put')
         environ['wsgi.input'] = BufferedReader(
-            BytesIO(b'{"test": [1, 2, 3]}'))
+            BytesIO(json_str.encode('utf-8')))
         request = create_request_from_environ(environ)
         json_output = json.loads(request.body)
         assert 'test' in json_output

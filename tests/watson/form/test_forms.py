@@ -193,11 +193,13 @@ class TestMultiPartForm(object):
 class TestFormProcessingCsrfRequest(object):
 
     def setup(self):
+        data = 'form_csrf_token=123456&test=blah'
         environ = sample_environ(
             HTTP_COOKIE='watson.session=123456;',
-            REQUEST_METHOD='POST')
+            REQUEST_METHOD='POST',
+            CONTENT_LENGTH=len(data))
         environ['wsgi.input'] = BufferedReader(
-            BytesIO(b'form_csrf_token=123456&test=blah'))
+            BytesIO(data.encode('utf-8')))
         self.request = create_request_from_environ(
             environ, 'watson.http.sessions.Memory')
 

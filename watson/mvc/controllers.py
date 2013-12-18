@@ -219,8 +219,8 @@ class HttpMixin(object):
             method = self.__action__
         if not hasattr(controller, method):
             controller = self.container.get(controller)
-            controller.request = self.request
-            controller.event = self.event
+        controller.request = self.request
+        controller.event = self.event
         return getattr(controller, method)(*args, **kwargs)
 
     @property
