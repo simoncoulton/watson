@@ -124,6 +124,8 @@ TEMPLATE = """<!-- Injected Watson Debug Toolbar -->
 </div>
 <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.2.min.js"></script>
 <script type="text/javascript">
+    var body = $('body');
+    body.css('padding-bottom', parseFloat(body.css('padding-bottom')) + parseFloat($('.watson-debug-toolbar__container').height()));
     var toolbar = $('.watson-debug-toolbar__container'), toggle = $('#DebugToolbarToggle'), buttons = toolbar.find('.watson-debug-toolbar__buttons a[id!="DebugToolbarToggle"]'), panels = toolbar.find('.watson-debug-toolbar__panel');
     toggle.on('click', function() {
         panels.removeClass('active');
