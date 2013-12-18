@@ -58,10 +58,6 @@ def create_request_from_environ(
     headers, server, cookies = split_headers_server_vars(environ)
     get, post, files = get_form_vars(environ)
     body = None
-    if headers.get('Content-Length', 0):
-        body = environ['wsgi.input'].readlines()
-        encoding = headers.get_option('Content-Type', 'charset', 'utf-8')
-        body = ''.join(line.decode(encoding) for line in body)
     if post.get('HTTP_REQUEST_METHOD', '').upper() in REQUEST_METHODS:
         method = post.get('HTTP_REQUEST_METHOD')
     else:
@@ -70,7 +66,7 @@ def create_request_from_environ(
         method, ImmutableMultiDict(get), ImmutableMultiDict(post),
         ImmutableMultiDict(files), ImmutableMultiDict(headers),
         ImmutableMultiDict(server), cookies, body)
-    request._environ = environ
+    request._environ = environ.copy()
     if session_class:
         request.define_session(session_class, session_options or {})
     return request
@@ -108,6 +104,21 @@ class Request(MessageMixin, SessionMixin):
     _server = None
     _cookies = None
     _environ = None
+
+    @property
+    def body(self):
+        if not self._body:
+            input_ = self._environ['wsgi.input']
+            input_.seek(0)
+            body = input_.readlines()
+            encoding = self.headers.get_option('Content-Type', 'charset', 'utf-8')
+            body = ''.join(line.decode(encoding) for line in body)
+            self._body = body
+        return self._body
+
+    @body.setter
+    def body(self, body):
+        self._body = body
 
     @property
     def method(self):

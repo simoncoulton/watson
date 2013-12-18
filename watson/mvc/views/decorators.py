@@ -2,7 +2,7 @@
 from watson.mvc import views
 
 
-def view(func=None, template=None, format=None):
+def view(template=None, format=None):
     """Return the view model in a specific format and with a specific template.
 
     This will not work if the response returned from the controller is of
@@ -35,7 +35,4 @@ def view(func=None, template=None, format=None):
                 controller_response.template = template
             return controller_response
         return wrapper
-    if func:
-        return decorator(func)
-    else:
-        return decorator
+    return decorator
